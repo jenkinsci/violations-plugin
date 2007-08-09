@@ -60,6 +60,14 @@ public class ViolationsProjectAction
     }
 
     /**
+     * Get the search url for this.
+     * @return "violations"
+     */
+    public String getSearchUrl() {
+        return MagicNames.VIOLATIONS;
+    }
+
+    /**
      * Get the display name for the violations.
      * @return "Violations".
      */

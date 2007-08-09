@@ -126,7 +126,7 @@ public class ViolationsBuildAction
     public String getSearchUrl() {
         return getUrlName();
     }
-    
+
     // -------------------------------------------
     //  These are the magic methods to tell hudson
     //  the url, the object to go to when the url

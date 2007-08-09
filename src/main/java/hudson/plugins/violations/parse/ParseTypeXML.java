@@ -1,0 +1,59 @@
+package hudson.plugins.violations.parse;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.File;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+
+import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.util.CloseUtil;
+
+/**
+ * Parse a violation type xml file.
+ */
+public class ParseTypeXML {
+
+    /**
+     * Parse a xml violation file.
+     * @param model the model to store the violations in.
+     * @param projectPath the project path used for resolving paths.
+     * @param xmlFile the xml file to parse.
+     * @param typeParser the parser to use.
+     * @throws IOException if there is an error.
+     */
+    public void parse(
+        FullBuildModel model,
+        File           projectPath,
+        String         xmlFile,
+        AbstractTypeParser typeParser) throws IOException {
+        InputStream in = null;
+        boolean  seenException = false;
+        try {
+            in = projectPath == null
+                ? new FileInputStream(new File(xmlFile))
+                : new FileInputStream(new File(projectPath, xmlFile));
+            XmlPullParserFactory factory =  XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser parser = factory.newPullParser();
+            parser.setInput(in, null);
+
+            typeParser.setProjectPath(projectPath);
+            typeParser.setModel(model);
+            typeParser.setParser(parser);
+            typeParser.execute();
+
+        } catch (IOException ex) {
+            seenException = true;
+            throw ex;
+        } catch (Exception ex) {
+            seenException = true;
+            throw new IOException(ex);
+        } finally {
+            CloseUtil.close(in, seenException);
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <l:layout>
+    <j:set var="url" value="${h.decompose(request)}"/>
+    <j:if test="${url.baseUrl == null}">
+      <st:include it="${it.build.parent}" page="sidepanel.jelly" />
+    </j:if>
+    <j:if test="${url.baseUrl != null}">
+      <st:include it="${it.build}" page="sidepanel.jelly" />
+    </j:if>
+    <l:main-panel>
+      <h1>
+        <img src="${rootURL}/plugin/violations/images/48x48/dialog-warning.png"/>
+        Violations Report ${url.baseUrl}
+      </h1>
+      <j:set var="model" value="${it.model}"/>
+      <table class="pane">
+        <tbody>
+          <tr>
+            <td class="pane-header">Type</td>
+            <td class="pane-header">Violations</td>
+            <td class="pane-header">Files in violation</td>
+          </tr>
+          <j:forEach var="t" items="${model.typeCounts}">
+            <tr>
+              <td class="pane">${t.name}</td>
+              <td class="pane">${t.count}</td>
+              <td class="pane">${t.numberFiles}</td>
+            </tr>
+          </j:forEach>
+        </tbody>
+      </table>
+
+      <j:forEach var="t" items="${model.typeMap.entrySet()}">
+        <j:if test="${t.value.size() != 0}">
+          <table class="pane">
+            <tr>
+              <td class="pane-header" colspan="2">${t.key}</td>
+            </tr>
+            <j:forEach var="f" items="${t.value}">
+              <tr>
+                <td class="pane" width="95%">
+                  <a href="file/${f.name}"><st:out value="${f.name}"/></a></td>
+                <td class="pane">${f.count}</td>
+              </tr>
+            </j:forEach>
+          </table>
+        </j:if>
+      </j:forEach>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
+

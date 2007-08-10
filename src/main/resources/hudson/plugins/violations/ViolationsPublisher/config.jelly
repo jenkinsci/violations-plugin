@@ -11,7 +11,8 @@
   <j:set var="configs" value="${config.typeConfigs.values()}"/>
   <f:entry
     title="Per file display limit"
-    description="This is the number of violations to display per file (per type)"
+    description="This is the number of violations 
+    to display per file (per type)"
     >
     <f:textbox name="config.limit" value="${config.limit}"/>
   </f:entry>
@@ -48,5 +49,22 @@
         </j:forEach>
       </tbody>
     </table>
+  </f:entry>
+  <f:entry
+    title="Source Path Pattern&lt;br/&gt;(Optional)"
+    description
+    = "This is a file name pattern that can be used to resolve classes
+       to sourcefiles (for example &lt;b&gt;**/src/main/java&lt;/b&gt;)."
+    >
+    <f:textbox name="config.sourcePathPattern"
+               value="${config.sourcePathPattern}"/>
+  </f:entry>
+  <f:entry
+    title="Faux Project Path&lt;br/&gt;(Optional)"
+    description
+    = "This can be set if the project's source and build is not actually
+       in the hudson job directory area.">
+    <f:textbox name="config.fauxProjectPath"
+               value="${config.fauxProjectPath}"/>
   </f:entry>
 </j:jelly>

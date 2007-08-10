@@ -73,7 +73,8 @@ public class OutputFileModel implements Execute {
         }
         w.println(">");
         createLimited();
-        if (fileModel.getSourceFile().exists()) {
+        if (fileModel.getSourceFile() != null
+            && fileModel.getSourceFile().exists()) {
             try {
                 outputContents();
             } finally {

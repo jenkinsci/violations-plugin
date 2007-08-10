@@ -1,15 +1,18 @@
 package hudson.plugins.violations;
 
+import java.io.File;
+import java.io.IOException;
+
+import java.util.logging.Logger;
+
+import org.apache.tools.ant.types.FileSet;
+
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
 import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.tools.ant.types.FileSet;
-
+import hudson.plugins.violations.util.StringUtil;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.generate.GenerateXML;
 import hudson.plugins.violations.parse.ParseTypeXML;
@@ -21,9 +24,13 @@ import hudson.plugins.violations.parse.ParseTypeXML;
  */
 
 public class ViolationsCollector implements FileCallable<ViolationsReport> {
+   private static final Logger LOG = Logger.getLogger(
+        ViolationsCollector.class.getName());
 
-    /** Logger. */
+    /** Logger for hudson. */
     private final transient BuildListener listener;
+
+    private static final String[] NO_STRINGS = new String[]{};
 
     /** Working directory to copy xml files to. */
     private final FilePath targetDir;
@@ -57,13 +64,28 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
     /**
      * Create a report.
      * @param workspace the current workspace.
-     * @param channel   the virutal channel.
+     * @param channel   the virtual channel.
      * @return the report.
      * @throws IOException if there is a problem.
      */
     public ViolationsReport invoke(File workspace, VirtualChannel channel)
         throws IOException {
         this.workspace = workspace;
+
+        // If the faux project path has been set, use that instead of
+        // the given workspace
+        if (!StringUtil.isBlank(config.getFauxProjectPath())) {
+            this.workspace = new File(config.getFauxProjectPath());
+            LOG.fine("Using faux workspace " + this.workspace);
+        }
+
+        // get the source path directories (if any)
+        String[] sourcePaths = findAbsoluteDirs(
+            workspace, config.getSourcePathPattern());
+
+        for (String sp: sourcePaths) {
+            LOG.fine("Using extra sourcePath " + sp);
+        }
 
         // Create the report
         ViolationsReport report = new ViolationsReport();
@@ -73,11 +95,11 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         this.model = new FullBuildModel();
         for (String type: config.getTypeConfigs().keySet()) {
             TypeConfig c = config.getTypeConfigs().get(type);
-            TypeDescriptor t = TypeDescriptor.TYPES.get(type);
-            if (empty(c.getPattern()) || t == null) {
+            TypeDescriptor typeDescriptor = TypeDescriptor.TYPES.get(type);
+            if (empty(c.getPattern()) || typeDescriptor == null) {
                 continue;
             }
-            doType(c, t, report);
+            doType(c, typeDescriptor, sourcePaths, report);
         }
         model.cleanup();
 
@@ -100,9 +122,11 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         return report;
     }
 
-    private void doType(TypeConfig c, TypeDescriptor t, ViolationsReport report)
+    private void doType(
+        TypeConfig c, TypeDescriptor t, String[] sourcePaths,
+        ViolationsReport report)
         throws IOException {
-        String[] xmlFiles = findViolationsFiles(workspace, c.getPattern());
+        String[] xmlFiles = findFiles(workspace, c.getPattern());
         if (xmlFiles.length == 0) {
             report.getViolations().put(
                 c.getType(), -1);
@@ -116,20 +140,25 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         model.addType(c.getType());
         for (String xmlFile: xmlFiles) {
             new ParseTypeXML().parse(
-                model, workspace, xmlFile, t.getParser());
+                model, workspace, xmlFile, sourcePaths, t.getParser());
         }
     }
 
+    //  TO DO : PLACE THESE IN A UTILITY CLASS
     /**
-     * Returns an array with the filenames of the violations files that have
-     * been found in the workspace.
+     * Returns an array with the filenames of the files
+     * that match an Ant pattern using the workspace as the base
+     * directory.
      *
      * @param workspaceRoot root directory of the workspace
      *
-     * @return the filenames of the violations xml files
+     * @return the filenames found.
      */
-    private String[] findViolationsFiles(
+    private String[] findFiles(
         final File workspaceRoot, String pattern) {
+        if (StringUtil.isBlank(pattern)) {
+            return NO_STRINGS;
+        }
         FileSet fileSet = new FileSet();
         org.apache.tools.ant.Project project
             = new org.apache.tools.ant.Project();
@@ -138,5 +167,52 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         fileSet.setIncludes(pattern);
 
         return fileSet.getDirectoryScanner(project).getIncludedFiles();
+    }
+
+    /**
+     * Returns an array with the relative filenames of directories
+     * that match an Ant pattern using the workspace as the base
+     * directory.
+     *
+     * @param workspaceRoot root directory of the workspace
+     *
+     * @return the filenames found.
+     */
+    private String[] findDirs(
+        final File workspaceRoot, String pattern) {
+        if (StringUtil.isBlank(pattern)) {
+            return NO_STRINGS;
+        }
+        FileSet fileSet = new FileSet();
+        org.apache.tools.ant.Project project
+            = new org.apache.tools.ant.Project();
+        fileSet.setProject(project);
+        fileSet.setDir(workspaceRoot);
+        fileSet.setIncludes(pattern);
+
+        return fileSet.getDirectoryScanner(project).getIncludedDirectories();
+    }
+
+    /**
+     * Returns an array with the absolute filenames of directories
+     * that match an Ant pattern using the workspace as the base
+     * directory.
+     *
+     * @param workspaceRoot root directory of the workspace
+     *
+     * @return the filenames found.
+     */
+    private String[] findAbsoluteDirs(
+        final File workspaceRoot, String pattern) {
+        String[] relative = findDirs(workspaceRoot, pattern);
+        if (relative.length == 0) {
+            return relative;
+        }
+        String[] absolute = new String[relative.length];
+        for (int i = 0; i < relative.length; ++i) {
+            absolute[i] = new File(
+                workspaceRoot, relative[i]).getAbsolutePath();
+        }
+        return absolute;
     }
 }

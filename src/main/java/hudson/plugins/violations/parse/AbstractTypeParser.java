@@ -15,6 +15,7 @@ public abstract class AbstractTypeParser
     extends AbstractParser {
     private FullBuildModel model;
     private File           projectPath;
+    private String[]       sourcePaths;
 
     /**
      * Set the build model.
@@ -47,6 +48,23 @@ public abstract class AbstractTypeParser
      */
     protected File getProjectPath() {
         return projectPath;
+    }
+
+    /**
+     * Set the source paths attribute.
+     * This is used to resolve classes against.
+     * @param sourcePaths the value to use
+     */
+    public void setSourcePaths(String[] sourcePaths) {
+        this.sourcePaths = sourcePaths;
+    }
+
+    /**
+     * Get the source paths.
+     * @return the source paths.
+     */
+    protected String[] getSourcePaths() {
+        return sourcePaths;
     }
 
     // -----------------------------------------------

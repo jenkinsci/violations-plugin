@@ -14,6 +14,12 @@ public class ViolationsConfig implements Cloneable {
     /** The number of violations per type per file to display */
     private int limit = LIMIT_DEFAULT;
 
+    /** The (optional) source path pattern. */
+    private String sourcePathPattern;
+
+    /** The (optional) project base used for "faux" projects. */
+    private String fauxProjectPath;
+
     /**
      * The constructor fot eh violations config.
      * This creates a config with default values.
@@ -48,6 +54,8 @@ public class ViolationsConfig implements Cloneable {
                 type, typeConfigs.get(type).clone());
         }
         ret.limit = limit;
+        ret.sourcePathPattern = sourcePathPattern;
+        ret.fauxProjectPath   = fauxProjectPath;
         return ret;
     }
 
@@ -65,6 +73,43 @@ public class ViolationsConfig implements Cloneable {
      */
     public void setLimit(int limit) {
         this.limit = limit;
+    }
+
+    /**
+     * Get the source path pattern.
+     * This is used if one has a class but no source
+     * file. This is true for the current maven find bugs plugin.
+     * It may be true for other violation detectors as well.
+     * @return the source path pattern.
+     */
+    public String getSourcePathPattern() {
+        return sourcePathPattern;
+    }
+
+    /**
+     * Set the source path patter.
+     * @param sourcePathPattern the value to use.
+     */
+    public void setSourcePathPattern(String sourcePathPattern) {
+        this.sourcePathPattern = sourcePathPattern;
+    }
+
+    /**
+     * Get the faux project path.
+     * This is used for projects that are not actually in
+     * the hudson job directory area.
+     * @return the faux project path - may be blank.
+     */
+    public String getFauxProjectPath() {
+        return fauxProjectPath;
+    }
+
+    /**
+     * Set the faux project path.
+     * @param fauxProjectPath the value to use.
+     */
+    public void setFauxProjectPath(String fauxProjectPath) {
+        this.fauxProjectPath = fauxProjectPath;
     }
 
     /**

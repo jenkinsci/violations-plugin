@@ -1,11 +1,12 @@
 package hudson.plugins.violations;
 
 import java.util.TreeMap;
+import java.io.Serializable;
 
 /**
  * The configuration class for the violations plugin.
  */
-public class ViolationsConfig implements Cloneable {
+public class ViolationsConfig implements Cloneable, Serializable {
     private static final int LIMIT_DEFAULT = 100;
 
     private TreeMap<String, TypeConfig> typeConfigs
@@ -124,4 +125,6 @@ public class ViolationsConfig implements Cloneable {
             limit = LIMIT_DEFAULT;
         }
     }
+
+    private static final long serialVersionUID = 1L;
 }

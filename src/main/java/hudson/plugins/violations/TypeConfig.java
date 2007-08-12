@@ -1,11 +1,14 @@
 package hudson.plugins.violations;
 
 import hudson.plugins.violations.util.HealthNumber;
+
+import java.io.Serializable;
+
 /**
  * This contains the configuration of a
  * particular violation type.
  */
-public class TypeConfig implements Cloneable {
+public class TypeConfig implements Cloneable, Serializable {
     /** Default min */
     public static final int DEFAULT_MIN = 10;
     /** Default max */
@@ -128,4 +131,6 @@ public class TypeConfig implements Cloneable {
             throw new RuntimeException(ex); // Should not happen
         }
     }
+
+    private static final long serialVersionUID = 1L;
 }

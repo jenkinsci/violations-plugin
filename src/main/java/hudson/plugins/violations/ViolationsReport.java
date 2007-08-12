@@ -11,6 +11,7 @@ import hudson.plugins.violations.util.HelpHudson;
 import java.lang.ref.WeakReference;
 import java.io.IOException;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  * This contains the report for the violations
  * of a particular build.
  */
-public class ViolationsReport {
+public class ViolationsReport implements Serializable {
     private static final Logger LOG
         = Logger.getLogger(ViolationsReport.class.getName());
 
@@ -284,4 +285,6 @@ public class ViolationsReport {
             return number;
         }
     }
+
+    private static final long serialVersionUID = 1L;
 }

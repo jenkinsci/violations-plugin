@@ -215,4 +215,6 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         }
         return absolute;
     }
+
+    private static final long serialVersionUID = 1L;
 }

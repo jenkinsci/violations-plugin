@@ -179,6 +179,7 @@ public class OutputFileModel implements Execute {
         printAttr("severity", v.getSeverity());
         printAttr("type", v.getType());
         printAttr("message", v.getMessage().trim());
+        printAttr("severity-level", v.getSeverityLevel());
         if (v.getPopupMessage() != null) {
             printAttr("popup-message", v.getPopupMessage().trim());
         }

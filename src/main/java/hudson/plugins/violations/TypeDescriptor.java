@@ -3,10 +3,10 @@ package hudson.plugins.violations;
 import java.util.TreeMap;
 
 import hudson.plugins.violations.parse.AbstractTypeParser;
-import hudson.plugins.violations.parse.CheckstyleParser;
-import hudson.plugins.violations.parse.PMDParser;
-import hudson.plugins.violations.parse.FindBugsParser;
-import hudson.plugins.violations.parse.CPDParser;
+import hudson.plugins.violations.parse.CheckstyleDescriptor;
+import hudson.plugins.violations.parse.PMDDescriptor;
+import hudson.plugins.violations.parse.FindBugsDescriptor;
+import hudson.plugins.violations.parse.CPDDescriptor;
 
 /**
  * A descriptor for a violation type.
@@ -37,37 +37,30 @@ public abstract class TypeDescriptor {
      * Get a new parser for the type.
      * @return a new parser object.
      */
-    public abstract AbstractTypeParser getParser();
+    public abstract AbstractTypeParser createParser();
 
     /**  The map of types to type descriptors. */
     public static final TreeMap<String, TypeDescriptor> TYPES =
         new TreeMap<String, TypeDescriptor>();
 
+    private static void addDescriptor(TypeDescriptor t) {
+        TYPES.put(t.getName(), t);
+    }
+
+    /**
+     * Get a detailed description of a violation source.
+     * @param source the code name for the violation.
+     * @return a detailed description, if available, null otherwise.
+     */
+    public String getDetailForSource(String source) {
+        return null;
+    }
+
     static {
-        TYPES.put(
-            "checkstyle", new TypeDescriptor("checkstyle") {
-                public AbstractTypeParser getParser() {
-                    return new CheckstyleParser();
-                }
-            });
-        TYPES.put(
-            "pmd", new TypeDescriptor("pmd") {
-                public AbstractTypeParser getParser() {
-                    return new PMDParser();
-                }
-            });
-        TYPES.put(
-            "findbugs", new TypeDescriptor("findbugs") {
-                public AbstractTypeParser getParser() {
-                    return new FindBugsParser();
-                }
-            });
-        TYPES.put(
-            "cpd", new TypeDescriptor("cpd") {
-                public AbstractTypeParser getParser() {
-                    return new CPDParser();
-                }
-            });
+        addDescriptor(FindBugsDescriptor.DESCRIPTOR);
+        addDescriptor(PMDDescriptor.DESCRIPTOR);
+        addDescriptor(CPDDescriptor.DESCRIPTOR);
+        addDescriptor(CheckstyleDescriptor.DESCRIPTOR);
     }
 }
 

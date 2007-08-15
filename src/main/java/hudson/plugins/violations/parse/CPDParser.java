@@ -8,6 +8,7 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParserException;
 
 
+import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 
 /**
@@ -140,10 +141,11 @@ public class CPDParser extends AbstractTypeParser {
         Violation v = new Violation();
         v.setType("cpd");
         v.setLine(self.line);
-        v.setSeverity(
-            (tokens < LOW_LIMIT) ? "low"
-            : (tokens < MEDIUM_LIMIT) ? "medium"
-            : "high");
+        setSeverity(
+            v,
+            (tokens < LOW_LIMIT) ? Severity.LOW
+            : (tokens < MEDIUM_LIMIT) ? Severity.MEDIUM
+            : Severity.HIGH);
         v.setSource("duplication");
         v.setMessage(
             "Duplication of " + tokens + " tokens from "
@@ -152,5 +154,11 @@ public class CPDParser extends AbstractTypeParser {
             "Duplication of " + tokens + " tokens from "
             + relativeOther(self, other));
         getFileModel(self.path).addViolation(v);
+    }
+
+    private void setSeverity(Violation v, String severity) {
+        v.setSeverity(severity);
+        v.setSeverityLevel(Severity.getSeverityLevel(
+                               severity));
     }
 }

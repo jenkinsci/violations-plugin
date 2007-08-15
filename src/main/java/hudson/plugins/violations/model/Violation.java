@@ -1,5 +1,6 @@
 package hudson.plugins.violations.model;
 
+import  hudson.plugins.violations.TypeDescriptor;
 
 /**
  * A class contains information on a violation.
@@ -9,7 +10,8 @@ public class Violation implements Comparable<Violation> {
     private String  message;
     private String  popupMessage;
     private String  source;
-    private String  severity;
+    private int     severityLevel; // 0 is most serious
+    private String  severity;      // the display name for the severity
     private String  type;
 
     /**
@@ -55,6 +57,22 @@ public class Violation implements Comparable<Violation> {
      */
     public int getLine() {
         return line;
+    }
+
+    /**
+     * Set the severityLevel of the violation.
+     * @param severityLevel the value to use.
+     */
+    public void setSeverityLevel(int severityLevel) {
+        this.severityLevel = severityLevel;
+    }
+
+    /**
+     * Get the severityLevel number where the violation occuried.
+     * @return the severityLevel number (0 if no severityLevel number).
+     */
+    public int getSeverityLevel() {
+        return severityLevel;
     }
 
     /**
@@ -105,7 +123,24 @@ public class Violation implements Comparable<Violation> {
      * @return the popup message.
      */
     public String getPopupMessage() {
-        return popupMessage;
+        if (popupMessage == null) {
+            return message;
+        } else {
+            return popupMessage;
+        }
+    }
+
+    /**
+     * Get the source detail message.
+     * @return a detailed description for the source.
+     */
+    public String getSourceDetail() {
+        String ret = TypeDescriptor.TYPES.get(type).getDetailForSource(
+            source);
+        if (ret == null) {
+            ret = getPopupMessage();
+        }
+        return ret;
     }
 
     /**
@@ -120,10 +155,15 @@ public class Violation implements Comparable<Violation> {
 
     /**
      * Get the source of the violation.
-     * @return the source.
+     * @return the source (from the last dot).
      */
     public String getSource() {
-        return source;
+        int pos = source.lastIndexOf('.');
+        if (pos != -1) {
+            return source.substring(pos + 1);
+        } else {
+            return source;
+        }
     }
 
     /**

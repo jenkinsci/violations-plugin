@@ -14,6 +14,8 @@ import hudson.remoting.VirtualChannel;
 
 import hudson.plugins.violations.util.StringUtil;
 import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.generate.GenerateXML;
 import hudson.plugins.violations.parse.ParseTypeXML;
 
@@ -118,8 +120,25 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         for (String type: model.getTypeMap().keySet()) {
             report.getViolations().put(
                 type, model.getCountNumber(type));
+            doSeverities(report, type);
         }
         return report;
+    }
+
+    /**
+     * Get all the severities of a particular type and
+     * update the severity array of the type summary.
+     */
+    private void doSeverities(ViolationsReport report, String type) {
+        TypeSummary summary = report.getTypeSummary(type);
+        for (FullFileModel file: model.getFileModelMap().values()) {
+            if (file.getTypeMap().get(type) == null) {
+                continue;
+            }
+            for (Violation v: file.getTypeMap().get(type)) {
+                summary.getSeverityArray()[v.getSeverityLevel()]++;
+            }
+        }
     }
 
     private void doType(
@@ -130,17 +149,15 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         if (xmlFiles.length == 0) {
             report.getViolations().put(
                 c.getType(), -1);
-            return;
-            /** FIXME - add to above!
-            throw new RuntimeException(
+            report.getTypeSummary(c.getType()).setErrorMessage(
                 "No violation xml files of type " + c.getType()
                 + " with pattern " + c.getPattern() + " were found!");
-            **/
+            return;
         }
         model.addType(c.getType());
         for (String xmlFile: xmlFiles) {
             new ParseTypeXML().parse(
-                model, workspace, xmlFile, sourcePaths, t.getParser());
+                model, workspace, xmlFile, sourcePaths, t.createParser());
         }
     }
 

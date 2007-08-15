@@ -13,6 +13,7 @@ import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.CategoryPlot;
@@ -37,6 +38,9 @@ import hudson.model.Build;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
 
+import hudson.plugins.violations.graph.SeverityTypeDataSet;
+import hudson.plugins.violations.util.StringUtil;
+
 /**
  * This is the build action for the
  * violations. It has the violation report for
@@ -48,6 +52,9 @@ import hudson.model.HealthReportingAction;
 public class ViolationsBuildAction
     extends Actionable
     implements Action, HealthReportingAction, StaplerProxy {
+
+    private static final double LOG_VALUE_FOR_ZERO = 0.5;
+    private boolean  useLog = false;
 
     private static final int X_SIZE = 400;
     private static final int Y_SIZE = 200;
@@ -139,6 +146,7 @@ public class ViolationsBuildAction
      * @return the report.
      */
     public ViolationsReport getReport() {
+        report.setBuild(owner);
         return report;
     }
 
@@ -170,6 +178,8 @@ public class ViolationsBuildAction
      */
     public void doGraph(StaplerRequest req, StaplerResponse rsp)
         throws IOException {
+        String type = req.getParameter("type");
+
         if (ChartUtil.awtProblem) {
             // not available. send out error message
             rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
@@ -177,9 +187,14 @@ public class ViolationsBuildAction
         }
         Calendar t = owner.getTimestamp();
 
-        if (req.checkIfModified(t, rsp)) {
-            return; // up to date
+        if (!StringUtil.isBlank(type)) {
+            ChartUtil.generateGraph(
+                req, rsp, new SeverityTypeDataSet(
+                    getReport(), type).createChart(),
+                X_SIZE, Y_SIZE);
+            return;
         }
+
         DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb
             = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
@@ -189,20 +204,31 @@ public class ViolationsBuildAction
             report.setBuild(owner);
             ChartUtil.NumberOnlyBuildLabel label
                 = new ChartUtil.NumberOnlyBuildLabel(a.owner);
-            for (String type: report.getViolations().keySet()) {
+            for (String ty: report.getViolations().keySet()) {
                 /*
                 System.out.println(
                     "adding type " + type + " number "
                     + report.getViolations().get(type)
                     + " for build " + a.owner.getNumber());
                 */
-                dsb.add(report.getViolations().get(type), type, label);
+                dsb.add(roundUp(report.getViolations().get(ty)),
+                        ty, label);
             }
         }
         ChartUtil.generateGraph(
             req, rsp, createChart(dsb.build()), X_SIZE, Y_SIZE);
     }
 
+    private double roundUp(int val) {
+        if (!useLog) {
+            return 1.0 * val;
+        }
+        if (val < 1) {
+            return LOG_VALUE_FOR_ZERO;
+        } else {
+            return 1.0 * val;
+        }
+    }
 
     /**
      * Get the violations build action from a build.
@@ -248,6 +274,10 @@ public class ViolationsBuildAction
 
         final CategoryPlot plot = chart.getCategoryPlot();
 
+        if (useLog) {
+            final NumberAxis rangeAxis2 = new LogarithmicAxis("Log(y)");
+            plot.setRangeAxis(rangeAxis2);
+        }
         // plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
         plot.setBackgroundPaint(Color.WHITE);
         plot.setOutlinePaint(null);

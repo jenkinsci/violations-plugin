@@ -11,6 +11,7 @@ import java.io.File;
 
 import hudson.plugins.violations.parse.ParseXML;
 import hudson.plugins.violations.parse.FileModelParser;
+import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.FileModel;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.generate.XMLUtil;
@@ -204,7 +205,64 @@ public class FileModelProxy  {
         }
     }
 
-    // Following should be in generate!
+    /**
+     * Get the severity column for a violation.
+     * @param v the violation.
+     * @return a string to place in the severity column of the violation table.
+     */
+    public String severityColumn(Violation v) {
+        String color = null;
+        switch (v.getSeverityLevel()) {
+            case Severity.HIGH_VALUE:
+                color = "red";
+                break;
+            case Severity.LOW_VALUE:
+                color = "yellow";
+                break;
+            default:
+                color = "violet"; // medium (low,-,high)
+        }
+        StringBuilder b = new StringBuilder();
+        addVDiv(b);
+        b.append("<a class='healthReport'>");
+        b.append(
+            "<img src='"
+            + contextPath
+            + "/plugin/violations/images/16x16/"
+            + color
+            + "-warning.png' alt='"
+            + v.getSeverity()
+            + "'/>");
+        b.append("</a>");
+        b.append("<div class='healthReportDetails'>\n");
+        b.append("<table class='violationPopup'>\n");
+        b.append("<tr>\n");
+        b.append("<th>Severity</th>\n");
+        b.append("<td>");
+        b.append(v.getSeverity());
+        b.append("</td>\n");
+        b.append("</tr>\n");
+
+        b.append("<tr>\n");
+        b.append("<th>Class</th>\n");
+        b.append("<td>");
+        b.append(v.getSource());
+        b.append("</td>\n");
+        b.append("</tr>\n");
+
+        b.append("<tr>\n");
+        b.append("<th>Detail</th>\n");
+        b.append("<td class='message'>");
+        b.append(v.getSourceDetail());
+        b.append("</td>\n");
+        b.append("</tr>\n");
+
+        b.append("</table>\n");
+        b.append("</div>\n");
+        b.append("</div>\n");
+        return b.toString();
+    }
+
     private void addVDiv(StringBuilder b) {
         b.append("<div class='healthReport'");
         b.append(
@@ -229,25 +287,25 @@ public class FileModelProxy  {
     private void showDiv(
         StringBuilder b,  Set<Violation> violations) {
         b.append("<div class='healthReportDetails'>\n");
-        b.append(" <table border='1' >\n");
+        b.append(" <table class='violationPopup'>\n");
         b.append("  <thead>\n");
         b.append("   <tr>\n");
-        b.append("     <th align='left'> Type</th>\n");
-        b.append("     <th align='left'> Description</th>\n");
+        b.append("     <th> Type</th>\n");
+        b.append("     <th> Class</th>\n");
+        b.append("     <th> Description</th>\n");
         b.append("   </tr>\n");
         b.append("  </thead>\n");
         b.append("  <tbody>\n");
         for (Violation v: violations) {
             b.append("   <tr>\n");
-            b.append("     <td align='left'>");
+            b.append("     <td>");
             b.append(v.getType());
             b.append("</td>\n");
-            b.append("     <td  align='left'>");
-            if (v.getPopupMessage() != null) {
-                b.append(XMLUtil.escapeContent(v.getPopupMessage()));
-            } else {
-                b.append(XMLUtil.escapeContent(v.getMessage()));
-            }
+            b.append("     <td>");
+            b.append(v.getSource());
+            b.append("</td>\n");
+            b.append("     <td width='100%' class='message'>");
+            b.append(XMLUtil.escapeContent(v.getPopupMessage()));
             b.append("</td>\n");
             b.append("   </tr>\n");
         }

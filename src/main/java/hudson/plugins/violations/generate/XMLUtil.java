@@ -119,4 +119,14 @@ public final class XMLUtil {
     public static String toAttribute(String name, String value) {
         return " " + name + "=\"" + escapeAttribute(value) + "\"";
     }
+
+    /**
+     * Return an attribute setting.
+     * @param name the name of the attribute.
+     * @param value the value of the attribute.
+     * @return the encoded attribute = value string.
+     */
+    public static String toAttribute(String name, int value) {
+        return " " + name + "=\"" + value + "\"";
+    }
 }

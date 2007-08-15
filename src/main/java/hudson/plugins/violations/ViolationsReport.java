@@ -1,13 +1,5 @@
 package hudson.plugins.violations;
 
-import hudson.plugins.violations.parse.ParseXML;
-import hudson.plugins.violations.parse.BuildModelParser;
-import hudson.plugins.violations.render.FileModelProxy;
-import hudson.plugins.violations.render.NoViolationsFile;
-import hudson.plugins.violations.model.BuildModel;
-import hudson.plugins.violations.util.RecurDynamic;
-import hudson.plugins.violations.util.HelpHudson;
-
 import java.lang.ref.WeakReference;
 import java.io.IOException;
 import java.io.File;
@@ -16,14 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import hudson.model.HealthReport;
-import hudson.model.Build;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import hudson.model.HealthReport;
+import hudson.model.Build;
+import hudson.model.Result;
+
+import hudson.plugins.violations.parse.ParseXML;
+import hudson.plugins.violations.parse.BuildModelParser;
+import hudson.plugins.violations.render.FileModelProxy;
+import hudson.plugins.violations.render.NoViolationsFile;
+import hudson.plugins.violations.model.BuildModel;
+import hudson.plugins.violations.model.FileModel;
+import hudson.plugins.violations.util.RecurDynamic;
+import hudson.plugins.violations.util.HelpHudson;
 
 
 /**
@@ -37,6 +39,9 @@ public class ViolationsReport implements Serializable {
     private Build build;
     private ViolationsConfig config;
     private Map<String, Integer> violations = new TreeMap<String, Integer>();
+    private Map<String, TypeSummary> typeSummaries
+        = new TreeMap<String, TypeSummary>();
+
     private transient WeakReference<BuildModel> modelReference;
 
     /**
@@ -198,6 +203,28 @@ public class ViolationsReport implements Serializable {
     }
 
     /**
+     * Get a map of type to type summary report.
+     * @return a map.
+     */
+    public Map<String, TypeSummary> getTypeSummaries() {
+        return typeSummaries;
+    }
+
+    /**
+     * Get a type summary for a particular type.
+     * @param type the violation type.
+     * @return the type summary.
+     */
+    public TypeSummary getTypeSummary(String type) {
+        TypeSummary ret = typeSummaries.get(type);
+        if (ret == null) {
+            ret = new TypeSummary();
+            typeSummaries.put(type, ret);
+        }
+        return ret;
+    }
+
+    /**
      * Get a map of type to type reports.
      * @return a map of type to type reports.
      */
@@ -284,6 +311,73 @@ public class ViolationsReport implements Serializable {
         public int getNumber() {
             return number;
         }
+    }
+
+    /**
+     * Get the previous ViolationsReport
+     * @return the previous report if present, null otherwise.
+     */
+    public ViolationsReport previous() {
+        Build<?, ?> b = build;
+        Build<?, ?> curr = b.getPreviousBuild();
+        while (curr != null) {
+            int number = curr.getNumber();
+            if (curr.getResult() == Result.FAILURE) {
+                curr = curr.getPreviousBuild();
+                continue;
+            }
+            ViolationsBuildAction r = curr.getAction(
+                ViolationsBuildAction.class);
+            if (r != null) {
+                if (r.getReport().build.getNumber() != number) {
+                    System.out.println("SOMETHING is wrong!!");
+                    return null;
+                }
+                return r.getReport();
+            }
+            curr = curr.getPreviousBuild();
+        }
+        return null;
+    }
+
+    /**
+     * Get the number of violations for a particular type.
+     * @param type the violation type.
+     * @return the number of violations.
+     */
+    public int typeCount(String type) {
+        return getModel().getTypeCountMap().get(type).getCount();
+    }
+
+    /**
+     * Get the number of files in violation for a particular type.
+     * @param type the violation type.
+     * @return the number of files.
+     */
+    public int fileCount(String type) {
+        return getModel().getTypeCountMap().get(type).getNumberFiles();
+    }
+
+    /**
+     * Get the number of violations of a type for a file.
+     * @param type the type in question.
+     * @param filename the name of the file.
+     * @return the number found (0 for none and for failures).
+     */
+    public int violationCount(String type, String filename) {
+        FileModelProxy proxy = getFileModelProxy(filename);
+        if (proxy == null) {
+            return 0;
+        }
+        FileModel fileModel = proxy.getFileModel();
+        if (fileModel == null) {
+            return 0;
+        }
+        FileModel.LimitType limit = fileModel.getLimitTypeMap().get(type);
+        if (limit == null) {
+            return 0;
+        }
+        return limit.getNumber();
     }
 
     private static final long serialVersionUID = 1L;

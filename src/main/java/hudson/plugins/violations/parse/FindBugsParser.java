@@ -1,11 +1,8 @@
 package hudson.plugins.violations.parse;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +12,9 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 
-import hudson.plugins.violations.util.CloseUtil;
+import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.util.StringUtil;
+import hudson.plugins.violations.util.HashMapWithDefault;
 import hudson.plugins.violations.model.Violation;
 
 /**
@@ -30,58 +28,6 @@ public class FindBugsParser extends AbstractTypeParser {
     private List<String> sourceDirectories
         = new ArrayList<String>();
 
-    private static Map<String, String> messageMap;
-
-    private static class ParseMessages extends AbstractParser {
-        public void execute() {
-            try {
-                doIt();
-            } catch (Exception ex) {
-                // ignore
-            }
-        }
-        private void doIt() throws Exception {
-            while (true) {
-                toTag("BugPattern");
-                String type = checkNotBlank("type");
-                toTag("ShortDescription");
-                String desc = getNextText("missin");
-                messageMap.put(type, desc);
-            }
-        }
-        private void toTag(String name) throws Exception {
-            while (true) {
-                if (getParser().getEventType() == XmlPullParser.START_TAG) {
-                    if (getParser().getName().equals(name)) {
-                        return;
-                    }
-                }
-                getParser().next();
-            }
-        }
-    }
-
-
-    private static void parseMessages() {
-        if (messageMap != null) {
-            return;
-        }
-        messageMap = new HashMap<String, String>();
-
-        InputStream is = null;
-        try {
-            is = FindBugsParser.class.getResourceAsStream(
-                "FindBugsParser/messages.xml");
-            if (is != null) {
-                ParseXML.parse(is, new ParseMessages());
-            }
-        } catch (Exception ex) {
-            // Ignore
-        } finally {
-            CloseUtil.close(is);
-        }
-    }
-
     /**
      * Parse the findbugs xml file.
      * @throws IOException if there is a problem reading the file.
@@ -89,8 +35,6 @@ public class FindBugsParser extends AbstractTypeParser {
      */
     protected void execute()
         throws IOException, XmlPullParserException {
-        parseMessages();
-
         // Ensure that the top level tag is "BugCollection"
         expectNextTag("BugCollection");
         getParser().next(); // consume the "BugCollection" tag
@@ -186,7 +130,10 @@ public class FindBugsParser extends AbstractTypeParser {
                 v.setType("findbugs");
                 v.setLine(getInt("lineNumber"));
                 v.setSource(checkNotBlank("type"));
-                v.setSeverity(checkNotBlank("priority"));
+                v.setSeverity(normalizeSeverity(
+                                  checkNotBlank("priority")));
+                v.setSeverityLevel(
+                    getSeverityLevel(v.getSeverity()));
                 v.setMessage(checkNotBlank("message"));
                 getFileModel(name, file).addViolation(v);
             }
@@ -220,10 +167,7 @@ public class FindBugsParser extends AbstractTypeParser {
     }
 
     private String convertType(String x) {
-        if (messageMap == null) {
-            return x;
-        }
-        String y = messageMap.get(x);
+        String y = FindBugsDescriptor.getMessageMap().get(x);
         return (y == null) ? x : y;
     }
 
@@ -274,6 +218,17 @@ public class FindBugsParser extends AbstractTypeParser {
         }
     }
 
+    private boolean sameClassname(String currentClassname) {
+        if (currentClassname == null) {
+            return true;
+        }
+        String thisClassname = getParser().getAttributeValue("", "classname");
+        if (StringUtil.isBlank(thisClassname)) {
+            return true;
+        }
+        return thisClassname.equals(currentClassname);
+    }
+
     private void getBugInstance()
         throws IOException, XmlPullParserException {
         String type = getParser().getAttributeValue("", "type");
@@ -290,9 +245,9 @@ public class FindBugsParser extends AbstractTypeParser {
             if (tag == null) {
                 break;
             }
-            if ("Class".equals(tag)
-                || "Method".equals(tag)
-                || "Field".equals(tag)) {
+            if (("Class".equals(tag) || "Method".equals(tag)
+                || "Field".equals(tag))
+                && sameClassname(classname)) {
                 if (StringUtil.isBlank(classname)) {
                     classname = getParser().getAttributeValue("", "classname");
                 }
@@ -320,10 +275,38 @@ public class FindBugsParser extends AbstractTypeParser {
         v.setType("findbugs");
         v.setLine(lineNumber);
         v.setSource(type);
-        v.setSeverity(priority);
+        v.setSeverity(normalizeSeverity(priority));
+        v.setSeverityLevel(
+            getSeverityLevel(v.getSeverity()));
         v.setMessage(convertType(type));
         getFileModel(name, file).addViolation(v);
 
         endElement();
+    }
+
+    private static final HashMapWithDefault<String, String> SEVERITIES
+        = new HashMapWithDefault<String, String>("High");
+
+    static {
+        // From findbugs
+        SEVERITIES.put("1", "High");
+        SEVERITIES.put("2", "Medium");
+        SEVERITIES.put("3", "Low");
+
+        // From maven
+        SEVERITIES.put("High", "High");
+        SEVERITIES.put("Medium", "Medium");
+        SEVERITIES.put("Low", "Low");
+    }
+
+    /** Convert a severity in the xml to a name */
+    private String normalizeSeverity(String name) {
+        return SEVERITIES.get(name);
+    }
+
+    /** Convert a normalized severity to a severity level */
+    private int getSeverityLevel(String severity) {
+        return Severity.getSeverityLevel(
+            severity);
     }
 }

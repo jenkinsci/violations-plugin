@@ -5,13 +5,25 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlPullParserException;
 
 
+import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.util.HashMapWithDefault;
 
 /**
  * Parses a pmd xml report file.
  */
 public class PMDParser extends AbstractTypeParser {
+    private static final HashMapWithDefault<String, String> SEVERITIES
+        = new HashMapWithDefault<String, String>(Severity.HIGH);
+
+    static {
+        SEVERITIES.put("0", Severity.HIGH);
+        SEVERITIES.put("1", Severity.MEDIUM_HIGH);
+        SEVERITIES.put("2", Severity.MEDIUM);
+        SEVERITIES.put("3", Severity.MEDIUM_LOW);
+        SEVERITIES.put("4", Severity.LOW);
+    }
 
     /**
      * Parse the pmd xml file.
@@ -55,10 +67,16 @@ public class PMDParser extends AbstractTypeParser {
         }
         ret.setLine(line);
         ret.setSource(getParser().getAttributeValue("", "rule"));
-        ret.setSeverity(getParser().getAttributeValue("", "priority"));
+        setSeverity(ret, getParser().getAttributeValue("", "priority"));
         ret.setMessage(getNextText("Expecting text"));
         getParser().next();
         endElement(); // violation element
         return ret;
+    }
+
+    private void setSeverity(Violation v, String priority) {
+        v.setSeverity(SEVERITIES.get(priority));
+        v.setSeverityLevel(Severity.getSeverityLevel(
+                               v.getSeverity()));
     }
 }

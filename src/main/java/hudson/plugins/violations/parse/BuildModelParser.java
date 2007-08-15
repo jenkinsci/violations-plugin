@@ -6,6 +6,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 
 import hudson.plugins.violations.model.BuildModel;
+import hudson.plugins.violations.model.Severity;
 
 /**
  * Parses a violatios build xml report file.
@@ -47,10 +48,18 @@ public class BuildModelParser extends AbstractParser {
         String type = checkNotBlank("name");
         getParser().next();  // consume "file" tag
         buildModel.getFileCounts(type);
+
         while (skipToTag("file")) {
-            buildModel.addFileCount(
-                type, checkNotBlank("name"), checkGetInt("count"));
+            String filename = checkNotBlank("name");
+            int    totalCount = checkGetInt("count");
             getParser().next();
+            int[] counts = new int[Severity.NUMBER_SEVERITIES];
+            while (skipToTag("severity")) {
+                counts[getInt("level")] = getInt("count");
+                skipTag();
+            }
+            buildModel.addFileCount(
+                type, filename, counts);
             endElement();
         }
         endElement();

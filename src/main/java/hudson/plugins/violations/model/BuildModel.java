@@ -73,6 +73,15 @@ public class BuildModel {
     }
 
     /**
+     * Get the type count map.
+     * @return the type count map.
+     */
+    public Map<String, TypeCount> getTypeCountMap() {
+        getTypeCounts();
+        return typeCountMap;
+    }
+
+    /**
      * A class used in displaying number of violations and files
      * in violation.
      */
@@ -149,7 +158,7 @@ public class BuildModel {
      * @param name the filename.
      * @param count the number of violations.
      */
-    public void addFileCount(String type, String name, int count) {
+    public void addFileCount(String type, String name, int[] count) {
         FileModelProxy proxy = getFileNameProxy(name);
         getFileCounts(type).add(new FileCount(name, count, proxy));
     }
@@ -158,9 +167,10 @@ public class BuildModel {
      * A class of file name to count mapping.
      */
     public static class FileCount implements Comparable<FileCount> {
-        private String name;
-        private int    count;
-        private FileModelProxy proxy;
+        private final String name;
+        private final int    totalCount;
+        private final int[]  counts;
+        private final FileModelProxy proxy;
 
         /**
          * Create a FileCount object.
@@ -169,9 +179,14 @@ public class BuildModel {
          *              file.
          * @param proxy the associated file proxy (used during rendering).
          */
-        public FileCount(String name, int count, FileModelProxy proxy) {
+        public FileCount(String name, int[] counts, FileModelProxy proxy) {
             this.name = name;
-            this.count = count;
+            this.counts = counts;
+            int t = 0;
+            for (int i = 0; i < counts.length; ++i) {
+                t += counts[i];
+            }
+            this.totalCount = t;
             this.proxy = proxy;
         }
 
@@ -188,7 +203,21 @@ public class BuildModel {
          * @return the number.
          */
         public int getCount() {
-            return count;
+            return totalCount;
+        }
+
+        public int getHigh() {
+            return counts[Severity.HIGH_VALUE];
+        }
+
+        public int getMedium() {
+            return counts[Severity.MEDIUM_HIGH_VALUE]
+                + counts[Severity.MEDIUM_VALUE]
+                + counts[Severity.MEDIUM_LOW_VALUE];
+        }
+
+        public int getLow() {
+            return counts[Severity.LOW_VALUE];
         }
 
         /**
@@ -210,9 +239,9 @@ public class BuildModel {
             if (this == other) {
                 return 0;
             }
-            if (count > other.count) {
+            if (totalCount > other.totalCount) {
                 return -1;
-            } else if (count < other.count) {
+            } else if (totalCount < other.totalCount) {
                 return 1;
             }
             return name.compareTo(other.name);

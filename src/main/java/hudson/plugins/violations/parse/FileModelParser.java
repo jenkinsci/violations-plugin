@@ -70,6 +70,7 @@ public class FileModelParser extends AbstractParser {
         ret.setLine(checkGetInt("line"));
         ret.setSource(checkGetAttribute("source"));
         ret.setSeverity(checkGetAttribute("severity"));
+        ret.setSeverityLevel(getInt("severity-level"));
         ret.setType(checkGetAttribute("type"));
         ret.setMessage(checkGetAttribute("message"));
         String popup = getParser().getAttributeValue("", "popup-message");

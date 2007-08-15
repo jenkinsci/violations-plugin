@@ -6,6 +6,7 @@
     icon = '/plugin/violations/images/48x48/dialog-warning.png'>
 
     <j:set var="report" value="${it.report}"/>
+    <j:set var="prev" value="${report.previous()}"/>
     <j:set var="td" value="padding-left:0.5em;padding-right:0.5em;
                            border-width:0px 0px 0px 0px;"/>
     <table style="border-spacing:0;
@@ -16,6 +17,9 @@
           <td style="${td}">
             <img src="${rootURL}/images/16x16/${item.icon}"/>
             ${item.type} ${item.number}
+            <j:if test="${prev != null}">
+              (${h.getDiffString(item.number - prev.typeCount(item.type))})
+            </j:if>
           </td>
         </j:forEach>
       </tr>

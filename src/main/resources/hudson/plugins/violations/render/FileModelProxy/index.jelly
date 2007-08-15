@@ -10,11 +10,15 @@
       <st:include it="${it.build}" page="sidepanel.jelly" />
     </j:if>
     <l:main-panel>
-      <!--<p class="green">Hello World</p>-->
       <j:set var="model" value="${it.fileModel}"/>
+
       <j:set 
         var="image"
         value="${rootURL}/plugin/violations/images/48x48/dialog-warning.png"/>
+
+      <j:set 
+        var="iconDir"
+        value="${rootURL}/plugin/violations/images/16x16"/>
 
       <j:set var="href" value="${it.showLines}"/>
       <h3><img src="${image}"/> ${model.displayName}</h3>
@@ -23,7 +27,7 @@
       <j:forEach var="t" items="${model.typeMap.entrySet()}">
         <table class="pane">
           <tbody>
-            <tr><td class="pane-header" colspan="2">${it.typeLine(t.key)}</td></tr>
+            <tr><td class="pane-header" colspan="5">${it.typeLine(t.key)}</td></tr>
             <j:forEach var="v" items="${t.value}">
               <tr>
                 <td class="pane">
@@ -34,7 +38,9 @@
                     ${v.line}
                   </j:if>
                 </td>
-                <td class="pane" width="95%">${v.message}</td>
+                <!--<td class="pane">${v.source}</td> -->
+                <td class="pane">${it.severityColumn(v)}</td>
+                <td class="pane" width="99%">${v.message}</td>
               </tr>
             </j:forEach>
           </tbody>

@@ -3,7 +3,9 @@
          xmlns:d="jelly:define"
          xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" 
-         xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
+         xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local"
+         xmlns:v="/hudson/plugins/violations/tags"
+         >
 
   <j:set var="report" value="${from.violationsAction.report}"/>
   <j:set var="prev" value="${report.previous()}"/>
@@ -26,7 +28,7 @@
         <j:forEach var="item" items="${report.typeReports.values()}">
           <td style="${td}">
             <img src="${rootURL}/images/16x16/${item.icon}"/>
-            ${item.type} ${item.number}
+            ${item.type} ${item.numberString}
         </td>
         </j:forEach>
       </tr>

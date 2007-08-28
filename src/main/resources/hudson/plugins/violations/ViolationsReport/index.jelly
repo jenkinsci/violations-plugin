@@ -1,5 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
-         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+         xmlns:v="/hudson/plugins/violations/tags"
+         >
   <l:layout>
     <j:set var="vimg" value= "${rootURL}/plugin/violations/images"/>
     <j:set var="img_16" value= "${vimg}/16x16"/>
@@ -29,16 +31,12 @@
             <tr>
               <td class="pane"><a href="#${t.name}">${t.name}</a></td>
               <td class="pane">
-                ${it.typeCount(t.name)}
-                <j:if test="${prev!=null}">
-                  (${h.getDiffString(it.typeCount(t.name) - prev.typeCount(t.name))})
-                </j:if>
+                <v:numberdiff curr="${it.typeCount(t.name)}"
+                              prev="${prev.typeCount(t.name)}"/>
               </td>
               <td class="pane">
-                ${it.fileCount(t.name)}
-                <j:if test="${prev!=null}">
-                  (${h.getDiffString(it.fileCount(t.name) - prev.fileCount(t.name))})
-                </j:if>
+                <v:numberdiff curr="${it.fileCount(t.name)}"
+                              prev="${prev.fileCount(t.name)}"/>
               </td>
             </tr>
           </j:forEach>
@@ -77,10 +75,8 @@
                   ${f.high}
                 </td>
                 <td class="pane">
-                  ${f.count}
-                  <j:if test="${prev!=null}">
-                    (${h.getDiffString(f.count - prev.violationCount(t.key, f.name))})
-                  </j:if>
+                  <v:numberdiff curr="${f.count}"
+                                prev="${prev.violationCount(t.key, f.name)}"/>
                 </td>
               </tr>
             </j:forEach>

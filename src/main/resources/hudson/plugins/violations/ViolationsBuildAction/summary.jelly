@@ -1,7 +1,9 @@
 <j:jelly xmlns:j="jelly:core"
          xmlns:st="jelly:stapler"
          xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-         xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+         xmlns:f="/lib/form" xmlns:i="jelly:fmt"
+         xmlns:v="/hudson/plugins/violations/tags"
+         >
   <t:summary
     icon = '/plugin/violations/images/48x48/dialog-warning.png'>
 
@@ -16,10 +18,9 @@
         <j:forEach var="item" items="${report.typeReports.values()}">
           <td style="${td}">
             <img src="${rootURL}/images/16x16/${item.icon}"/>
-            ${item.type} ${item.number}
-            <j:if test="${prev != null}">
-              (${h.getDiffString(item.number - prev.typeCount(item.type))})
-            </j:if>
+            ${item.type}
+            <v:numberdiff curr="${item.numberString}"
+                          prev="${prev.typeCount(item.type)}"/>
           </td>
         </j:forEach>
       </tr>

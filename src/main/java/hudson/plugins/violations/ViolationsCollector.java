@@ -145,19 +145,18 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         TypeConfig c, TypeDescriptor t, String[] sourcePaths,
         ViolationsReport report)
         throws IOException {
-        String[] xmlFiles = findFiles(workspace, c.getPattern());
-        if (xmlFiles.length == 0) {
+        String[] fileNames = findFiles(workspace, c.getPattern());
+        if (fileNames.length == 0) {
             report.getViolations().put(
                 c.getType(), -1);
             report.getTypeSummary(c.getType()).setErrorMessage(
-                "No violation xml files of type " + c.getType()
+                "No violation report files of type " + c.getType()
                 + " with pattern " + c.getPattern() + " were found!");
             return;
         }
         model.addType(c.getType());
-        for (String xmlFile: xmlFiles) {
-            new ParseTypeXML().parse(
-                model, workspace, xmlFile, sourcePaths, t.createParser());
+        for (String fileName: fileNames) {
+            t.createParser().parse(model, workspace, fileName, sourcePaths);
         }
     }
 

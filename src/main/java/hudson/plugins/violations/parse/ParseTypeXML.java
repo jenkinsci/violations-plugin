@@ -39,6 +39,7 @@ public class ParseTypeXML {
         AbstractTypeParser typeParser) throws IOException {
         LOG.info("Parsing " + xmlFile);
         InputStream in = null;
+        boolean success = false;
         boolean  seenException = false;
         try {
             in = projectPath == null
@@ -54,15 +55,13 @@ public class ParseTypeXML {
             typeParser.setParser(parser);
             typeParser.setSourcePaths(sourcePaths);
             typeParser.execute();
-
+            success = true;
         } catch (IOException ex) {
-            seenException = true;
             throw ex;
         } catch (Exception ex) {
-            seenException = true;
             throw new IOException(ex);
         } finally {
-            CloseUtil.close(in, seenException);
+            CloseUtil.close(in, !success);
         }
     }
 }

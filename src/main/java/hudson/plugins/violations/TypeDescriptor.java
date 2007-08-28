@@ -37,13 +37,17 @@ public abstract class TypeDescriptor {
      * Get a new parser for the type.
      * @return a new parser object.
      */
-    public abstract AbstractTypeParser createParser();
+    public abstract ViolationsParser createParser();
 
     /**  The map of types to type descriptors. */
     public static final TreeMap<String, TypeDescriptor> TYPES =
         new TreeMap<String, TypeDescriptor>();
 
-    private static void addDescriptor(TypeDescriptor t) {
+    /**
+     * Add a violations type descriptor.
+     * @param t the violations type descriptor to add.
+     */
+    public static void addDescriptor(TypeDescriptor t) {
         TYPES.put(t.getName(), t);
     }
 

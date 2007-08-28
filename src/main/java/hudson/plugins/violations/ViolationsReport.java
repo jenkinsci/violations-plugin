@@ -311,6 +311,19 @@ public class ViolationsReport implements Serializable {
         public int getNumber() {
             return number;
         }
+
+        /**
+         * Get the number of violations as a string.
+         * @return the number if >= 0 othersise an error string.
+         */
+        public String getNumberString() {
+            if (number >= 0) {
+                    return "" + number;
+            } else {
+                return "<span style='color:red'>No reports</span>";
+            }
+        }
+        
     }
 
     /**

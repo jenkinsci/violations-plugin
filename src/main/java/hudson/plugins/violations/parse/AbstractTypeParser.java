@@ -1,21 +1,70 @@
 package hudson.plugins.violations.parse;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
 import java.util.Locale;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import hudson.plugins.violations.ViolationsParser;
+
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.util.CloseUtil;
 
 /**
  * An abstract xml parsing class for parsing
- * violation configuration files.
+ * violation configuration files using an XML pull parser.
  */
 public abstract class AbstractTypeParser
-    extends AbstractParser {
+    extends AbstractParser implements ViolationsParser {
     private FullBuildModel model;
     private File           projectPath;
     private String[]       sourcePaths;
+
+    /**
+     * Parse a violations file.
+     * @param model the model to store the violations in.
+     * @param projectPath the project path used for resolving paths.
+     * @param violationsFile the name of the violations file to parse
+     *                       (relative to the projectPath).
+     * @param sourcePaths a list of source paths to resolve classes against
+     * @throws IOException if there is an error.
+     */
+    public void parse(
+        FullBuildModel model,
+        File           projectPath,
+        String         fileName,
+        String[]       sourcePaths)
+        throws IOException {
+
+        InputStream in = null;
+        boolean success = false;
+        try {
+            in = new FileInputStream(new File(projectPath, fileName));
+            XmlPullParserFactory factory =  XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser parser = factory.newPullParser();
+            parser.setInput(in, null);
+
+            setProjectPath(projectPath);
+            setModel(model);
+            setParser(parser);
+            setSourcePaths(sourcePaths);
+            execute();
+            success = true;
+        } catch (IOException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new IOException(ex);
+        } finally {
+            CloseUtil.close(in, !success);
+        }
+    }
 
     /**
      * Set the build model.

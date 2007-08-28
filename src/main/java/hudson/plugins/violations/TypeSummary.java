@@ -1,11 +1,13 @@
 package hudson.plugins.violations;
 
+import java.io.Serializable;
+
 import hudson.plugins.violations.model.Severity;
 
 /**
  * A summary report for a type.
  */
-public class TypeSummary {
+public class TypeSummary implements Serializable {
 
     private String errorMessage;
     private int[] severityArray =
@@ -34,5 +36,7 @@ public class TypeSummary {
     public int[] getSeverityArray() {
         return severityArray;
     }
+
+    private static final long serialVersionUID = 1L;
 }
 

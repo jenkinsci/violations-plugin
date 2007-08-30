@@ -7,6 +7,7 @@ import hudson.plugins.violations.parse.CheckstyleDescriptor;
 import hudson.plugins.violations.parse.PMDDescriptor;
 import hudson.plugins.violations.parse.FindBugsDescriptor;
 import hudson.plugins.violations.parse.CPDDescriptor;
+import hudson.plugins.violations.parse.PyLintDescriptor;
 
 /**
  * A descriptor for a violation type.
@@ -65,6 +66,7 @@ public abstract class TypeDescriptor {
         addDescriptor(PMDDescriptor.DESCRIPTOR);
         addDescriptor(CPDDescriptor.DESCRIPTOR);
         addDescriptor(CheckstyleDescriptor.DESCRIPTOR);
+        addDescriptor(PyLintDescriptor.DESCRIPTOR);
     }
 }
 

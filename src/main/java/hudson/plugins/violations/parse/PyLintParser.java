@@ -15,33 +15,33 @@ import hudson.plugins.violations.model.Violation;
 
 /**
  * Parser for parsing PyLint reports.
- * 
- * The parser only supports PyLint report that has the output format 'parseable'. 
- * 
+ *
+ * The parser only supports PyLint report that has the output format 'parseable'.
+ *
  * @author Erik Ramfelt
  */
 public class PyLintParser implements ViolationsParser {
-	
+
     /** Regex pattern for the PyLint errors. */
     private transient final Pattern pattern;
-	
+
 	public PyLintParser() {
 		pattern = Pattern.compile("(.*):(\\d+): \\[(\\D\\d*).*\\] (.*)");
 	}
-	
+
 	/** {@inheritDoc} */
 	public void parse(FullBuildModel model, File projectPath, String fileName, String[] sourcePaths) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(new File(projectPath, fileName)));
-				
+
 		String line = reader.readLine();
 		while (line != null) {
 			parseLine(model, line, projectPath);
 			line = reader.readLine();
-		}		
-		
+		}
+
 		reader.close();
 	}
-	
+
 	/**
 	 * Parses a PyLint line and adding a violation if regex
 	 * @param model build model to add violations to
@@ -51,7 +51,7 @@ public class PyLintParser implements ViolationsParser {
 		PyLintViolation pyLintViolation = GetPyLintViolation(line);
 
 	    if ( pyLintViolation != null) {
-		
+
 	    	Violation violation = new Violation();
 	    	violation.setType("pylint");
 	    	violation.setLine(pyLintViolation.getLineStr());
@@ -59,12 +59,12 @@ public class PyLintParser implements ViolationsParser {
 	    	violation.setSource(pyLintViolation.getViolationId());
 	    	setServerityLevel(violation, pyLintViolation.getViolationId());
 
-	    	FullFileModel fileModel = getFileModel(model, pyLintViolation.getFileName(), 
+	    	FullFileModel fileModel = getFileModel(model, pyLintViolation.getFileName(),
 	    			new File(projectPath, pyLintViolation.getFileName()));
 	    	fileModel.addViolation(violation);
 	    }
 	}
-	
+
     protected FullFileModel getFileModel(FullBuildModel model, String name, File sourceFile) {
         FullFileModel fileModel = model.getFileModel(name);
         File other = fileModel.getSourceFile();
@@ -79,7 +79,7 @@ public class PyLintParser implements ViolationsParser {
         fileModel.setLastModified(sourceFile.lastModified());
         return fileModel;
     }
-	
+
     /**
      * Returns a pylint violation (if it is one)
      * @param line a line from the PyLint parseable report
@@ -94,10 +94,10 @@ public class PyLintParser implements ViolationsParser {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the Severity level as an int from the PyLint message type.
-	 * 
+	 *
 	 * The different message types are:
 	 * (C) convention, for programming standard violation
      * (R) refactor, for bad code smell
@@ -109,7 +109,7 @@ public class PyLintParser implements ViolationsParser {
 	 * @return an int is matched to the message type.
 	 */
 	private void setServerityLevel(Violation violation, String messageType) {
-	
+
 		switch (messageType.charAt(0)) {
 		case 'C':
 			violation.setSeverity(Severity.LOW);
@@ -133,14 +133,14 @@ public class PyLintParser implements ViolationsParser {
 			violation.setSeverityLevel(Severity.HIGH_VALUE);
 			break;
 		}
-	} 
-	
+	}
+
 	class PyLintViolation {
 		private transient final String lineStr;
 		private transient final String message;
 		private transient final String fileName;
 		private transient final String violationId;
-		
+
 		public PyLintViolation(Matcher matcher) {
 		    if ( matcher.groupCount() < 4) {
 		    	throw new IllegalArgumentException("The Regex matcher could not find enough information");

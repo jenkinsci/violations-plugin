@@ -51,7 +51,6 @@ public class BuildModelParser extends AbstractParser {
 
         while (skipToTag("file")) {
             String filename = checkNotBlank("name");
-            int    totalCount = checkGetInt("count");
             getParser().next();
             int[] counts = new int[Severity.NUMBER_SEVERITIES];
             while (skipToTag("severity")) {

@@ -40,7 +40,6 @@ public class ParseTypeXML {
         LOG.info("Parsing " + xmlFile);
         InputStream in = null;
         boolean success = false;
-        boolean  seenException = false;
         try {
             in = projectPath == null
                 ? new FileInputStream(new File(xmlFile))

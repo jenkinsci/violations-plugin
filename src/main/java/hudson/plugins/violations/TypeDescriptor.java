@@ -2,12 +2,11 @@ package hudson.plugins.violations;
 
 import java.util.TreeMap;
 
-import hudson.plugins.violations.parse.AbstractTypeParser;
-import hudson.plugins.violations.parse.CheckstyleDescriptor;
-import hudson.plugins.violations.parse.PMDDescriptor;
-import hudson.plugins.violations.parse.FindBugsDescriptor;
-import hudson.plugins.violations.parse.CPDDescriptor;
-import hudson.plugins.violations.parse.PyLintDescriptor;
+import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
+import hudson.plugins.violations.types.pmd.PMDDescriptor;
+import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
+import hudson.plugins.violations.types.cpd.CPDDescriptor;
+import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 
 /**
  * A descriptor for a violation type.

@@ -1,6 +1,5 @@
-package hudson.plugins.violations.parse;
+package hudson.plugins.violations.types.pylint;
 
-import hudson.plugins.violations.parse.PyLintParser.PyLintViolation;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,7 +9,7 @@ public class PyLintParserTest {
 	@Test
 	public void testParseLineSimple() {
 		PyLintParser parser = new PyLintParser();
-		PyLintViolation violation = parser.GetPyLintViolation("trunk/src/python/cachedhttp.py:3: [C] Line too long (85/80)");
+		PyLintParser.PyLintViolation violation = parser.getPyLintViolation("trunk/src/python/cachedhttp.py:3: [C] Line too long (85/80)");
 
 		Assert.assertEquals("The message is incorrect", "Line too long (85/80)", violation.getMessage());
 		Assert.assertEquals("The violation id is incorrect", "C", violation.getViolationId());
@@ -21,7 +20,7 @@ public class PyLintParserTest {
 	@Test
 	public void testExtraViolationInfo() {
 		PyLintParser parser = new PyLintParser();
-		PyLintViolation violation = parser.GetPyLintViolation("trunk/src/python/tv.py:28: [C0103, Show.__init__] Invalid name \"seasonCount\" (should match [a-z_][a-z0-9_]{2,30}$)");
+		PyLintParser.PyLintViolation violation = parser.getPyLintViolation("trunk/src/python/tv.py:28: [C0103, Show.__init__] Invalid name \"seasonCount\" (should match [a-z_][a-z0-9_]{2,30}$)");
 
 		Assert.assertEquals("The message is incorrect", "Invalid name \"seasonCount\" (should match [a-z_][a-z0-9_]{2,30}$)", violation.getMessage());
 		Assert.assertEquals("The violation id is incorrect", "C0103", violation.getViolationId());
@@ -32,7 +31,7 @@ public class PyLintParserTest {
 	@Test
 	public void testExtraViolationInfo2() {
 		PyLintParser parser = new PyLintParser();
-		PyLintViolation violation = parser.GetPyLintViolation("trunk/src/python/tv.py:35: [C0111, Episode] Missing docstring");
+		PyLintParser.PyLintViolation violation = parser.getPyLintViolation("trunk/src/python/tv.py:35: [C0111, Episode] Missing docstring");
 
 		Assert.assertEquals("The message is incorrect", "Missing docstring", violation.getMessage());
 		Assert.assertEquals("The violation id is incorrect", "C0111", violation.getViolationId());

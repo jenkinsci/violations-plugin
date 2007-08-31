@@ -17,7 +17,6 @@ import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.generate.GenerateXML;
-import hudson.plugins.violations.parse.ParseTypeXML;
 
 /**
  * Collects the violations xml files, analyses them, renders

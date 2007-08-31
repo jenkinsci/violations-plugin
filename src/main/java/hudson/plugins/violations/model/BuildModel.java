@@ -175,7 +175,7 @@ public class BuildModel {
         /**
          * Create a FileCount object.
          * @param name the name of the file.
-         * @param count the number of violations (of a particular type) in the
+         * @param counts the numbers of violations (of a particular type) in the
          *              file.
          * @param proxy the associated file proxy (used during rendering).
          */
@@ -206,16 +206,28 @@ public class BuildModel {
             return totalCount;
         }
 
+        /**
+         * Get the number of high severity violations.
+         * @return the number.
+         */
         public int getHigh() {
             return counts[Severity.HIGH_VALUE];
         }
 
+        /**
+         * Get the number of medium severity violations.
+         * @return the number.
+         */
         public int getMedium() {
             return counts[Severity.MEDIUM_HIGH_VALUE]
                 + counts[Severity.MEDIUM_VALUE]
                 + counts[Severity.MEDIUM_LOW_VALUE];
         }
 
+        /**
+         * Get the number of low severity violations.
+         * @return the number.
+         */
         public int getLow() {
             return counts[Severity.LOW_VALUE];
         }

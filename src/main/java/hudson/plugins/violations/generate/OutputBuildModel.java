@@ -110,7 +110,7 @@ public class OutputBuildModel implements Execute {
             super.put(code, i);
         }
     }
-    
+
     private void footer() throws IOException {
         writer.println("</violations>");
     }

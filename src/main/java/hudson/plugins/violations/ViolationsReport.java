@@ -323,7 +323,7 @@ public class ViolationsReport implements Serializable {
                 return "<span style='color:red'>No reports</span>";
             }
         }
-        
+
     }
 
     /**

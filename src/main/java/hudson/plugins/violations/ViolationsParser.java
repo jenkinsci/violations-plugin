@@ -15,7 +15,7 @@ public interface ViolationsParser {
      * Parse a violations file.
      * @param model the model to store the violations in.
      * @param projectPath the project path used for resolving paths.
-     * @param violationsFile the name of the violations file to parse
+     * @param fileName the name of the violations file to parse
      *                       (relative to the projectPath).
      * @param sourcePaths a list of source paths to resolve classes against
      * @throws IOException if there is an error.

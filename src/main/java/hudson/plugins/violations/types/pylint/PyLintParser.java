@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +28,8 @@ public class PyLintParser implements ViolationsParser {
     /** Regex pattern for the PyLint errors. */
     private final transient Pattern pattern;
 
+	private transient List<String> sourcePaths = new ArrayList<String>();
+
     /**
      * Constructor - create the pattern.
      */
@@ -34,10 +38,16 @@ public class PyLintParser implements ViolationsParser {
     }
 
     /** {@inheritDoc} */
-    public void parse(
-        FullBuildModel model, File projectPath, String fileName,
+    public void parse( FullBuildModel model, File projectPath, String fileName,
         String[] sourcePaths) throws IOException {
-        BufferedReader reader = null;
+        
+    	BufferedReader reader = null;
+        
+    	this.sourcePaths.add(projectPath.getAbsolutePath());
+        for (String path : sourcePaths) {
+        	this.sourcePaths.add(path);
+        }
+        
         try {
             reader = new BufferedReader(
                 new FileReader(new File(projectPath, fileName)));
@@ -71,23 +81,23 @@ public class PyLintParser implements ViolationsParser {
             violation.setSource(pyLintViolation.getViolationId());
             setServerityLevel(violation, pyLintViolation.getViolationId());
 
-            FullFileModel fileModel = getFileModel(
-                model, pyLintViolation.getFileName(),
-                new File(projectPath, pyLintViolation.getFileName()));
+            FullFileModel fileModel = getFileModel(model, 
+            		pyLintViolation.getFileName(), getFileForName(pyLintViolation.getFileName()));
             fileModel.addViolation(violation);
         }
     }
-
-    /**
-     * Get the file model for a name/sourcefile combo.
-     * (protected to allow UT).
-     * @param model the full build model.
-     * @param name the name.
-     * @param sourceFile the source file.
-     * @return the file model.
-     */
-    protected FullFileModel getFileModel(
-        FullBuildModel model, String name, File sourceFile) {
+    
+    private File getFileForName(String name) {
+        for (String p : sourcePaths) {
+            File f = new File(new File(p), name);
+            if (f.exists()) {
+                return f;
+            }
+        }
+        return null;
+    }
+    
+    private FullFileModel getFileModel(FullBuildModel model, String name, File sourceFile) {
         FullFileModel fileModel = model.getFileModel(name);
         File other = fileModel.getSourceFile();
 
@@ -97,10 +107,12 @@ public class PyLintParser implements ViolationsParser {
                     || other.exists()))) {
             return fileModel;
         }
+        
         fileModel.setSourceFile(sourceFile);
         fileModel.setLastModified(sourceFile.lastModified());
         return fileModel;
     }
+    
 
     /**
      * Returns a pylint violation (if it is one)
@@ -155,7 +167,7 @@ public class PyLintParser implements ViolationsParser {
                 break;
         }
     }
-
+    
     class PyLintViolation {
         private final transient String lineStr;
         private final transient String message;

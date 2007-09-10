@@ -5,6 +5,7 @@ import java.util.TreeMap;
 import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
 import hudson.plugins.violations.types.pmd.PMDDescriptor;
 import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
+import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
 import hudson.plugins.violations.types.cpd.CPDDescriptor;
 import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 
@@ -66,6 +67,7 @@ public abstract class TypeDescriptor {
         addDescriptor(CPDDescriptor.DESCRIPTOR);
         addDescriptor(CheckstyleDescriptor.DESCRIPTOR);
         addDescriptor(PyLintDescriptor.DESCRIPTOR);
+        addDescriptor(FxCopDescriptor.DESCRIPTOR);
     }
 }
 

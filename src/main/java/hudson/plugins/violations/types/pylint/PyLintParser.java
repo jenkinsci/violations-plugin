@@ -14,6 +14,7 @@ import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.util.AbsoluteFileFinder;
 
 /**
  * Parser for parsing PyLint reports.
@@ -27,8 +28,7 @@ public class PyLintParser implements ViolationsParser {
 
     /** Regex pattern for the PyLint errors. */
     private final transient Pattern pattern;
-
-	private transient List<String> sourcePaths = new ArrayList<String>();
+    private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder(); 
 
     /**
      * Constructor - create the pattern.
@@ -43,10 +43,8 @@ public class PyLintParser implements ViolationsParser {
         
     	BufferedReader reader = null;
         
-    	this.sourcePaths.add(projectPath.getAbsolutePath());
-        for (String path : sourcePaths) {
-        	this.sourcePaths.add(path);
-        }
+    	absoluteFileFinder.addSourcePath(projectPath.getAbsolutePath());
+    	absoluteFileFinder.addSourcePaths(sourcePaths);
         
         try {
             reader = new BufferedReader(
@@ -82,19 +80,10 @@ public class PyLintParser implements ViolationsParser {
             setServerityLevel(violation, pyLintViolation.getViolationId());
 
             FullFileModel fileModel = getFileModel(model, 
-            		pyLintViolation.getFileName(), getFileForName(pyLintViolation.getFileName()));
+            		pyLintViolation.getFileName(), 
+            		absoluteFileFinder.getFileForName(pyLintViolation.getFileName()));
             fileModel.addViolation(violation);
         }
-    }
-    
-    private File getFileForName(String name) {
-        for (String p : sourcePaths) {
-            File f = new File(new File(p), name);
-            if (f.exists()) {
-                return f;
-            }
-        }
-        return null;
     }
     
     private FullFileModel getFileModel(FullBuildModel model, String name, File sourceFile) {

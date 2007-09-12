@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 
 import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.util.AbsoluteFileFinder;
 import hudson.plugins.violations.util.StringUtil;
 import hudson.plugins.violations.util.HashMapWithDefault;
 import hudson.plugins.violations.model.Violation;
@@ -27,8 +28,7 @@ public class FindBugsParser extends AbstractTypeParser {
         FindBugsParser.class.getName());
 
     private boolean debug = false;
-    private List<String> sourceDirectories
-        = new ArrayList<String>();
+    private AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder();
 
     /**
      * Parse the findbugs xml file.
@@ -41,10 +41,7 @@ public class FindBugsParser extends AbstractTypeParser {
         expectNextTag("BugCollection");
         getParser().next(); // consume the "BugCollection" tag
 
-        // Initial populate the source directories
-        for (String d: getSourcePaths()) {
-            sourceDirectories.add(d);
-        }
+        absoluteFileFinder.addSourcePaths(getSourcePaths());
 
         // Top level tags:
         //   file: from the maven findbugs plugin
@@ -79,29 +76,7 @@ public class FindBugsParser extends AbstractTypeParser {
         }
         return filename + ".java";
     }
-
-    private File getFileForName(String name) {
-        if (debug) {
-            System.out.println("getFileForName(" + name + ")");
-        }
-        for (String p: sourceDirectories) {
-            File f = new File(new File(p), name);
-            if (debug) {
-                System.out.println("Checking " + f);
-            }
-            if (f.exists()) {
-                if (debug) {
-                    System.out.println("FOUND !!");
-                }
-                return f;
-            }
-        }
-        if (debug) {
-            System.out.println("Not found");
-        }
-        return null;
-    }
-
+    
     private String getRelativeName(String name, File file) {
         if (file != null && file.exists()) {
             String absolute = file.getAbsolutePath();
@@ -119,7 +94,7 @@ public class FindBugsParser extends AbstractTypeParser {
         //        with no source files
         String classname = checkNotBlank("classname");
         String name = resolveClassName(classname);
-        File file = getFileForName(name);
+        File file = absoluteFileFinder.getFileForName(name);
         name = getRelativeName(name, file);
         getParser().next();
         while (true) {
@@ -157,7 +132,7 @@ public class FindBugsParser extends AbstractTypeParser {
     private void getSourceDir()
         throws IOException, XmlPullParserException {
         checkNextEvent(XmlPullParser.TEXT, "Expecting text");
-        sourceDirectories.add(getParser().getText());
+        absoluteFileFinder.addSourcePath(getParser().getText());
         endElement();
     }
 
@@ -270,7 +245,7 @@ public class FindBugsParser extends AbstractTypeParser {
             return;
         }
 
-        File file = getFileForName(name);
+        File file = absoluteFileFinder.getFileForName(name);
 
         name = getRelativeName(name, file);
         Violation v = new Violation();

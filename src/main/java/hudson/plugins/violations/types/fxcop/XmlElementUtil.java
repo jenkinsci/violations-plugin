@@ -12,12 +12,14 @@ public class XmlElementUtil {
 	
     public static List<Element> getNamedChildElements(Element parent, String name) {
         List<Element> elements = new ArrayList<Element>();
-        Node child = parent.getFirstChild();
-        while (child != null) {
-            if ((child.getNodeType() == Node.ELEMENT_NODE) && (child.getNodeName() == name)) {
-                elements.add((Element) child);
+        if (parent != null) {
+            Node child = parent.getFirstChild();
+            while (child != null) {
+                if ((child.getNodeType() == Node.ELEMENT_NODE) && (child.getNodeName() == name)) {
+                    elements.add((Element) child);
+                }
+                child = child.getNextSibling();
             }
-            child = child.getNextSibling();
         }
         return elements;
     }

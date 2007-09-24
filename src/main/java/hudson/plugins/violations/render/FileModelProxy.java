@@ -205,14 +205,9 @@ public class FileModelProxy  {
         }
     }
 
-    /**
-     * Get the severity column for a violation.
-     * @param v the violation.
-     * @return a string to place in the severity column of the violation table.
-     */
-    public String severityColumn(Violation v) {
+    private String getSeverityIcon(int level) {
         String color = null;
-        switch (v.getSeverityLevel()) {
+        switch (level) {
             case Severity.HIGH_VALUE:
                 color = "red";
                 break;
@@ -222,15 +217,23 @@ public class FileModelProxy  {
             default:
                 color = "violet"; // medium (low,-,high)
         }
+        return "/plugin/violations/images/16x16/" + color + "-warning.png";
+    }
+
+    /**
+     * Get the severity column for a violation.
+     * @param v the violation.
+     * @return a string to place in the severity column of the violation table.
+     */
+    public String severityColumn(Violation v) {
         StringBuilder b = new StringBuilder();
         addVDiv(b);
         b.append("<a class='healthReport'>");
         b.append(
             "<img src='"
             + contextPath
-            + "/plugin/violations/images/16x16/"
-            + color
-            + "-warning.png' alt='"
+            + getSeverityIcon(v.getSeverityLevel())
+            + "' alt='"
             + v.getSeverity()
             + "'/>");
         b.append("</a>");
@@ -272,13 +275,21 @@ public class FileModelProxy  {
 
     private void showIcon(
         StringBuilder b, Set<Violation> violations) {
+        // Get the worst icon in the set
+        int level = Severity.LOW_VALUE;
+        for (Violation v: violations) {
+            if (v.getSeverityLevel() < level) {
+                level = v.getSeverityLevel();
+            }
+        }
         b.append("<td class='source icon'>");
         addVDiv(b);
         b.append("<a class='healthReport'>");
         b.append(
             "<img src='"
             + contextPath
-            + "/plugin/violations/images/12x12/dialog-warning.png'/>");
+            + getSeverityIcon(level)
+            + "'/>");
         b.append("</a>");
         showDiv(b, violations);
         b.append("</div>");

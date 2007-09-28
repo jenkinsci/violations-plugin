@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.144</version>
+    <version>1.142</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.5</version>
+  <version>0.5.1</version>
   <name>Hudson Violations plugin</name>
   <reporting>
     <plugins>

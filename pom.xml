@@ -10,7 +10,7 @@
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.5.1</version>
+  <version>0.5.2</version>
   <name>Hudson Violations plugin</name>
   <reporting>
     <plugins>

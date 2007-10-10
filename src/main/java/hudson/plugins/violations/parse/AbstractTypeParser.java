@@ -175,7 +175,7 @@ public abstract class AbstractTypeParser
             int colPos = name.indexOf(':');
             int dirPos = name.indexOf('/');
             if (colPos != -1 && (dirPos == -1 || dirPos > colPos)) {
-                name = name.substring(colPos);
+                name = name.substring(colPos + 1);
             }
         }
         // if name starts with a / strip it.

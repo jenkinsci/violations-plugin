@@ -50,12 +50,9 @@ public class ViolationsProjectAction
 
     /**
      * Get the urlname for the proxy.
-     * @return "violations" if a violations action is avail.
+     * @return "violations"
      */
     public String getUrlName() {
-        if (getViolationsAction() == null) {
-            return null;
-        }
         return MagicNames.VIOLATIONS;
     }
 

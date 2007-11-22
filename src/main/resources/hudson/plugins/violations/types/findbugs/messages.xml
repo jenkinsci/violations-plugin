@@ -90,6 +90,14 @@ This plugin contains all of the standard FindBugs detectors.
   **********************************************************************
    -->
 
+	<Detector class="edu.umd.cs.findbugs.detect.SynchronizationOnSharedBuiltinConstant">
+     <Details>
+<![CDATA[
+<p> This detector looks for synchronization on a shared builtin constant (such as a String).</p>
+]]>
+     </Details>
+   </Detector>
+
 	<Detector class="edu.umd.cs.findbugs.detect.SynchronizeAndNullCheckField">
      <Details>
 <![CDATA[
@@ -120,6 +128,13 @@ This plugin contains all of the standard FindBugs detectors.
 ]]>
     </Details>
   </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers">
+    <Details>
+<![CDATA[
+<p> Note the type qualifiers relevant to analyzing a method.</p>
+]]>
+    </Details>
+  </Detector>
   <Detector class="edu.umd.cs.findbugs.detect.NoteSuppressedWarnings">
     <Details>
 <![CDATA[
@@ -134,11 +149,25 @@ This plugin contains all of the standard FindBugs detectors.
 ]]>
     </Details>
   </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.NoteSyntheticElements">
+    <Details>
+      <![CDATA[
+        <p>Records synthetic classes, methods, fields, etc.</p>
+      ]]>
+    </Details>
+  </Detector>
   <Detector class="edu.umd.cs.findbugs.detect.Methods">
     <Details>
 <![CDATA[
 <p> Builds of database of all methods defined in analyzed classes, for use
 by other detectors.</p>
+]]>
+    </Details>
+  </Detector>
+  <Detector class="edu.umd.cs.findbugs.detect.ReflectiveClasses">
+    <Details>
+<![CDATA[
+<p> Try to determine which classes have constant references to their .class objects.  </p>
 ]]>
     </Details>
   </Detector>
@@ -493,6 +522,15 @@ issues.  It is a fast detector.</p>
 <![CDATA[
 <p> This detector looks for problems in the definition of the hashCode() and equals()
 methods.  It is a fast detector.</p>
+]]>
+    </Details>
+  </Detector>
+
+  <Detector class="edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical" >
+    <Details>
+<![CDATA[
+<p> Looks for equals methods that override equals methods in a superclass where the equivalence relationship might not be symmetrical.
+</p>
 ]]>
     </Details>
   </Detector>
@@ -1338,6 +1376,24 @@ It is a fast detector.</p>
 </Details>
 </Detector>
 
+  <Detector class="edu.umd.cs.findbugs.detect.TestDataflowAnalysis">
+    <Details>
+      <![CDATA[
+      	<p>This is an internal detector used only for testing dataflow analyses.
+      	It is not enabled by default.</p>
+      ]]>
+    </Details>
+  </Detector>
+  
+  <Detector class="edu.umd.cs.findbugs.detect.CheckTypeQualifiers">
+    <Details>
+      <![CDATA[
+        <p>Check for violations of properties specified by JSR-305
+        type qualifier annotations.</p>
+      ]]>
+    </Details>
+  </Detector>
+
   <!--
   **********************************************************************
   BugPatterns
@@ -1806,7 +1862,7 @@ dangerous methods in the Java libraries.</em> -- Joshua Bloch</p>
 
   <BugPattern type="DM_NUMBER_CTOR">
     <ShortDescription>Method invokes inefficient Number constructor; use static valueOf instead</ShortDescription>
-    <LongDescription>Method {1} invokes inefficient {3} constructor; use {4} instead</LongDescription>
+    <LongDescription>Method {1} invokes inefficient {2} constructor; use {3} instead</LongDescription>
     <Details>
       <![CDATA[
       <p>
@@ -2163,6 +2219,21 @@ Don't do it.
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="EQ_DOESNT_OVERRIDE_EQUALS">
+    <ShortDescription>Class doesn't override equals in superclass</ShortDescription>
+    <LongDescription>{0} doesn't override {1.givenClass}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> This class extends a class that defines an equals method and adds fields, but doesn't
+define an equals method itself. Thus, equality on instances of this class will
+ignore the identity of the subclass and the added fields. Be sure this is what is intended,
+and that you don't need to override the equals method. Even if you don't need to override
+the equals method, consider overriding it anyone to document the fact
+that the equals method for the subclass just return the result of
+invoking super.equals(o).
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="EQ_SELF_NO_OBJECT">
     <ShortDescription>Covariant equals() method defined</ShortDescription>
     <LongDescription>{0} defines equals({0.givenClass}) method but not equals(Object)</LongDescription>
@@ -2172,6 +2243,20 @@ Don't do it.
   To correctly override the <code>equals()</code> method in
   <code>java.lang.Object</code>, the parameter of <code>equals()</code>
   must have type <code>java.lang.Object</code>.</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="EQ_OVERRIDING_EQUALS_NOT_SYMMETRIC">
+    <ShortDescription>equals method overrides equals in superclass and may not be symmetric</ShortDescription>
+    <LongDescription>{1.class} overrides equals in {2.class.givenClass} and may not be symmetric</LongDescription>
+    <Details>
+<![CDATA[
+  <p> This class defines an equals method that overrides an equals method in a superclass. Both equals methods
+methods use <code>instanceof</code> in the determination of whether two objects are equals. This is fraught with peril,
+since it is important that the equals method is symetrical (in other words, <code>a.equals(b) == b.equals(a)</code>).
+If B is a subtype of A, and A's equals method checks that the argument is an instanceof A, and B's equals method
+checks that the argument is an instanceof B, it is quite likely that the equivalence relation defined by these
+methods is not symmetric.
 ]]>
     </Details>
   </BugPattern>
@@ -2749,6 +2834,27 @@ public class CircularClassInitialization {
     </Details>
   </BugPattern>
 
+  <BugPattern type="DL_SYNCHRONIZATION_ON_SHARED_CONSTANT">
+    <ShortDescription>Synchronization on shared constant could lead to deadlock</ShortDescription>
+    <LongDescription>Synchronization on shared constant could deadlock in {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> The code synchronizes on a shared primative constant, such as an interned String.
+<pre>
+private static String LOCK = "LOCK";
+...
+  synchronized(LOCK) { ...}
+...
+</pre>
+</p>
+<p>Such constants an interned and shared across all other classes loaded by the JVM. Thus, this could
+is locking on something that other code might also be locking. This could result in very strange and hard to diagnose
+blocking and deadlock behavior. See <a href="http://www.javalobby.org/java/forums/t96352.html">http://www.javalobby.org/java/forums/t96352.html</a> and <a href="http://jira.codehaus.org/browse/JETTY-352">http://jira.codehaus.org/browse/JETTY-352</a>.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
   <BugPattern type="ESync_EMPTY_SYNC">
     <ShortDescription>Empty synchronized block</ShortDescription>
     <LongDescription>Empty synchronized block in {1}</LongDescription>
@@ -2918,6 +3024,35 @@ that you want to invoke the inherited method, not the method in the outer class.
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS">
+    <ShortDescription>Class names shouldn't shadow simple name of superclass</ShortDescription>
+    <LongDescription>The class name {0} shadows the simple name of the superclass {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> This class has a simple name that is identical to that of its superclass, except
+that its superclass is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>). 
+This can be exceptionally confusing, create lots of situations in which you have to look at import statements
+to resolve references and creates many
+opportunities to accidently define methods that do not override methods in their superclasses.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="NM_SAME_SIMPLE_NAME_AS_INTERFACE">
+    <ShortDescription>Class names shouldn't shadow simple name of implemented interface</ShortDescription>
+    <LongDescription>The class name {0} shadows the simple name of implemented interface {1}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> This class/interface has a simple name that is identical to that of an implemented/extended  interface, except
+that the interface is in a different package (e.g., <code>alpha.Foo</code> extends <code>beta.Foo</code>). 
+This can be exceptionally confusing, create lots of situations in which you have to look at import statements
+to resolve references and creates many
+opportunities to accidently define methods that do not override methods in their superclasses.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
   <BugPattern type="NM_CLASS_NAMING_CONVENTION">
     <ShortDescription>Class names should start with an upper case letter</ShortDescription>
     <LongDescription>The class name {0} doesn't start with an upper case letter</LongDescription>
@@ -2958,23 +3093,89 @@ Names of fields that are not final should be in mixed case with a lowercase firs
     <LongDescription>VERY confusing to have methods {1} and {3}</LongDescription>
     <Details>
 <![CDATA[
-  <p> The referenced methods have names that differ only by capitalization or the packages of their parameters. 
-This is very confusing because if the capitalization and parameter package names were
+  <p> The referenced methods have names that differ only by capitalization. 
+This is very confusing because if the capitalization were
 identical then one of the methods would override the other.
 </p>
 ]]>
     </Details>
   </BugPattern>
   <BugPattern type="NM_VERY_CONFUSING_INTENTIONAL">
-    <ShortDescription>Very confusing method names (but intentional)</ShortDescription>
+    <ShortDescription>Very confusing method names</ShortDescription>
     <LongDescription>VERY confusing (but perhaps intentional) to have methods {1} and {3}</LongDescription>
     <Details>
 <![CDATA[
-  <p> The referenced methods have names that differ only by capitalization or the packages of their parameters. 
+  <p> The referenced methods have names that differ only by capitalization. 
 This is very confusing because if the capitalization were
 identical then one of the methods would override the other. From the existence of other methods, it
 seems that the existence of both of these methods is intentional, but is sure is confusing. 
 You should try hard to eliminate one of them, unless you are forced to have both due to frozen APIs.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="NM_WRONG_PACKAGE">
+    <ShortDescription>Method doesn't override method in superclass due to wrong package for parameter</ShortDescription>
+    <LongDescription>{1} doesn't override method in superclass because parameter type {4} doesn't match superclass parameter type {5}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> The method in the subclass doesn't override a similar method in a superclass because the type of a parameter doesn't exactly match
+the type of the corresponding parameter in the superclass. For example, if you have:</p>
+
+<blockquote>
+<pre>
+import alpha.Foo;
+public class A {
+  public int f(Foo x) { return 17; }
+}
+----
+import beta.Foo;
+public class B extends A {
+  public int f(Foo x) { return 42; }
+}
+</pre>
+</blockquote>
+
+<p>The <code>f(Foo)</code> method defined in class <code>B</code> doesn't
+override the 
+<code>f(Foo)</code> method defined in class <code>A</code>, because the argument
+types are <code>Foo</code>'s from different packages.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="NM_WRONG_PACKAGE_INTENTIONAL">
+    <ShortDescription>Method doesn't override method in superclass due to wrong package for parameter</ShortDescription>
+    <LongDescription>{1} doesn't override method in superclass because parameter type {4} doesn't match superclass parameter type {5}</LongDescription>
+    <Details>
+<![CDATA[
+  <p> The method in the subclass doesn't override a similar method in a superclass because the type of a parameter doesn't exactly match
+the type of the corresponding parameter in the superclass. For example, if you have:</p>
+
+<blockquote>
+<pre>
+import alpha.Foo;
+public class A {
+  public int f(Foo x) { return 17; }
+}
+----
+import beta.Foo;
+public class B extends A {
+  public int f(Foo x) { return 42; }
+  public int f(alpha.Foo x) { return 27; }
+}
+</pre>
+</blockquote>
+
+<p>The <code>f(Foo)</code> method defined in class <code>B</code> doesn't
+override the 
+<code>f(Foo)</code> method defined in class <code>A</code>, because the argument
+types are <code>Foo</code>'s from different packages.
+</p>
+
+<p>In this case, the subclass does define a method with a signature identical to the method in the superclass,
+so this is presumably understood. However, such methods are exceptionally confusing. You should strongly consider
+removing or deprecating the method with the similar but not identical signature.
 </p>
 ]]>
     </Details>
@@ -3639,6 +3840,48 @@ dateString = dateString.trim();
 ]]>
     </Details>
   </BugPattern>
+  <BugPattern type="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE">
+    <ShortDescription>Method ignores return value</ShortDescription>
+    <LongDescription>{1} ignores return value of {2}</LongDescription>
+    <Details>
+<![CDATA[
+   <p> This method returns a value that is not checked. For
+example, the <code>File.delete()</code> method returns false
+if the file could not be successfully deleted (rather than 
+throwing an Exception).
+If you don't check the result, you won't notice if the method invocation
+signals unexpected behavior by returning an atypical return value.
+]]>
+    </Details>
+  </BugPattern>
+
+
+  <BugPattern type="RV_EXCEPTION_NOT_THROWN">
+    <ShortDescription>Exception created and dropped rather than thrown</ShortDescription>
+    <LongDescription>{1} forgets to throw {2.givenClass}</LongDescription>
+    <Details>
+<![CDATA[
+   <p> This code creates an exception (or error) object, but doesn't do anything with it. For example,
+something like  </p>
+<blockquote>
+<pre>
+if (x < 0)
+  new IllegalArgumentException("x must be nonnegative");
+</pre>
+</blockquote>
+<p>It was probably the intent of the programmer to throw the created exception:</p>
+<blockquote>
+<pre>
+if (x < 0)
+  throw new IllegalArgumentException("x must be nonnegative");
+</pre>
+</blockquote>
+]]>
+    </Details>
+  </BugPattern>
+
+
+
   <BugPattern type="RV_RETURN_VALUE_IGNORED2">
     <ShortDescription>Method ignores return value</ShortDescription>
     <LongDescription>{1} ignores return value of {2}</LongDescription>
@@ -3793,7 +4036,7 @@ was return from a method which is known to return possibly-null values.</p>
       This method passes a null value as the parameter of a method which
 	must be nonnull. Either this parameter has been explicitly marked
 	as @Nonnull, or analysis has determined that this parameter is
-	always deferenced.
+	always dereferenced.
       </p>
       ]]>
    </Details>
@@ -4107,6 +4350,17 @@ not be compared by reference are java.lang.Integer, java.lang.Float, etc.</p>
     </Details>
   </BugPattern>
 
+  <BugPattern type="EC_UNRELATED_TYPES_USING_POINTER_EQUALITY">
+    <ShortDescription>Using pointer equality  to compare  different types</ShortDescription>
+    <LongDescription>Using pointer equality  to compare a {2} with a {3} in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p> This method uses using pointer equality to compare two references that seem to be of
+different types.  The result of this comparison will always be false at runtime.
+</p>
+]]>
+    </Details>
+  </BugPattern>
   <BugPattern type="EC_UNRELATED_TYPES">
     <ShortDescription>Call to equals() comparing different types</ShortDescription>
     <LongDescription>Call to equals() comparing different types in {1}</LongDescription>
@@ -4539,6 +4793,48 @@ This may indicate a logic error or typo.</p>
     </Details>
   </BugPattern>
 
+  <BugPattern type="BIT_SIGNED_CHECK">
+    <ShortDescription>Check for sign of bitwise operation</ShortDescription>
+    <LongDescription>Check for sign of bitwise operation in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p> This method compares an expression such as
+<pre>((event.detail & SWT.SELECTED) > 0)</pre>.
+Using bit arithmetic and then comparing with the greater than operator can
+lead to unexpected results (of course depending on the value of
+SWT.SELECTED). If SWT.SELECTED is a negative number, this is a candidate
+for a bug. Even when SWT.SELECTED is not negative, it seems good practice
+to use '!= 0' instead of '> 0'.
+</p>
+<p>
+<em>Boris Bokowski</em>
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="BIT_SIGNED_CHECK_HIGH_BIT">
+    <ShortDescription>Check for sign of bitwise operation</ShortDescription>
+    <LongDescription>Check for sign of bitwise operation in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p> This method compares an expression such as
+<pre>((event.detail & SWT.SELECTED) > 0)</pre>.
+Using bit arithmetic and then comparing with the greater than operator can
+lead to unexpected results (of course depending on the value of
+SWT.SELECTED). If SWT.SELECTED is a negative number, this is a candidate
+for a bug. Even when SWT.SELECTED is not negative, it seems good practice
+to use '!= 0' instead of '> 0'.
+</p>
+<p>
+<em>Boris Bokowski</em>
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
+
+
   <BugPattern type="BIT_AND_ZZ">
     <ShortDescription>Check to see if ((...) &amp; 0) == 0</ShortDescription>
     <LongDescription>Check to see if ((...) &amp; 0) == 0 in {1}</LongDescription>
@@ -4597,6 +4893,21 @@ threads are not guaranteed to see a completely initialized object,
 You can make the field volatile to correct the problem.
 For more information, see the
 <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/">Java Memory Model web site</a>.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="LI_LAZY_INIT_UPDATE_STATIC">
+    <ShortDescription>Incorrect lazy initialization and update of static field</ShortDescription>
+    <LongDescription>Incorrect lazy initialization and update of static field {2} in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p> This method contains an unsynchronized lazy initialization of a static field.
+After the field is set, the object stored into that location is further accessed. 
+The setting of the field is visible to other threads as soon as it is set. If the
+futher accesses in the method that set the field serve to initialize the object, then
+you have a <em>very serious</em> multithreading bug, unless something else prevents
+any other thread from accessing the stored object until it is fully initialized.
 </p>
 ]]>
     </Details>
@@ -4974,6 +5285,25 @@ is never used.
 Note that Sun's javac compiler often generates dead stores for
 final local variables.  Because FindBugs is a bytecode-based tool,
 there is no easy way to eliminate these false positives.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="DLS_DEAD_STORE_OF_CLASS_LITERAL">
+    <ShortDescription>Dead store of class literal</ShortDescription>
+    <LongDescription>Dead store of {3}.class in {1}</LongDescription>
+    <Details>
+<![CDATA[
+<p>
+This instruction assigns a class literal to a variable and then never uses it.
+<a href="//java.sun.com/j2se/1.5.0/compatibility.html#literal">The behavior of this differs in Java 1.4 and in Java 5.</a>
+In Java 1.4 and earlier, a reference to <code>Foo.class</code> would force the static initializer
+for <code>Foo</code> to be executed, if it has not been executed already.
+In Java 5 and later, it does not.
+</p>
+<p>See Sun's <a href="//java.sun.com/j2se/1.5.0/compatibility.html#literal">article on Java SE compatibility</a>
+for more details and examples, and suggestions on how to force class initialization in Java 5.
 </p>
 ]]>
     </Details>
@@ -5939,7 +6269,7 @@ and <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6178997">Sun Bug
 </BugPattern>
 
 
-<BugPattern type="STCAL_STATIC_SIMPLE_DATA_FORMAT_INSTANCE">
+<BugPattern type="STCAL_STATIC_SIMPLE_DATE_FORMAT_INSTANCE">
 <ShortDescription>Static DateFormat</ShortDescription>
 <LongDescription>Found static field of type java.text.DateFormat in {1}</LongDescription>
 <Details>
@@ -5968,6 +6298,109 @@ and <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6178997">Sun Bug
 ]]>
 </Details>
 </BugPattern>
+
+  <BugPattern type="TQ_ALWAYS_VALUE_USED_WHERE_NEVER_REQUIRED">
+    <ShortDescription>Value annotated as carrying a type qualifier used where a value that must not carry that qualifier is required</ShortDescription>
+    <LongDescription>Value annotated as carrying type qualifier @{2.excludingPackage} used where a value that must not carry that qualifier is required</LongDescription>
+    <Details>
+      <![CDATA[
+        <p>
+        A value specified as carrying a type qualifier annotation is
+        consumed in a location or locations requiring that the value not
+        carry that annotation.
+        </p>
+        
+        <p>
+        More precisely, a value annotated with a type qualifier specifying when=ALWAYS
+        is guaranteed to reach a use or uses where the same type qualifier specifies when=NEVER.
+        </p>
+        
+        <p>
+        For example, say that @NonNegative is a nickname for
+        the type qualifier annotation @Negative(when=When.NEVER).
+        The following code will generate this warning because
+        the return statement requires a @NonNegative value,
+        but receives one that is marked as @Negative.   
+        </p>
+        <blockquote>
+<pre>
+public @NonNegative Integer example(@Negative Integer value) {
+    return value;
+}
+</pre>
+        </blockquote>
+      ]]>
+    </Details>
+  </BugPattern>
+
+  <BugPattern type="TQ_NEVER_VALUE_USED_WHERE_ALWAYS_REQUIRED">
+    <ShortDescription>Value annotated as never carrying a type qualifier used where value carrying that qualifier is required</ShortDescription>
+    <LongDescription>Value annotated as never carrying type qualifier @{2.excludingPackage} used where value carrying that qualifier is required</LongDescription>
+    <Details>
+      <![CDATA[
+        <p>
+        A value specified as not carrying a type qualifier annotation is guaranteed
+        to be consumed in a location or locations requiring that the value does
+        carry that annotation.
+        </p>
+        
+        <p>
+        More precisely, a value annotated with a type qualifier specifying when=NEVER
+        is guaranteed to reach a use or uses where the same type qualifier specifies when=ALWAYS.
+        </p>
+
+        <p>
+        TODO: example
+        </p>        
+      ]]>
+    </Details>
+  </BugPattern>
+  
+  <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_ALWAYS_SINK">
+    <ShortDescription>Value that might not carry a type qualifier reaches a use requiring that type qualifier</ShortDescription>
+    <LongDescription>Value that might not carry the @{2.excludingPackage} annotation reaches a use requiring that annotation</LongDescription>
+    <Details>
+      <![CDATA[
+      <p>
+      A value that might not carry a type qualifier annotation
+      reaches a use which requires that annotation.
+      </p>
+      
+      <p>
+      For example, consider the following method:
+      </p>
+      <blockquote>
+<pre>
+public @Untainted Object mustReturnUntainted(Object unknown) {
+    return unknown;
+}
+</pre>
+      </blockquote>
+      <p>
+      The <code>mustReturnUntainted</code> method is required to
+      return a value carrying the @Untainted annotation,
+      but a value not known to carry that annotation is returned.
+      </p>
+      ]]>
+    </Details>
+  </BugPattern>
+  
+  <BugPattern type="TQ_MAYBE_SOURCE_VALUE_REACHES_NEVER_SINK">
+    <ShortDescription>Unknown value reaches a use which forbids values carrying type qualifier annotation</ShortDescription>
+    <LongDescription>Unknown value reaches a use which forbids values carrying the @{2.excludingPackage} annotation</LongDescription>
+    <Details>
+      <![CDATA[
+      <p>
+      A value which might carry a type qualifier annotation reaches
+      a use which forbids values carrying that annotation.
+      </p> 
+      
+      <p>
+      TODO: example.
+      </p>
+      ]]>
+    </Details>
+  </BugPattern>
 
   <!--
   **********************************************************************
@@ -6068,6 +6501,7 @@ and <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6178997">Sun Bug
   <BugCode abbrev="ICAST">Casting from integer values</BugCode>
   <BugCode abbrev="RE">Regular expressions</BugCode>
   <BugCode abbrev="SQL">SQL Problem</BugCode>
+  <BugCode abbrev="DL">Potential deadlock or unexpected blocking</BugCode>
   <BugCode abbrev="ESync">Empty Synchronized blocks</BugCode>
   <BugCode abbrev="QF">Questionable for loops</BugCode>
   <BugCode abbrev="VA">Var arg problems</BugCode>
@@ -6089,6 +6523,7 @@ and <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6178997">Sun Bug
   <BugCode abbrev="DP">Use doPrivileged</BugCode>
   <BugCode abbrev="GC">Suspicious calls to generic container methods</BugCode>
   <BugCode abbrev="STCAL">Static use of type Calendar or DateFormat</BugCode>
+  <BugCode abbrev="TQ">Inconsistent use of type qualifier annotations</BugCode>
   </MessageCollection>
 
 

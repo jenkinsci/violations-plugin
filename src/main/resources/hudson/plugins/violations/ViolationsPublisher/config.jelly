@@ -19,14 +19,16 @@
   <f:entry title="">
     <table>
       <thead>
-        <td width="15%">type</td>
-        <td width="10%">
-          <img src="${icons}/health-80plus.gif" title="sunny" alt="sunny"/>
-        </td>
-        <td width="10%">
-          <img src="${icons}/health-00to19.gif" title="stormy" alt="stormy"/>
-        </td>
-        <td width="65%">XML filename pattern</td>
+        <tr>
+          <td width="15%">type</td>
+          <td width="10%">
+            <img src="${icons}/health-80plus.gif" title="sunny" alt="sunny"/>
+          </td>
+          <td width="10%">
+            <img src="${icons}/health-00to19.gif" title="stormy" alt="stormy"/>
+          </td>
+          <td width="65%">XML filename pattern</td>
+        </tr>
       </thead>
       <tbody>
 

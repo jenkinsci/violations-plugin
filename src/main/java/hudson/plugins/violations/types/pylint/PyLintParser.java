@@ -147,8 +147,8 @@ public class PyLintParser implements ViolationsParser {
                 violation.setSeverityLevel(Severity.MEDIUM_VALUE);
                 break;
             case 'E':
-                violation.setSeverity(Severity.MEDIUM_HIGH);
-                violation.setSeverityLevel(Severity.MEDIUM_HIGH_VALUE);
+                violation.setSeverity(Severity.HIGH);
+                violation.setSeverityLevel(Severity.HIGH_VALUE);
                 break;
             case 'F':
                 violation.setSeverity(Severity.HIGH);

@@ -10,7 +10,7 @@
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.5.3</version>
+  <version>0.5.4-SNAPSHOT</version>
   <name>Hudson Violations plugin</name>
   <url>http://hudson.gotdns.com/wiki/display/HUDSON/Violations+Plugin</url>
   

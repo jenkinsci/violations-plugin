@@ -18,12 +18,13 @@ public class PMDParser extends AbstractTypeParser {
     private static final HashMapWithDefault<String, String> SEVERITIES
         = new HashMapWithDefault<String, String>(Severity.HIGH);
 
+    // see http://pmd.sourceforge.net/rule-guidelines.html
     static {
-        SEVERITIES.put("0", Severity.HIGH);
-        SEVERITIES.put("1", Severity.MEDIUM_HIGH);
-        SEVERITIES.put("2", Severity.MEDIUM);
-        SEVERITIES.put("3", Severity.MEDIUM_LOW);
-        SEVERITIES.put("4", Severity.LOW);
+        SEVERITIES.put("1", Severity.HIGH);
+        SEVERITIES.put("2", Severity.MEDIUM_HIGH);
+        SEVERITIES.put("3", Severity.MEDIUM);
+        SEVERITIES.put("4", Severity.MEDIUM_LOW);
+        SEVERITIES.put("5", Severity.LOW);
     }
 
     /**

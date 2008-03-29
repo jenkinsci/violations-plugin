@@ -19,6 +19,11 @@ import hudson.plugins.violations.parse.ParseXML;
 public final class FindBugsDescriptor
     extends TypeDescriptor {
 
+    /** Message resources */
+    private static final String[] MESSAGES = new String[] {
+        "findbugs-1.3.3-rc2.messages.xml",
+        "fb-contrib-3.4.2.messages.xml",
+    };
     /** The descriptor for the findbugs violations type. */
     public static final FindBugsDescriptor DESCRIPTOR
         = new FindBugsDescriptor();
@@ -64,10 +69,15 @@ public final class FindBugsDescriptor
     }
 
     private static void parseMessages() {
+        for (String name: MESSAGES) {
+            parseMessages(name);
+        }
+    }
+
+    private static void parseMessages(String filename) {
         InputStream is = null;
         try {
-            is = FindBugsParser.class.getResourceAsStream(
-                "messages.xml");
+            is = FindBugsParser.class.getResourceAsStream(filename);
             if (is != null) {
                 ParseXML.parse(is, new ParseMessages());
             }

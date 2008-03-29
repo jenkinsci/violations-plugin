@@ -59,6 +59,7 @@ public class OutputFileModel implements Execute {
      */
     public void execute(PrintWriter w) throws IOException {
         this.w = w;
+        w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         w.println("<file");
         w.print(" ");
         w.println(XMLUtil.toAttribute("name", fileModel.getDisplayName()));

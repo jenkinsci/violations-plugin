@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.FileInputStream;
 import java.io.File;
 
@@ -39,7 +40,7 @@ public final class ParseXML {
             XmlPullParserFactory factory =  XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser parser = factory.newPullParser();
-            parser.setInput(in, null);
+            parser.setInput(new XmlReader(in));
             xmlParser.setParser(parser);
             xmlParser.execute();
         } catch (IOException ex) {
@@ -65,7 +66,7 @@ public final class ParseXML {
             XmlPullParserFactory factory =  XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser parser = factory.newPullParser();
-            parser.setInput(in, null);
+            parser.setInput(new XmlReader(in));
             xmlParser.setParser(parser);
             xmlParser.execute();
 

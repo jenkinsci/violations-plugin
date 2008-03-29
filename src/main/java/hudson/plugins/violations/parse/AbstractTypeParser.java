@@ -2,8 +2,7 @@ package hudson.plugins.violations.parse;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileInputStream;
+import java.io.Reader;
 
 import java.util.Locale;
 
@@ -44,14 +43,14 @@ public abstract class AbstractTypeParser
         String[]       sourcePaths)
         throws IOException {
 
-        InputStream in = null;
+        Reader in = null;
         boolean success = false;
         try {
-            in = new FileInputStream(new File(projectPath, fileName));
+            in = new XmlReader(new File(projectPath, fileName));
             XmlPullParserFactory factory =  XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser parser = factory.newPullParser();
-            parser.setInput(in, null);
+            parser.setInput(in);
 
             setProjectPath(projectPath);
             setModel(model);

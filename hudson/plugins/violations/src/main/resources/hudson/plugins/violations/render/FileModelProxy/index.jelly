@@ -1,0 +1,72 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <l:layout css="/plugin/violations/css/style.css">
+    <j:set var="url" value="${h.decompose(request)}"/>
+    <j:if test="${url.baseUrl == null}">
+      <st:include it="${it.build.parent}" page="sidepanel.jelly" />
+    </j:if>
+    <j:if test="${url.baseUrl != null}">
+      <st:include it="${it.build}" page="sidepanel.jelly" />
+    </j:if>
+    <l:main-panel>
+      <j:set var="model" value="${it.fileModel}"/>
+
+      <j:set 
+        var="image"
+        value="${rootURL}/plugin/violations/images/48x48/dialog-warning.png"/>
+
+      <j:set 
+        var="iconDir"
+        value="${rootURL}/plugin/violations/images/16x16"/>
+
+      <j:set var="href" value="${it.showLines}"/>
+      <h3><img src="${image}"/> ${model.displayName}</h3>
+      
+      
+      <j:forEach var="t" items="${model.typeMap.entrySet()}">
+        <table class="pane">
+          <tbody>
+            <tr><td class="pane-header" colspan="5">${it.typeLine(t.key)}</td></tr>
+            <j:forEach var="v" items="${t.value}">
+              <tr>
+                <td class="pane">
+                  <j:if test="${href}">
+                    <a href="#line${v.line}">${v.line}</a>
+                  </j:if>
+                  <j:if test="${!href}">
+                    ${v.line}
+                  </j:if>
+                </td>
+                <!--<td class="pane">${v.source}</td> -->
+                <td class="pane">${it.severityColumn(v)}</td>
+                <td class="pane" width="99%">${v.message}</td>
+              </tr>
+            </j:forEach>
+          </tbody>
+        </table>
+        <p></p>
+      </j:forEach>
+
+      ${it.fileContent}
+
+      <!--
+      <j:set var="line" value="${model.nextLine}"/>
+      <table class="source"  width='100%' cellspacing='0'>
+        <tbody>
+          <j:while test="${line != null}">
+            <tr>
+              ${line}
+            </tr>
+            <j:set var="line" value="${model.nextLine}"/>
+          </j:while>
+        </tbody>
+      </table>
+           -->
+      <!-- ${model.closeSourceFile()} -->
+      <!-- ${model.sourceFileStr} -->
+      <!-- <script src="js"></script> -->
+    </l:main-panel> 
+  </l:layout>
+</j:jelly>
+

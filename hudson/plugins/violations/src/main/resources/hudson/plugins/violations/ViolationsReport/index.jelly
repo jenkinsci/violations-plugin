@@ -1,0 +1,89 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+         xmlns:v="/hudson/plugins/violations/tags"
+         >
+  <l:layout>
+    <j:set var="vimg" value= "${rootURL}/plugin/violations/images"/>
+    <j:set var="img_16" value= "${vimg}/16x16"/>
+    <j:set var="url" value="${h.decompose(request)}"/>
+
+    <j:if test="${url.baseUrl == null}">
+      <st:include it="${it.build.parent}" page="sidepanel.jelly" />
+    </j:if>
+    <j:if test="${url.baseUrl != null}">
+      <st:include it="${it.build}" page="sidepanel.jelly" />
+    </j:if>
+    <l:main-panel>
+      <h1>
+        <img src="${rootURL}/plugin/violations/images/48x48/dialog-warning.png"/>
+        Violations Report ${url.baseUrl} for build ${it.build.number}
+      </h1>
+      <j:set var="model" value="${it.model}"/>
+      <j:set var="prev" value="${it.previous()}"/>
+      <table class="pane">
+        <tbody>
+          <tr>
+            <td class="pane-header">Type</td>
+            <td class="pane-header">Violations</td>
+            <td class="pane-header">Files in violation</td>
+          </tr>
+          <j:forEach var="t" items="${model.typeCounts}">
+            <tr>
+              <td class="pane"><a href="#${t.name}">${t.name}</a></td>
+              <td class="pane">
+                <v:numberdiff curr="${it.typeCount(t.name)}"
+                              prev="${prev.typeCount(t.name)}"/>
+              </td>
+              <td class="pane">
+                <v:numberdiff curr="${it.fileCount(t.name)}"
+                              prev="${prev.fileCount(t.name)}"/>
+              </td>
+            </tr>
+          </j:forEach>
+        </tbody>
+      </table>
+
+      <j:forEach var="t" items="${model.typeMap.entrySet()}">
+        <div>
+          <p><st:nbsp/></p>
+          <h2 id="${t.key}">
+            ${t.key}
+          </h2>
+          <img src="graph?type=${t.key}"/>
+        </div>
+        <j:if test="${t.value.size() != 0}">
+          <table class="pane sortable">
+            <tr>
+              <td class="pane-header">filename</td>
+              <td class="pane-header">l</td>
+              <td class="pane-header">m</td>
+              <td class="pane-header">h</td>
+              <td class="pane-header" initialSortDir="up" >number</td>
+            </tr>
+            <j:forEach var="f" items="${t.value}">
+              <tr>
+                <td class="pane" width="95%">
+                  <a href="file/${f.name}"><st:out value="${f.name}"/></a>
+                </td>
+                <td class="pane">
+                  ${f.low}
+                </td>
+                <td class="pane">
+                  ${f.medium}
+                </td>
+                <td class="pane">
+                  ${f.high}
+                </td>
+                <td class="pane">
+                  <v:numberdiff curr="${f.count}"
+                                prev="${prev.violationCount(t.key, f.name)}"/>
+                </td>
+              </tr>
+            </j:forEach>
+          </table>
+        </j:if>
+      </j:forEach>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
+

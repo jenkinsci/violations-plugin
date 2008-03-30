@@ -3,6 +3,10 @@ package hudson.plugins.violations.generate;
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.FileReader;
+import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.io.BufferedReader;
 
 import java.util.Set;
@@ -143,9 +147,21 @@ public class OutputFileModel implements Execute {
         }
     }
 
+    private Reader open() throws IOException {
+        if ("default".equals(config.getEncoding())) {
+            return new FileReader(fileModel.getSourceFile());
+        }
+        InputStream is = new FileInputStream(fileModel.getSourceFile());
+        try {
+            return new InputStreamReader(is, config.getEncoding());
+        } catch (IOException ex) {
+            CloseUtil.close(is);
+            throw ex;
+        }
+    }
+    
     private void outputContents() throws IOException {
-        sourceReader = new BufferedReader(
-            new FileReader(fileModel.getSourceFile()));
+        sourceReader = new BufferedReader(open());
         int lineNumber = 1;
         while (true) {
             String line = sourceReader.readLine();

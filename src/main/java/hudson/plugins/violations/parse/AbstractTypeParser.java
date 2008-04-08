@@ -157,6 +157,22 @@ public abstract class AbstractTypeParser
     }
 
     /**
+     * Fix an absolute path.
+     * Some paths in some violations file contain a ..
+     * this causes grief.
+     * @param abs the absolute name.
+     * @return a fixed name.
+     * @throws IOException if there is a problem.
+     */
+    protected String fixAbsolutePath(String abs) throws IOException {
+        if (abs.contains("..")) {
+            return new File(abs).getCanonicalPath();
+        } else {
+            return abs;
+        }
+    }
+
+    /**
      * Resolve an absolute name agaist the project path.
      * @param absoluteName the absolute name.
      * @return a path relative to the project path or an absolute

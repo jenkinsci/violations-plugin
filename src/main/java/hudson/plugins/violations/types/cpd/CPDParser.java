@@ -70,7 +70,7 @@ public class CPDParser extends AbstractTypeParser {
         expectNextTag("file");
         FileElement ret = new FileElement();
         ret.line =  getInt("line");
-        ret.path = checkNotBlank("path").replace('\\', '/');
+        ret.path = fixAbsolutePath(checkNotBlank("path").replace('\\', '/'));
         getParser().next();
         endElement();
         return ret;

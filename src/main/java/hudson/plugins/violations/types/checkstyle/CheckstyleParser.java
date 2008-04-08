@@ -47,7 +47,7 @@ public class CheckstyleParser extends AbstractTypeParser {
     private void parseFileElement()
         throws IOException, XmlPullParserException {
 
-        String absoluteFileName = checkNotBlank("name");
+        String absoluteFileName = fixAbsolutePath(checkNotBlank("name"));
         getParser().next();  // consume "file" tag
         FullFileModel fileModel = getFileModel(absoluteFileName);
 

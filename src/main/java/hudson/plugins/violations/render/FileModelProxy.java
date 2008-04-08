@@ -2,7 +2,7 @@ package hudson.plugins.violations.render;
 
 import java.util.Map;
 import java.util.Set;
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +29,7 @@ public class FileModelProxy  {
     private final File      xmlFile;
     private FileModel fileModel;
     private String    contextPath;
-    private Build     build;
+    private AbstractBuild<?, ?>     build;
 
     /**
      * Construct this proxy.
@@ -45,7 +45,7 @@ public class FileModelProxy  {
      * @param build the owner build.
      * @return this object.
      */
-    public FileModelProxy build(Build build) {
+    public FileModelProxy build(AbstractBuild<?, ?> build) {
         this.build = build;
         return this;
     }
@@ -65,7 +65,7 @@ public class FileModelProxy  {
      * get the current build.
      * @return the current build.
      */
-    public Build getBuild() {
+    public AbstractBuild<?, ?> getBuild() {
         return build;
     }
 

@@ -15,7 +15,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import hudson.model.HealthReport;
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 import hudson.model.Result;
 
 import hudson.plugins.violations.parse.ParseXML;
@@ -36,7 +36,7 @@ public class ViolationsReport implements Serializable {
     private static final Logger LOG
         = Logger.getLogger(ViolationsReport.class.getName());
 
-    private Build build;
+    private AbstractBuild<?, ?> build;
     private ViolationsConfig config;
     private Map<String, Integer> violations = new TreeMap<String, Integer>();
     private Map<String, TypeSummary> typeSummaries
@@ -48,7 +48,7 @@ public class ViolationsReport implements Serializable {
      * Set the build.
      * @param build the current build.
      */
-    public void setBuild(Build build) {
+    public void setBuild(AbstractBuild<?, ?> build) {
         this.build = build;
     }
 
@@ -56,7 +56,7 @@ public class ViolationsReport implements Serializable {
      * Get the build.
      * @return the build.
      */
-    public Build getBuild() {
+    public AbstractBuild<?, ?> getBuild() {
         return build;
     }
 
@@ -253,10 +253,10 @@ public class ViolationsReport implements Serializable {
      */
     public void doGraph(StaplerRequest req, StaplerResponse rsp)
         throws IOException {
-        Build tBuild = build;
+        AbstractBuild<?, ?> tBuild = build;
         int buildNumber = HelpHudson.findBuildNumber(req);
         if (buildNumber != 0) {
-            tBuild = (Build)  build.getParent().getBuildByNumber(buildNumber);
+            tBuild = (AbstractBuild<?, ?>)  build.getParent().getBuildByNumber(buildNumber);
             if (tBuild == null) {
                 tBuild = build;
             }
@@ -331,8 +331,8 @@ public class ViolationsReport implements Serializable {
      * @return the previous report if present, null otherwise.
      */
     public ViolationsReport previous() {
-        Build<?, ?> b = build;
-        Build<?, ?> curr = b.getPreviousBuild();
+        AbstractBuild<?, ?> b = build;
+        AbstractBuild<?, ?> curr = b.getPreviousBuild();
         while (curr != null) {
             int number = curr.getNumber();
             if (curr.getResult() == Result.FAILURE) {

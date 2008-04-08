@@ -33,7 +33,7 @@ import hudson.util.ColorPalette;
 import hudson.model.Result;
 import hudson.model.Action;
 import hudson.model.Actionable;
-import hudson.model.Build;
+import hudson.model.AbstractBuild;
 
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
@@ -60,7 +60,7 @@ public class ViolationsBuildAction
     private static final int Y_SIZE = 200;
     private static final double PADDING = 5.0;
 
-    private final Build            owner;
+    private final AbstractBuild<?, ?>   owner;
     private final ViolationsReport report;
 
     /**
@@ -69,7 +69,7 @@ public class ViolationsBuildAction
      * @param report the report for this build.
      */
     public ViolationsBuildAction(
-        Build owner,
+        AbstractBuild<?, ?> owner,
         ViolationsReport report) {
         this.owner  = owner;
         this.report = report;
@@ -79,7 +79,7 @@ public class ViolationsBuildAction
      * Get the build that owns this action.
      * @return the build.
      */
-    public Build getBuild() {
+    public AbstractBuild<?, ?> getBuild() {
         return owner;
     }
 
@@ -155,8 +155,8 @@ public class ViolationsBuildAction
      * @return the previous violations build action.
      */
     public ViolationsBuildAction getPreviousResult() {
-        Build<?, ?> b = owner;
-        Build<?, ?> previous = b.getPreviousBuild();
+        AbstractBuild<?, ?> b = owner;
+        AbstractBuild<?, ?> previous = b.getPreviousBuild();
         return getViolationsAction(previous);
     }
 
@@ -235,8 +235,8 @@ public class ViolationsBuildAction
      * @param start the build to start looking in.
      * @return the action if found, null otherwise.
      */
-    public static ViolationsBuildAction getViolationsAction(Build start) {
-        Build<?, ?> b = start;
+    public static ViolationsBuildAction getViolationsAction(AbstractBuild<?, ?> start) {
+        AbstractBuild<?, ?> b = start;
         while (b != null) {
             if (b.getResult() == Result.FAILURE) {
                 b = b.getPreviousBuild();

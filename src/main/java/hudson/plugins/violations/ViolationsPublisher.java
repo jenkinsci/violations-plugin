@@ -12,7 +12,7 @@ import hudson.model.Action;
 import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
-import hudson.model.Project;
+import hudson.model.AbstractProject;
 import hudson.tasks.Publisher;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -84,7 +84,7 @@ public class ViolationsPublisher extends Publisher {
      * @param project the project to create the action for.
      * @return the created violations project action.
      */
-    public Action getProjectAction(Project project) {
+    public Action getProjectAction(AbstractProject<?, ?> project) {
         return new ViolationsProjectAction(project);
     }
 

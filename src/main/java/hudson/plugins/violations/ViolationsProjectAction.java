@@ -10,14 +10,14 @@ import org.kohsuke.stapler.StaplerProxy;
 
 import hudson.model.Action;
 import hudson.model.Actionable;
-import hudson.model.Project;
+import hudson.model.AbstractProject;
 
 /**
  * Project level action.
  */
 public class ViolationsProjectAction
     extends Actionable implements Action, StaplerProxy {
-    private final Project<?, ?> project;
+    private final AbstractProject<?, ?> project;
     private static final NumberFormat NUMBER_FORMAT
         = NumberFormat.getInstance();
 
@@ -25,7 +25,7 @@ public class ViolationsProjectAction
      * Create a project action for the violations.
      * @param project the current project.
      */
-    public  ViolationsProjectAction(Project project) {
+    public  ViolationsProjectAction(AbstractProject<?, ?> project) {
         this.project = project;
     }
 

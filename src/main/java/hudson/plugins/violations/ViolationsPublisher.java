@@ -16,6 +16,8 @@ import hudson.model.AbstractProject;
 import hudson.tasks.Publisher;
 
 import org.kohsuke.stapler.StaplerRequest;
+import hudson.maven.AbstractMavenProject;
+import hudson.tasks.BuildStepDescriptor;
 
 
 
@@ -103,7 +105,7 @@ public class ViolationsPublisher extends Publisher {
     /**
      * A class for  the plugin configuration screen in hudson.
      */
-    public static final class DescriptorImpl extends Descriptor<Publisher> {
+    public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
         /**
          * a private constructor.
@@ -167,6 +169,14 @@ public class ViolationsPublisher extends Publisher {
          */
         public ViolationsConfig getConfig() {
             return new ViolationsConfig();
+        }
+
+        /**
+         * Magic code to disable this publisher/descriptor appearing the the m2 project page.
+         */
+        @Override
+        public boolean isApplicable(final Class<? extends AbstractProject> jobType) {
+            return !AbstractMavenProject.class.isAssignableFrom(jobType);
         }
 
     };

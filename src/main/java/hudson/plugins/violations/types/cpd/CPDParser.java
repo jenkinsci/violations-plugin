@@ -5,17 +5,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParserException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.parse.ViolationsDOMParser;
 
 /**
  * Parses a cpd xml report file.
  */
-public class CPDParser extends AbstractTypeParser {
+public class CPDParser extends ViolationsDOMParser {
 
     private static final int LOW_LIMIT = 100;
     private static final int MEDIUM_LIMIT = 1000;
@@ -26,14 +29,15 @@ public class CPDParser extends AbstractTypeParser {
      * @throws XmlPullParserException if there is a problem parsing the file.
      */
     protected void execute()
-        throws IOException, XmlPullParserException {
-
-        // Ensure that the top level tag is "pmd-cpd"
-        expectNextTag("pmd-cpd");
-        getParser().next(); // consume the "pmd-cpd" tag
-        // loop tru the child elements, getting the "file" ones
-        while (skipToTag("duplication")) {
-            parseDuplicationElement();
+        throws IOException, Exception {
+        Element docElement = getDocument().getDocumentElement();
+        NodeList nl = docElement.getElementsByTagName("duplication");
+        if (nl == null) {
+            return;
+        }
+        for (int i = 0; i < nl.getLength(); ++i) {
+            Element el = (Element) nl.item(i);
+            parseDuplicationElement(el);
         }
     }
 
@@ -42,17 +46,22 @@ public class CPDParser extends AbstractTypeParser {
         private String path;
     }
 
-    private void parseDuplicationElement()
-        throws IOException, XmlPullParserException {
+    private void parseDuplicationElement(Element parent)
+        throws IOException, Exception {
+        int lines = getInt(parent, "lines");
+        int tokens = getInt(parent, "tokens");
 
-        int lines = getInt("lines");
-        int tokens = getInt("tokens");
-        getParser().next();  // consume "duplication" tag
         List<FileElement> fileElements = new ArrayList<FileElement>();
         // There should now be two or more file elements
         // and a codefragmentelement
-        while (skipToTag("file")) {
-            fileElements.add(parseFileElement());
+        
+        NodeList nl = parent.getElementsByTagName("file");
+        if (nl == null) {
+            return;
+        }
+        for (int i = 0; i < nl.getLength(); ++i) {
+            Element el = (Element) nl.item(i);
+            fileElements.add(parseFileElement(el));
         }
 
         FileElement prev = fileElements.get(
@@ -61,18 +70,13 @@ public class CPDParser extends AbstractTypeParser {
             addViolation(lines, tokens, curr, prev);
             prev = curr;
         }
-        endElement();
     }
 
-    private FileElement parseFileElement()
-        throws IOException, XmlPullParserException {
-        // Ensure that the next tag is "file"
-        expectNextTag("file");
+    private FileElement parseFileElement(Element parent)
+        throws IOException, Exception {
         FileElement ret = new FileElement();
-        ret.line =  getInt("line");
-        ret.path = fixAbsolutePath(checkNotBlank("path").replace('\\', '/'));
-        getParser().next();
-        endElement();
+        ret.line =  getInt(parent, "line");
+        ret.path = fixAbsolutePath(checkNotBlank(parent, "path").replace('\\', '/'));
         return ret;
     }
 

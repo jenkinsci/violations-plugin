@@ -10,7 +10,7 @@
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.5.7-SNAPSHOT</version>
+  <version>0.5.7</version>
   <name>Hudson Violations plugin</name>
   <url>http://hudson.gotdns.com/wiki/display/HUDSON/Violations+Plugin</url>
  
@@ -49,10 +49,21 @@
 
   <dependencies>
     <dependency>
+      <groupId>xpp3</groupId>
+      <artifactId>xpp3</artifactId>
+      <version>1.1.3.3</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.3.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/violations-0.5.7</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/violations-0.5.7</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/violations/tags/violations-0.5.7</url>
+  </scm>
 </project>

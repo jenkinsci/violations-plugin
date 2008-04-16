@@ -1,7 +1,7 @@
 package hudson.plugins.violations.types.cpd;
 
 import hudson.plugins.violations.TypeDescriptor;
-import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.ViolationsParser;
 
 /**
  * The descriptor class for CPD violations type.
@@ -21,7 +21,7 @@ public final class CPDDescriptor
      * @return a new CPD parser.
      */
     @Override
-    public AbstractTypeParser createParser() {
+    public ViolationsParser createParser() {
         return new CPDParser();
     }
 

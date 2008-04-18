@@ -4,21 +4,27 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Violation;
 
 public class SimianParserTest {
-    
-    @Test
-    public void testOneFileParsing() throws Exception {
-        File xmlFile = new File( getClass().getResource("onefile.xml").getFile());
+
+    private FullBuildModel getFullBuildModel(String filename) throws IOException {
+        File xmlFile = new File( getClass().getResource(filename).getPath());
 
         SimianParser parser = new SimianParser();
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
         model.cleanup();
+        return model;
+    }
+    
+    @Test
+    public void testOneFileParsing() throws Exception {
+        FullBuildModel model = getFullBuildModel("onefile.xml");
         
         assertEquals("Number of violations is incorrect", 2, model.getCountNumber(SimianParser.TYPE_NAME));
         assertEquals("Number of files is incorrect", 1, model.getFileModelMap().size());
@@ -26,11 +32,7 @@ public class SimianParserTest {
     
     @Test
     public void testOneFilePopupMessage() throws Exception {
-        File xmlFile = new File( getClass().getResource("onefile.xml").getFile());
-        SimianParser parser = new SimianParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
+        FullBuildModel model = getFullBuildModel("onefile.xml");
         
         Iterator<Violation> iterator = model.getFileModel("java/hudson/maven/MavenBuild.java").getTypeMap().get("simian").descendingIterator();
         Violation v = iterator.next();
@@ -41,11 +43,7 @@ public class SimianParserTest {
     
     @Test
     public void testOneFileMessage() throws Exception {
-        File xmlFile = new File( getClass().getResource("onefile.xml").getFile());
-        SimianParser parser = new SimianParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
+        FullBuildModel model = getFullBuildModel("onefile.xml");
         
         Iterator<Violation> iterator = model.getFileModel("java/hudson/maven/MavenBuild.java").getTypeMap().get("simian").descendingIterator();
         Violation v = iterator.next();
@@ -56,12 +54,7 @@ public class SimianParserTest {
 
     @Test
     public void testTwoFileParsing() throws Exception {
-        File xmlFile = new File( getClass().getResource("twofile.xml").getFile());
-
-        SimianParser parser = new SimianParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
+        FullBuildModel model = getFullBuildModel("twofile.xml");
         
         assertEquals("Number of violations is incorrect", 2, model.getCountNumber(SimianParser.TYPE_NAME));
         assertEquals("Number of files is incorrect", 2, model.getFileModelMap().size());
@@ -69,11 +62,7 @@ public class SimianParserTest {
     
     @Test
     public void testTwoFilePopupMessage() throws Exception {
-        File xmlFile = new File( getClass().getResource("twofile.xml").getFile());
-        SimianParser parser = new SimianParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
+        FullBuildModel model = getFullBuildModel("twofile.xml");
         
         Iterator<Violation> iterator = model.getFileModel("java/hudson/maven/MavenBuild.java").getTypeMap().get(SimianParser.TYPE_NAME).descendingIterator();
         Violation v = iterator.next();
@@ -83,15 +72,23 @@ public class SimianParserTest {
         v = iterator.next();
         assertEquals("Popup message in violation is incorrect", "Duplication of 6 lines from line 92 in MavenBuild.java", v.getPopupMessage());
     }
+    
+    @Test
+    public void testTwoFileMessage() throws Exception {
+        FullBuildModel model = getFullBuildModel("twofile.xml");
+        
+        Iterator<Violation> iterator = model.getFileModel("java/hudson/maven/MavenBuild.java").getTypeMap().get("simian").descendingIterator();
+        Violation v = iterator.next();
+        assertEquals("Message in violation is incorrect", "Duplication of 6 lines from <a href='../../matrix/MatrixRun.java#line61'>line 61 in MatrixRun.java</a>", v.getMessage());
+
+        iterator = model.getFileModel("java/hudson/matrix/MatrixRun.java").getTypeMap().get(SimianParser.TYPE_NAME).descendingIterator();
+        v = iterator.next();
+        assertEquals("Popup message in violation is incorrect", "Duplication of 6 lines from <a href='../../maven/MavenBuild.java#line92'>line 92 in MavenBuild.java</a>", v.getMessage());
+    }
 
     @Test
     public void testTwoSetsParsing() throws Exception {
-        File xmlFile = new File( getClass().getResource("twosets.xml").getFile());
-
-        SimianParser parser = new SimianParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
+        FullBuildModel model = getFullBuildModel("twosets.xml");
         
         assertEquals("Number of violations is incorrect", 4, model.getCountNumber(SimianParser.TYPE_NAME));
         assertEquals("Number of files is incorrect", 2, model.getFileModelMap().size());

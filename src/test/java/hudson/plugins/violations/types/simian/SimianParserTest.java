@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Iterator;
 
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Violation;
@@ -111,12 +110,12 @@ public class SimianParserTest {
         Violation v = iterator.next();
         assertEquals("Popup message in violation is incorrect", "Duplication of 6 lines from "
                 + "line 21 in foo2.java, "
-                + "line 41 in foo4.java "
-                + "and line 31 in foo3.java.", v.getPopupMessage());
+                + "line 31 in foo3.java "
+                + "and line 41 in foo4.java.", v.getPopupMessage());
 
         assertEquals("Popup message in violation is incorrect", "Duplication of 6 lines from "
                 + "<a href='../foo2.java#line21'>line 21 in foo2.java</a>, "
-                + "<a href='../foo4.java#line41'>line 41 in foo4.java</a> and "
-                + "<a href='../foo3.java#line31'>line 31 in foo3.java</a>.", v.getMessage());
+                + "<a href='../foo3.java#line31'>line 31 in foo3.java</a> and "
+                + "<a href='../foo4.java#line41'>line 41 in foo4.java</a>.", v.getMessage());
     }
 }

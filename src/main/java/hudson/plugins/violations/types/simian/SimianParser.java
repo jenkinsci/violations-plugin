@@ -2,9 +2,9 @@ package hudson.plugins.violations.types.simian;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -57,7 +57,7 @@ public class SimianParser extends AbstractTypeParser {
      * @throws XmlPullParserException thrown by XmlPullParser
      */
     private void parseSetElement() throws IOException, XmlPullParserException {
-        Set<DuplicationBlock> blocks = new HashSet<DuplicationBlock>();
+        List<DuplicationBlock> blocks = new ArrayList<DuplicationBlock>();
         while (skipToTag("block")) {
             blocks.add(parseBlockElement());
             getParser().next();
@@ -65,7 +65,7 @@ public class SimianParser extends AbstractTypeParser {
         }
         
         for (DuplicationBlock block : blocks) {
-            Set<DuplicationBlock> otherBlocks = new HashSet<DuplicationBlock>(blocks);
+            List<DuplicationBlock> otherBlocks = new ArrayList<DuplicationBlock>(blocks);
             otherBlocks.remove(block);
                         
             Violation violation = createViolation(block);
@@ -101,7 +101,7 @@ public class SimianParser extends AbstractTypeParser {
      * @param block the current block that is referencing the other blocks
      * @param otherBlocks other blocks that are used for references in the messages.
      */
-    private void setViolationMessages(Violation violation, DuplicationBlock block, Set<DuplicationBlock> otherBlocks) {
+    private void setViolationMessages(Violation violation, DuplicationBlock block, List<DuplicationBlock> otherBlocks) {
         StringBuilder popupMessage = new StringBuilder("Duplication of ");
         popupMessage.append(block.endLineNumber - block.startLineNumber + 1);
         popupMessage.append(" lines from ");

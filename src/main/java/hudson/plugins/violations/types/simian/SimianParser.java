@@ -107,6 +107,8 @@ public class SimianParser extends AbstractTypeParser {
         popupMessage.append(" lines from ");
         StringBuilder message = new StringBuilder(popupMessage);
         
+        int i = 0;
+        int size = otherBlocks.size();        
         for (Iterator<DuplicationBlock> iterator = otherBlocks.iterator(); iterator.hasNext();) {
             DuplicationBlock otherViolation = iterator.next();
             String hrefString = getOtherHrefString(block, otherViolation);
@@ -116,10 +118,19 @@ public class SimianParser extends AbstractTypeParser {
             message.append("'>");
             message.append(duplicationString);
             message.append("</a>");
-            popupMessage.append(duplicationString);                
-            if (iterator.hasNext()) {
-                popupMessage.append(", ");
+            popupMessage.append(duplicationString);
+            
+            String postfix;
+            i++;
+            if (i < (size - 1)) {
+                postfix = ", ";
+            } else if (i == (size - 1)){ 
+                postfix = " and ";
+            } else {
+                postfix = ".";
             }
+            popupMessage.append(postfix);
+            message.append(postfix);
         }
         violation.setPopupMessage(popupMessage.toString());
         violation.setMessage(message.toString());

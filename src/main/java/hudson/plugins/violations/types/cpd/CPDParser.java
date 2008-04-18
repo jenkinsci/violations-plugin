@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.parse.ViolationsDOMParser;
+import hudson.plugins.violations.util.StringUtil;
 
 /**
  * Parses a cpd xml report file.
@@ -80,42 +81,9 @@ public class CPDParser extends ViolationsDOMParser {
         return ret;
     }
 
-    private static String relativePath(final String self, final String other) {
-        if (self.equals(other)) {
-            return "";
-        }
-
-        String[] selfParts = self.split("/");
-        String[] otherParts = other.split("/");
-        int len = selfParts.length;
-        if (otherParts.length < len) {
-            len = otherParts.length;
-        }
-
-        int same = 0; // used outside for loop
-        for (; same < len; same++) {
-            if (!selfParts[same].equals(otherParts[same])) {
-                break;
-            }
-        }
-        StringBuilder b = new StringBuilder();
-        for (int i = same + 1; i < selfParts.length; ++i) {
-            b.append("../");
-        }
-        boolean first = true;
-        for (int i = same; i < otherParts.length; ++i) {
-            if (!first) {
-                b.append("/");
-            }
-            first = false;
-            b.append(otherParts[i]);
-        }
-        return b.toString();
-    }
-
     private String relativePoint(
         FileElement self, FileElement other) {
-        String path = relativePath(self.path + "/bats", other.path);
+        String path = StringUtil.relativePath(self.path + "/bats", other.path);
         return path + "#line" + other.line;
     }
 

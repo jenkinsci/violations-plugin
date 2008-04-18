@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Iterator;
 
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Violation;
@@ -13,8 +16,14 @@ import hudson.plugins.violations.model.Violation;
 public class SimianParserTest {
 
     private FullBuildModel getFullBuildModel(String filename) throws IOException {
-        File xmlFile = new File( getClass().getResource(filename).getPath());
-
+        URL url = getClass().getResource(filename);
+        File xmlFile;
+        try {
+            xmlFile = new File(url.toURI());
+        } catch(URISyntaxException e) {
+            xmlFile = new File(url.getPath());
+        }
+        
         SimianParser parser = new SimianParser();
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);

@@ -11,6 +11,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import java.io.File;
 import java.io.IOException;
 
+import hudson.maven.MavenBuildProxy.BuildCallable;
 
 import hudson.plugins.violations.ViolationsConfig;
 import hudson.plugins.violations.ViolationsProjectAction;
@@ -74,6 +75,12 @@ public class ViolationsMavenReporter extends MavenReporter {
     public boolean postExecute(
         MavenBuildProxy build, MavenProject pom, MojoInfo mojo,
         BuildListener listener, Throwable error) throws InterruptedException, IOException {
+        build.execute(new BuildCallable<Void, IOException>() {
+            public Void call(final MavenBuild build) throws IOException, InterruptedException {
+                build.registerAsProjectAction(ViolationsMavenReporter.this);
+                return null;
+            }
+        });
         return true;
     }
 

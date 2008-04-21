@@ -19,6 +19,7 @@ public class PluginImpl extends Plugin {
     @Override
     public void start() throws Exception {
         Publisher.PUBLISHERS.addRecorder(ViolationsPublisher.DESCRIPTOR);
-        MavenReporters.LIST.add(ViolationsMavenReporter.DESCRIPTOR);
+        // Disable for the moment
+        //MavenReporters.LIST.add(ViolationsMavenReporter.DESCRIPTOR);
     }
 }

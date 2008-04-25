@@ -56,6 +56,32 @@ public class ViolationsMavenReporter extends MavenReporter {
     }
 
 
+    /**
+     * Called at the end of each maven ?goal?.
+     * - so if the maven args are pmd:pmd checkstyle:checkstyle
+     * this will get called twice.
+     */
+    public boolean postExecute(
+        MavenBuildProxy build, MavenProject pom, MojoInfo mojo,
+        BuildListener listener, Throwable error)
+        throws InterruptedException, IOException {
+        build.execute(new BuildCallable<Void, IOException>() {
+            public Void call(final MavenBuild build)
+                throws IOException, InterruptedException {
+                // Create the violations build action - if not already built.
+                // This needes to be done here, otherwise aggregated actions
+                // do not get created.
+                // (aggreatedactions get created after the postExecute(), but
+                // before the end()
+                getCreateBuildAction(build);
+                // Need to register the  MavenReporter as a ProjectAction
+                build.registerAsProjectAction(ViolationsMavenReporter.this);
+                return null;
+            }
+        });
+        return true;
+    }
+
     public boolean end(MavenBuild build, Launcher launcher, BuildListener listener)
         throws InterruptedException, IOException {
         FilePath htmlPath   = new FilePath(
@@ -67,20 +93,10 @@ public class ViolationsMavenReporter extends MavenReporter {
             new ViolationsCollector(listener, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);
-        build.getActions().add(
-            new ViolationsBuildAction(build, report));
-        return true;
-    }
-
-    public boolean postExecute(
-        MavenBuildProxy build, MavenProject pom, MojoInfo mojo,
-        BuildListener listener, Throwable error) throws InterruptedException, IOException {
-        build.execute(new BuildCallable<Void, IOException>() {
-            public Void call(final MavenBuild build) throws IOException, InterruptedException {
-                build.registerAsProjectAction(ViolationsMavenReporter.this);
-                return null;
-            }
-        });
+        
+        ViolationsBuildAction buildAction = getCreateBuildAction(build);
+        buildAction.setReport(report);
+        build.getActions().add(buildAction);
         return true;
     }
 
@@ -95,5 +111,13 @@ public class ViolationsMavenReporter extends MavenReporter {
         return DESCRIPTOR;
     }
 
+    private ViolationsBuildAction getCreateBuildAction(MavenBuild b) {
+        ViolationsBuildAction ret
+            = b.getAction(ViolationsBuildAction.class);
+        if (ret == null) {
+            ret = new ViolationsBuildAction(b);
+        }
+        return ret;
+    }
     
 }

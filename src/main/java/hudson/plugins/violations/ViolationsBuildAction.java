@@ -61,7 +61,7 @@ public class ViolationsBuildAction
     private static final double PADDING = 5.0;
 
     private final AbstractBuild<?, ?>   owner;
-    private final ViolationsReport report;
+    private ViolationsReport report;
 
     /**
      * Construct a build action.
@@ -74,6 +74,30 @@ public class ViolationsBuildAction
         this.owner  = owner;
         this.report = report;
     }
+
+    /**
+     * Constructor used for M2 projects.
+     * This needs to be created during a "postExecute"
+     * due to sequencing issue (1582). However,
+     * it may be usefull to do this anyway.
+     * report is set later.
+     * @param owner the build that has created this action.
+     */
+    public ViolationsBuildAction(
+        AbstractBuild<?, ?> owner) {
+        this.owner = owner;
+    }
+
+    /**
+     * Set the report.
+     * Used in M2.
+     * @param report the report for this build.
+     */
+    public void setReport(
+        ViolationsReport report) {
+        this.report = report;
+    }
+
 
     /**
      * Get the build that owns this action.

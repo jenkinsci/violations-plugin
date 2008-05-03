@@ -273,6 +273,7 @@ public class FindBugsParser extends AbstractTypeParser {
         // From maven
         SEVERITIES.put("High", "High");
         SEVERITIES.put("Medium", "Medium");
+        SEVERITIES.put("Normal", "Medium");
         SEVERITIES.put("Low", "Low");
     }
 

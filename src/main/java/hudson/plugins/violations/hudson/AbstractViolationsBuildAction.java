@@ -161,7 +161,6 @@ public abstract class AbstractViolationsBuildAction
      */
     public void doGraph(StaplerRequest req, StaplerResponse rsp)
         throws IOException {
-        System.out.println("DO GRAPH called");
         String type = req.getParameter("type");
 
         if (ChartUtil.awtProblem) {

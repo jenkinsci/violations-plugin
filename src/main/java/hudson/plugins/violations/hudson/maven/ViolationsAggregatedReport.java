@@ -33,10 +33,7 @@ public class ViolationsAggregatedReport
     }
 
     public ViolationsReport getReportForMavenBuild(MavenBuild b) {
-        System.out.println("getReportForMavenBuild() called"
-                           + " b is " + b);
         for (ViolationsModuleReport moduleReport: reports) {
-            System.out.println("Checking against " + moduleReport.getBuild());
             if (moduleReport.getBuild().equals(b)) {
                 return moduleReport.getReport();
             }

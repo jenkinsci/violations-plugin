@@ -260,7 +260,6 @@ public class ViolationsReport
      */
     public void doGraph(StaplerRequest req, StaplerResponse rsp)
         throws IOException {
-        System.out.println("DoGraph for a violations report");
         AbstractBuild<?, ?> tBuild = build;
         int buildNumber = HelpHudson.findBuildNumber(req);
         if (buildNumber != 0) {
@@ -408,10 +407,6 @@ public class ViolationsReport
          for (String t: violations.keySet()) {
             int count = violations.get(t);
             Integer failCount = config.getTypeConfigs().get(t).getFail();
-            System.out.println(
-                "isFailed called for " + t
-                + " count is " + count
-                + " failed is " + config.getTypeConfigs().get(t).getFail());
             if (failCount == null) {
                 continue;
             }

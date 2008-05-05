@@ -2,6 +2,35 @@
          xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
+  <script>
+      function setAuto(vType) {
+         var d = document
+         var sel = d.getElementById("violations-" + vType + "-select");
+         var au = d.getElementById("violations-" + vType + "-auto");
+         var noau = d.getElementById("violations-" + vType + "-noauto");
+         var selInx = sel.selectedIndex;
+         var t = sel.options[selInx].text
+         if (t == "pattern") {
+            au.style.display = "none";
+            noau.style.display = "";
+         } else {
+            au.style.display = "";
+            noau.style.display = "none";
+         }
+      }
+      function toggleMore(vType) {
+         var d = document
+         var button = d.getElementById(vType + "-more-button")
+         var more = d.getElementById(vType + "-more")
+         if (more.style.display == "none") {
+             more.style.display = "";
+             button.value = "-"
+         } else {
+             more.style.display= "none";
+             button.value = "+"
+         }
+      }
+  </script>
   <!-- Get the current config either from the instance or from the descriptor -->
   <j:set var="config" value="${instance.oldConfig}"/>
   <j:if test="${config == null}">
@@ -9,66 +38,157 @@
   </j:if>
   <j:set var="icons" value="${rootURL}/images/16x16/"/>
   <j:set var="configs" value="${config.typeConfigs.values()}"/>
-  <f:entry
-    title="Per file display limit"
-    description="This is the number of violations 
-    to display per file (per type)"
-    >
-    <f:textbox name="config.limit" value="${config.limit}"/>
-  </f:entry>
-  <f:entry title="">
-    <table>
-      <thead>
-        <tr>
-          <td width="15%">type</td>
-          <td width="10%">
-            <img src="${icons}/health-80plus.gif" title="sunny" alt="sunny"/>
-          </td>
-          <td width="10%">
-            <img src="${icons}/health-00to19.gif" title="stormy" alt="stormy"/>
-          </td>
-          <td width="65%">XML filename pattern</td>
-        </tr>
-      </thead>
-      <tbody>
 
-        <j:forEach var="inst" items="${configs}">
-          <tr>
-            <td>${inst.name}</td>
-            <td>
-              <f:textbox name="${inst.name}.min"
-                         value="${inst.min}"/>
-            </td>
-            <td>
-              <f:textbox name="${inst.name}.max"
-                         value="${inst.max}"/>
-            </td>
-            <td>
-              <f:textbox name="${inst.name}.pattern"
-                         value="${inst.pattern}"/>
-            </td>
-          </tr>
-        </j:forEach>
-      </tbody>
+  <j:set
+    var="t" value="padding-left:10px;"/>
+
+  <j:set
+    var="td"
+    value=
+    " padding-left: 0.3em;  padding-right: 0.3em; padding-top:0em; padding-bottom:0em;"/>
+
+  <f:entry
+    help="/plugin/violations/table-help.html"
+    >
+    <table width="100%" border='0' cellspacing='0' padding="0">
+      <tr>
+        <td width="8%" align="center" style="${td}">
+          <img src="${icons}/health-80plus.gif" title="sunny" alt="sunny"/>
+        </td>
+        <td width="8%" align="center" style="${td}">
+          <img src="${icons}/health-00to19.gif" title="stormy" alt="stormy"/>
+        </td>
+        <td width="8%" align="center" style="${td}">
+          <img src="${icons}/yellow.gif" title="unstable" alt="unstable"/>
+        </td>
+        <!--
+        <td width="8%" align="center" style="${td}">
+          <img src="${icons}/red.gif" title="fail" alt="fail"/>
+        </td>
+             -->
+        <td width="76%" style="${td}">
+          <st:nbsp/>
+          XML filename pattern
+        </td> 
+      </tr>
     </table>
   </f:entry>
+
+  <j:forEach var="inst" items="${configs}">
+    <f:entry title="${inst.name}">
+      <table width="100%"  border='0'  cellspacing='0' padding="0">
+        <tr>
+          <td width="8%" style="${td}">
+            <f:textbox name="${inst.name}.min"
+                       value="${inst.min}"/>
+          </td>
+          <td width="8%" style="${td}">
+            <f:textbox name="${inst.name}.max"
+                       value="${inst.max}"/>
+          </td>
+          <td width="8%" style="${td}">
+            <f:textbox name="${inst.name}.unstable"
+                       value="${inst.unstable}"/>
+          </td>
+          <!--
+          <td width="8%" style="${td}">
+            <f:textbox name="${inst.name}.fail"
+                       value="${inst.fail}"/>
+          </td>
+               -->
+          <j:choose>
+            <j:set var="typeDescriptor"
+                   value="${config.typeDescriptorMap.get(inst.name)}"/>
+            <j:set var="mavenTargets"
+                   value="${typeDescriptor.mavenTargets}"/>
+            <j:when test="${descriptor.freeStyle}">
+              <!-- NORMAL XML FILE PATTERN -->
+              <td width="76" style="${td}">
+                <f:textbox name="${inst.name}.pattern"
+                           value="${inst.pattern}"/>
+              </td>
+            </j:when>
+            <j:otherwise>
+              <!-- MAVEN -->
+              <j:choose>
+                <j:when
+                  test="${(mavenTargets == null)}">
+                  <!-- NO Maven Targets -->
+                  <td width="76%" style="${td}">
+                    <f:textbox name="${inst.name}.pattern"
+                               value="${inst.pattern}"/>
+                  </td>
+                </j:when>
+                <j:otherwise>
+                  <!-- HAS Maven Targets -->
+                  <j:set 
+                    var="a_d" 
+                    value="${h.ifThenElse(inst.usePattern, 'none', '')}"/>
+                  <j:set 
+                    var="na_d" 
+                    value="${h.ifThenElse(inst.usePattern, '', 'none')}"/>
+                  <td width="76%" style="${td}">
+                    <table width="100%" border='0'  cellspacing='0' padding="0">
+                      <tr>
+                        <td>
+                          <select
+                            id="violations-${inst.name}-select"
+                            name="${inst.name}.usePattern"
+                            onclick="setAuto('${inst.name}')">
+                              <f:option value="false"
+                                        selected="${!inst.usePattern}"
+                                        >auto</f:option>
+                              <f:option value="true"
+                                      selected="${inst.usePattern}"
+                                      >pattern</f:option>
+                          </select>
+                        </td>
+                        <td id="violations-${inst.name}-auto"
+                            style="display:${a_d}"
+                            class="setting-input">
+                        </td>
+                        <td id="violations-${inst.name}-noauto"
+                            class="setting-input"
+                            style="display:${na_d}"
+                            width="90%">
+                          <input name="${inst.name}.pattern"
+                                 class="setting-input"
+                                 type="text"
+                                 value="${inst.name.pattern}">
+                          </input>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </j:otherwise>
+              </j:choose>
+            </j:otherwise>
+          </j:choose>
+        </tr>
+      </table>
+    </f:entry>
+  </j:forEach>
+
   <f:entry
-    title="Source Path Pattern&lt;br/&gt;(Optional)"
-    description
-    = "This is a file name pattern that can be used to resolve classes
-       to sourcefiles (for example &lt;b&gt;**/src/main/java&lt;/b&gt;)."
-    >
-    <f:textbox name="config.sourcePathPattern"
-               value="${config.sourcePathPattern}"/>
+    title="Per file limit"
+    help="/plugin/violations/per-file-limit.html">
+    <f:textbox name="config.limit" value="${config.limit}"/>
   </f:entry>
-  <f:entry
-    title="Faux Project Path&lt;br/&gt;(Optional)"
-    description
-    = "This can be set if the project's source and build is not actually
-       in the hudson job directory area.">
-    <f:textbox name="config.fauxProjectPath"
-               value="${config.fauxProjectPath}"/>
-  </f:entry>
+
+  <j:if test="${descriptor.freeStyle}">
+    <f:entry
+      title="Source Path&lt;br /&gt;Pattern"
+      help="/plugin/violations/source-path-help.html">
+      <f:textbox name="config.sourcePathPattern"
+                 value="${config.sourcePathPattern}"/>
+    </f:entry>
+    <f:entry
+      title="Faux Project&lt;br /&gt;Path"
+      help="/plugin/violations/faux-project-path.html">
+      <f:textbox name="config.fauxProjectPath"
+                 value="${config.fauxProjectPath}"/>
+    </f:entry>
+  </j:if>
 
   <f:entry title="Source encoding" help="/plugin/violations/encoding-help.html">
     <select class="setting-input" name="config.encoding">

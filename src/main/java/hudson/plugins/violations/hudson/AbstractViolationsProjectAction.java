@@ -95,7 +95,6 @@ public abstract class AbstractViolationsProjectAction
      */
     public void doGraph(StaplerRequest req, StaplerResponse rsp)
         throws IOException {
-        System.out.println("ViolationsProjectActiion:doGraph()");
         if (getViolationsAction() != null) {
             getViolationsAction().doGraph(req, rsp);
         }

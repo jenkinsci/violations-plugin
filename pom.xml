@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.213</version>
+    <version>1.210</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.5.9-SNAPSHOT</version>
+  <version>0.6.0</version>
   <name>Hudson Violations plugin</name>
   <url>http://hudson.gotdns.com/wiki/display/HUDSON/Violations+Plugin</url>
  
@@ -19,9 +19,10 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
+        <version>1.2</version>
         <configuration>
            <findbugsXmlOutput>true</findbugsXmlOutput>
-           <xmlOutput>true</xmlOutput>
+           <xmlOutput>false</xmlOutput>
         </configuration>
      </plugin>
     </plugins>
@@ -32,9 +33,10 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
+        <version>1.2</version>
         <configuration>
            <findbugsXmlOutput>true</findbugsXmlOutput>
-           <xmlOutput>true</xmlOutput>
+           <xmlOutput>false</xmlOutput>
         </configuration>
      </plugin>
       <plugin>
@@ -60,4 +62,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/violations-0.6.0</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/violations-0.6.0</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/violations/tags/violations-0.6.0</url>
+  </scm>
 </project>

@@ -87,6 +87,14 @@ public final class ViolationsFreestyleDescriptor
     }
 
     /**
+     * Return true that tis is free style descriptor.
+     * @return true for this class.
+     */
+    public boolean isFreeStyle() {
+        return true;
+    }
+
+    /**
      * Magic code to disable this publisher/descriptor appearing the the
      * m2 project page.
      */

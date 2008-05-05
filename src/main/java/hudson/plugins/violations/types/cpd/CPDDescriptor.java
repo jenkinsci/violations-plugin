@@ -1,5 +1,8 @@
 package hudson.plugins.violations.types.cpd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.ViolationsParser;
 
@@ -23,6 +26,19 @@ public final class CPDDescriptor
     @Override
     public ViolationsParser createParser() {
         return new CPDParser();
+    }
+
+    /**
+     * Get a list of target xml files to look for
+     * for this particular type.
+     * @return a list filenames to look for in the target
+     *         target directory.
+     */
+    @Override
+    public List<String> getMavenTargets() {
+        List<String> ret = new ArrayList<String>();
+        ret.add("cpd.xml");
+        return ret;
     }
 
 }

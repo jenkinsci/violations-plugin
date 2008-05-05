@@ -13,6 +13,7 @@ import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.AbstractProject;
+import hudson.model.Result;
 import hudson.tasks.Publisher;
 
 import org.kohsuke.stapler.StaplerRequest;
@@ -74,9 +75,10 @@ public class ViolationsPublisher extends Publisher {
             new File(build.getRootDir(), VIOLATIONS));
 
         ViolationsReport report = build.getProject().getWorkspace().act(
-            new ViolationsCollector(listener, targetPath, htmlPath, config));
+            new ViolationsCollector(false, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);
+        report.setBuildResult();
         build.getActions().add(
             new ViolationsBuildAction(build, report));
         return true;

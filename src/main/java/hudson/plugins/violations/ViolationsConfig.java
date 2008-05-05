@@ -2,6 +2,7 @@ package hudson.plugins.violations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.io.Serializable;
 
@@ -43,6 +44,14 @@ public class ViolationsConfig implements Cloneable, Serializable {
      */
     public TreeMap<String, TypeConfig> getTypeConfigs() {
         return typeConfigs;
+    }
+
+    /**
+     * Get the map of type descriptors (for jelly use).
+     * @return the map of type descriptors.
+     */
+    public Map<String, TypeDescriptor> getTypeDescriptorMap() {
+        return TypeDescriptor.TYPES;
     }
 
     /**

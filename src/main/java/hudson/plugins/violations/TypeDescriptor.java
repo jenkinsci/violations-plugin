@@ -1,5 +1,6 @@
 package hudson.plugins.violations;
 
+import java.util.List;
 import java.util.TreeMap;
 
 import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
@@ -60,6 +61,16 @@ public abstract class TypeDescriptor {
      */
     public String getDetailForSource(String source) {
         return null;
+    }
+
+    /**
+     * Get a list of target xml files to look for
+     * for this particular type.
+     * @return a list filenames to look for in the target
+     *         target directory.
+     */
+    public List<String> getMavenTargets() {
+        return  null;
     }
 
     static {

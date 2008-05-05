@@ -1,4 +1,4 @@
-package hudson.plugins.violations.hudson;
+package hudson.plugins.violations.hudson.maven;
 
 import java.util.Map;
 
@@ -10,6 +10,7 @@ import hudson.plugins.violations.ViolationsConfig;
 import hudson.plugins.violations.ViolationsPublisher;
 import hudson.plugins.violations.TypeConfig;
 
+import hudson.plugins.violations.hudson.*;
 
 public class ViolationsMavenDescriptor
     extends MavenReporterDescriptor {
@@ -69,4 +70,13 @@ public class ViolationsMavenDescriptor
     public ViolationsConfig getConfig() {
         return new ViolationsConfig();
     }
+
+    /**
+     * Return false that tihs is free style descriptor.
+     * @return false for this class.
+     */
+    public boolean isFreeStyle() {
+        return false;
+    }
+
 }

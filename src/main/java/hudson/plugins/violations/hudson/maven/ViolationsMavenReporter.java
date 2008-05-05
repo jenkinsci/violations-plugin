@@ -1,4 +1,4 @@
-package hudson.plugins.violations.hudson;
+package hudson.plugins.violations.hudson.maven;
 
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenReporter;
@@ -18,8 +18,9 @@ import hudson.plugins.violations.ViolationsProjectAction;
 import hudson.plugins.violations.ViolationsBuildAction;
 import hudson.plugins.violations.ViolationsReport;
 import hudson.plugins.violations.ViolationsCollector;
-
+import hudson.plugins.violations.hudson.*;
 import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.Launcher;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -90,13 +91,13 @@ public class ViolationsMavenReporter extends MavenReporter {
             new File(build.getRootDir(), VIOLATIONS));
 
         ViolationsReport report = build.getProject().getWorkspace().act(
-            new ViolationsCollector(listener, targetPath, htmlPath, config));
+            new ViolationsCollector(true, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);
+        report.setBuildResult();
         
         ViolationsBuildAction buildAction = getCreateBuildAction(build);
         buildAction.setReport(report);
-        build.getActions().add(buildAction);
         return true;
     }
 
@@ -111,11 +112,12 @@ public class ViolationsMavenReporter extends MavenReporter {
         return DESCRIPTOR;
     }
 
-    private ViolationsBuildAction getCreateBuildAction(MavenBuild b) {
+    private ViolationsBuildAction getCreateBuildAction(MavenBuild build) {
         ViolationsBuildAction ret
-            = b.getAction(ViolationsBuildAction.class);
+            = build.getAction(ViolationsBuildAction.class);
         if (ret == null) {
-            ret = new ViolationsBuildAction(b);
+            ret = new ViolationsBuildAction(build);
+            build.getActions().add(ret);
         }
         return ret;
     }

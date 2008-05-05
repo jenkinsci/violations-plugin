@@ -1,5 +1,7 @@
 package hudson.plugins.violations.types.findbugs;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -41,6 +43,21 @@ public final class FindBugsDescriptor
         return new FindBugsParser();
     }
 
+    /**
+     * Get a list of target xml files to look for
+     * for this particular type.
+     * @return a list filenames to look for in the target
+     *         target directory.
+     */
+    @Override
+    public List<String> getMavenTargets() {
+        List<String> ret = new ArrayList<String>();
+        ret.add("findbugsXml.xml"); // "good" report
+        ret.add("findbugs.xml");    // "bad" report
+        return ret;
+    }
+
+    
     private static Map<String, String> messageMap
         = new HashMap<String, String>();
 

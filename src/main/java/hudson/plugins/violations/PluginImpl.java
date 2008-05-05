@@ -4,7 +4,7 @@ import hudson.Plugin;
 
 import hudson.tasks.Publisher;
 import hudson.maven.MavenReporters;
-import hudson.plugins.violations.hudson.ViolationsMavenReporter;
+import hudson.plugins.violations.hudson.maven.ViolationsMavenReporter;
 
 /**
  * Entry point of a plugin.

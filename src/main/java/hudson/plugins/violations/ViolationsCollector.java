@@ -28,11 +28,9 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
    private static final Logger LOG = Logger.getLogger(
         ViolationsCollector.class.getName());
 
-    /** Logger for hudson. */
-    private final transient BuildListener listener;
-
     private static final String[] NO_STRINGS = new String[]{};
 
+    private final boolean mavenProject;
     /** Working directory to copy xml files to. */
     private final FilePath targetDir;
     private final FilePath htmlDir;
@@ -44,15 +42,15 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
 
     /**
      * Constructor.
-     * @param listener the Logger
+     * @param mavenProject true if this a maven project, false otherwise
      * @param targetDir working directory to copy xml results to
      * @param htmlDir working directory to html reports to.
      * @param config  the violations configuration.
      */
     public ViolationsCollector(
-        BuildListener listener, FilePath targetDir, FilePath htmlDir,
+        boolean mavenProject, FilePath targetDir, FilePath htmlDir,
         ViolationsConfig config) {
-        this.listener = listener;
+        this.mavenProject = mavenProject;
         this.targetDir = targetDir;
         this.htmlDir = htmlDir;
         this.config = config;
@@ -80,9 +78,17 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
             LOG.fine("Using faux workspace " + this.workspace);
         }
 
-        // get the source path directories (if any)
-        String[] sourcePaths = findAbsoluteDirs(
-            workspace, config.getSourcePathPattern());
+        String[] sourcePaths = null;
+
+        if (mavenProject) {
+            sourcePaths = new String[] {
+                workspace.toString() + "/src/main/java"
+            };
+        } else {
+            // get the source path directories (if any)
+            sourcePaths = findAbsoluteDirs(
+                workspace, config.getSourcePathPattern());
+        }
 
         for (String sp: sourcePaths) {
             LOG.fine("Using extra sourcePath " + sp);
@@ -97,7 +103,14 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         for (String type: config.getTypeConfigs().keySet()) {
             TypeConfig c = config.getTypeConfigs().get(type);
             TypeDescriptor typeDescriptor = TypeDescriptor.TYPES.get(type);
-            if (empty(c.getPattern()) || typeDescriptor == null) {
+            if (typeDescriptor == null) {
+                continue;
+            }
+            if (mavenProject && (typeDescriptor.getMavenTargets() != null)) {
+                doType(c, typeDescriptor, sourcePaths, report);
+                continue;
+            }
+            if (empty(c.getPattern())) {
                 continue;
             }
             doType(c, typeDescriptor, sourcePaths, report);
@@ -140,18 +153,36 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         }
     }
 
+    // TODO: to many if, else, break  and return
     private void doType(
         TypeConfig c, TypeDescriptor t, String[] sourcePaths,
         ViolationsReport report)
         throws IOException {
-        String[] fileNames = findFiles(workspace, c.getPattern());
-        if (fileNames.length == 0) {
-            report.getViolations().put(
-                c.getType(), -1);
-            report.getTypeSummary(c.getType()).setErrorMessage(
-                "No violation report files of type " + c.getType()
-                + " with pattern " + c.getPattern() + " were found!");
-            return;
+        String[] fileNames = null;
+        if (mavenProject
+            && t.getMavenTargets() != null
+            && !c.isUsePattern()) {
+            for (String name: t.getMavenTargets()) {
+                fileNames = findFiles(workspace, "target/" + name);
+                if (fileNames.length != 0) {
+                    break;
+                }
+            }
+            if (fileNames.length == 0) {
+                return;
+            }
+        } else {
+            fileNames = findFiles(workspace, c.getPattern());
+            if (fileNames.length == 0) {
+                if (!mavenProject) {
+                    report.getViolations().put(
+                        c.getType(), -1);
+                    report.getTypeSummary(c.getType()).setErrorMessage(
+                        "No violation report files of type " + c.getType()
+                        + " with pattern " + c.getPattern() + " were found!");
+                }
+                return;
+            }
         }
         model.addType(c.getType());
         for (String fileName: fileNames) {

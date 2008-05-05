@@ -15,6 +15,8 @@ public class TypeConfig implements Cloneable, Serializable {
     public static final int DEFAULT_MAX = 999;
     /** Default unstable */
     public static final int DEFAULT_UNSTABLE = 999;
+    /** UNSTABLE BLANK */
+    public static final int UNSTABLE_BLANK = -4646;
 
     /** Default fail */
     public static final int DEFAULT_FAIL = 99999;
@@ -89,10 +91,13 @@ public class TypeConfig implements Cloneable, Serializable {
      * Get the unstable value
      * @return the unstable value
      */
-    public int getUnstable() {
+    public Integer getUnstable() {
         if (unstable == null) { // OLD CONFIG
             unstable = DEFAULT_UNSTABLE;
-        }   
+        }
+        if (unstable == UNSTABLE_BLANK) {
+            return null;
+        }
         return unstable;
     }
 
@@ -100,7 +105,10 @@ public class TypeConfig implements Cloneable, Serializable {
      * Set the unstable value.
      * @param unstable the value to use.
      */
-    public void setUnstable(int unstable) {
+    public void setUnstable(Integer unstable) {
+        if (unstable <= 0) {
+            unstable = UNSTABLE_BLANK;
+        }
         this.unstable = unstable;
     }
  

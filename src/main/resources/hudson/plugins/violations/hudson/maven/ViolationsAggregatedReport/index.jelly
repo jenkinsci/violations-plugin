@@ -30,12 +30,11 @@
                     border-collapse:collapse;
                     border-width:0px 0px 0px 0px;">
         <tr>
-          <j:forEach var="item" items="${report.typeReports.values()}">
+          <j:forEach var="item" items="${report.violations.entrySet()}">
             <td style="${td}">
-              <!--<img src="${rootURL}/images/16x16/${item.icon}"/> -->
-              ${item.type}
-              <v:numberdiff curr="${item.numberString}"
-                            prev="${prev.typeCount(item.type)}"/>
+              ${item.key}
+              <v:numberdiff curr="${item.value}"
+                            prev="${prev.violations.get(item.key)}"/>
             </td>
           </j:forEach>
         </tr>

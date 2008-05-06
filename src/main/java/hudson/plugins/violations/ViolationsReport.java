@@ -193,7 +193,11 @@ public class ViolationsReport
      */
     public Object getDynamic(
         String token, StaplerRequest req, StaplerResponse rsp) {
+        System.out.println("LOOKING for " + req.getRestOfPath());
         String name =  req.getRestOfPath();
+        if (name.equals("")) {
+            return null;
+        }
         if (name.startsWith("/")) {
             name = name.substring(1);
         }
@@ -349,6 +353,9 @@ public class ViolationsReport
      * @return the number of violations.
      */
     public int typeCount(String type) {
+        if (getModel() == null) {
+            return 0;
+        }
         return getModel().getTypeCountMap().get(type).getCount();
     }
 
@@ -358,6 +365,9 @@ public class ViolationsReport
      * @return the number of files.
      */
     public int fileCount(String type) {
+        if (getModel() == null) {
+            return 0;
+        }
         return getModel().getTypeCountMap().get(type).getNumberFiles();
     }
 

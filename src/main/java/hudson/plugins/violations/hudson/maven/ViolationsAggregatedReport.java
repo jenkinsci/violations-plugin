@@ -10,6 +10,7 @@ import hudson.model.HealthReport;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.maven.MavenBuild;
 
+import  hudson.plugins.violations.model.BuildModel;
 import  hudson.plugins.violations.ViolationsBuildAction;
 import  hudson.plugins.violations.ViolationsReport;
 
@@ -30,6 +31,11 @@ public class ViolationsAggregatedReport
     @Override
     public HealthReport getBuildHealth() {
         return healthReport;
+    }
+
+    @Override
+    public BuildModel getModel() {
+        return null;
     }
 
     public ViolationsReport getReportForMavenBuild(MavenBuild b) {

@@ -37,7 +37,8 @@ public class ViolationsMavenReporter extends MavenReporter {
     private final ViolationsConfig config =
         new  ViolationsConfig();
 
-    
+    private transient boolean registered;
+
     /**
      * Get the confiation object for this violations publisher.
      * @return the config.
@@ -75,11 +76,14 @@ public class ViolationsMavenReporter extends MavenReporter {
                 // (aggreatedactions get created after the postExecute(), but
                 // before the end()
                 getCreateBuildAction(build);
-                // Need to register the  MavenReporter as a ProjectAction
-                build.registerAsProjectAction(ViolationsMavenReporter.this);
                 return null;
             }
         });
+        // Need to register the  MavenReporter as a ProjectAction
+        if (!registered) {
+            build.registerAsProjectAction(this);
+            registered = true;
+        }
         return true;
     }
 

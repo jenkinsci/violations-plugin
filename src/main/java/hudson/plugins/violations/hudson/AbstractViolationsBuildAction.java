@@ -143,6 +143,14 @@ public abstract class AbstractViolationsBuildAction
     }
 
     /**
+     * Gets the first valid violations report.
+     * @return the first violations report found for this build.
+     */
+    public ViolationsReport findReport() {
+        return ViolationsReport.findViolationsReport(owner);
+    }
+
+    /**
      * Gets the test result of the previous build, if it's recorded, or null.
      */
     public T getPreviousResult() {

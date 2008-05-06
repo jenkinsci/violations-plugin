@@ -282,6 +282,38 @@ public class ViolationsReport
     }
 
     /**
+     * Get the string number for a particular type.
+     * @param t the type
+     * @return the string - a number for a value type,
+     *         "" for not found and "No reports" for
+     *         < 0.
+     */
+    public String getNumberString(String t) {
+        Integer v = violations.get(t);
+        if (v == null) {
+            return "";
+        }
+        if (v < 0) {
+            return "<span style='color:red'>No reports</span>";
+        }
+        return "" + v;
+    }
+
+    /**
+     * Get the icon for a type.
+     * @param t the type
+     * @return the icon name.
+     */
+    public String getIcon(String t) {
+        Integer v = violations.get(t);
+        HealthReport h = getHealthReportFor(t);
+        if (h == null) {
+            return null;
+        }
+        return h.getIconUrl();
+    }
+    
+    /**
      * Report class for a particular type.
      */
     public class TypeReport {

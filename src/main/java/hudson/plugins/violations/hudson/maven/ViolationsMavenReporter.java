@@ -89,6 +89,7 @@ public class ViolationsMavenReporter extends MavenReporter {
 
     public boolean end(MavenBuild build, Launcher launcher, BuildListener listener)
         throws InterruptedException, IOException {
+        registered = false;
         FilePath htmlPath   = new FilePath(
             new File(build.getProject().getRootDir(), VIOLATIONS));
         FilePath targetPath = new FilePath(

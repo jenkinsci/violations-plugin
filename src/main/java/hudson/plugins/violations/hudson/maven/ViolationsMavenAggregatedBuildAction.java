@@ -24,8 +24,6 @@ public class ViolationsMavenAggregatedBuildAction
     extends AbstractViolationsBuildAction
     implements MavenAggregatedReport {
 
-    transient private ViolationsAggregatedReport aggregatedReport;
-
     public ViolationsMavenAggregatedBuildAction(
         MavenModuleSetBuild owner) {
         super(owner);
@@ -47,38 +45,23 @@ public class ViolationsMavenAggregatedBuildAction
         return new ViolationsMavenAggregatedProjectAction(moduleSet);
     }
 
-
-    @Override
-    public HealthReport getBuildHealth() {
-        initReports();
-        return super.getBuildHealth();
-    }
-
     /**
      * Get the report.
      * @return the report.
      */
+    @Override
     public ViolationsAggregatedReport getReport() {
-        initReports();
-        aggregatedReport.setBuild(getBuild());
-        return aggregatedReport;
+        return new ViolationsAggregatedReport(
+            (MavenModuleSetBuild) getBuild());
     }
 
     /**
      * get rhe previous valid build result.
      * @return the previous violations build action.
      */
+    @Override
     public ViolationsMavenAggregatedBuildAction getPreviousResult() {
         return (ViolationsMavenAggregatedBuildAction) super.getPreviousResult();
-    }
-
-    private void initReports() {
-        if (aggregatedReport != null) {
-            return;
-        }
-        // FIXME: generics
-        aggregatedReport = new ViolationsAggregatedReport(
-            (MavenModuleSetBuild) getBuild());
     }
 
 }

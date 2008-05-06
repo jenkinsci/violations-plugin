@@ -6,7 +6,7 @@
          >
   <t:summary
     icon = '/plugin/violations/images/48x48/dialog-warning.png'>
-    <j:set var="report" value="${it.report}"/>
+    <j:set var="report" value="${it.findReport()}"/>
     <j:set var="prev" value="${report.previous()}"/>
     <j:set var="td" value="padding-left:0.5em;padding-right:0.5em;
                            border-width:0px 0px 0px 0px;"/>

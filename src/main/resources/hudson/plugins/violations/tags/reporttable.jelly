@@ -1,0 +1,41 @@
+<!--
+     Attributes:
+     report: the violationsReport (may be null)
+     icon:   (boolean) show icon
+-->
+<j:jelly
+  xmlns:j="jelly:core"
+  xmlns:st="jelly:stapler"
+  xmlns:d="jelly:define"
+  xmlns:l="/lib/layout"
+  xmlns:t="/lib/hudson"
+  xmlns:f="/lib/form"
+  xmlns:v="/hudson/plugins/violations/tags">
+  <j:if test="${attrs.report != null}">
+
+    <j:set var="report" value="${attrs.report}"/>
+    <j:set var="prev" value="${report.previous()}"/>
+    <j:set
+      var="icon_24"
+      value="${rootURL}/plugin/violations/images/24x24/dialog-warning.png"/>
+    <j:set var="td" value="padding-left:0.5em;padding-right:0.5em;
+                         border-width:0px 0px 0px 0px;"/>
+    <table style="border-spacing:0;
+                  border-collapse:collapse;
+                  border-width:0px 0px 0px 0px;">
+      <tr>
+        <td style="${td}"><img src="${icon_24}"/></td>
+        <j:forEach var="item" items="${report.violations.entrySet()}">
+          <td style="${td}">
+            <j:if test="${attrs.icon}">
+              <img src="${rootURL}/images/16x16/${report.getIcon(item.key)}"/>
+            </j:if>
+            ${item.key}
+            <v:numberdiff curr="${report.getNumberString(item.key)}"
+                          prev="${prev.violations.get(item.key)}"/>
+          </td>
+        </j:forEach>
+      </tr>
+    </table>
+  </j:if>
+</j:jelly>

@@ -22,23 +22,7 @@
       </h1>
 
       <h2>Aggregated</h2>
-      <j:set var="report" value="${it}"/>
-      <j:set var="prev" value="${report.previous()}"/>
-      <j:set var="td" value="padding-left:0.5em;padding-right:0.5em;
-                             border-width:0px 0px 0px 0px;"/>
-      <table style="border-spacing:0;
-                    border-collapse:collapse;
-                    border-width:0px 0px 0px 0px;">
-        <tr>
-          <j:forEach var="item" items="${report.violations.entrySet()}">
-            <td style="${td}">
-              ${item.key}
-              <v:numberdiff curr="${item.value}"
-                            prev="${prev.violations.get(item.key)}"/>
-            </td>
-          </j:forEach>
-        </tr>
-      </table>
+      <v:reporttable report="${it}" icon="false"/>
       <div>
         <img src="graph" />
       </div>
@@ -64,20 +48,7 @@
                   ${m.displayName}
                 </a>
                 <br />
-                <table style="border-spacing:0;
-                              border-collapse:collapse;
-                              border-width:0px 0px 0px 0px;">
-                  <tr>
-                    <j:forEach var="item" items="${report.typeReports.values()}">
-                      <td style="${td}">
-                        <img src="${rootURL}/images/16x16/${item.icon}"/>
-                        ${item.type}
-                        <v:numberdiff curr="${item.numberString}"
-                                      prev="${prev.typeCount(item.type)}"/>
-                      </td>
-                    </j:forEach>
-                  </tr>
-                </table>
+                <v:reporttable report="${report}" icon="true"/>
                 <a href="../${m.shortUrl}violations">
                   <img src="../${m.shortUrl}violations/graph" />
                 </a>

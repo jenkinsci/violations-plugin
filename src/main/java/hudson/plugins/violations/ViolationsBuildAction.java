@@ -113,7 +113,10 @@ public class ViolationsBuildAction
     }
 
     public ViolationsReport getReport() {
-        report.setBuild(getBuild());
+        if (report != null) {
+            // FIXME: really need to find the real reason for need to set build.
+            report.setBuild(getBuild());
+        }
         return report;
     }
 

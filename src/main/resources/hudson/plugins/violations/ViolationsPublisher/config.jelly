@@ -61,11 +61,6 @@
         <td width="8%" align="center" style="${td}">
           <img src="${icons}/yellow.gif" title="unstable" alt="unstable"/>
         </td>
-        <!--
-        <td width="8%" align="center" style="${td}">
-          <img src="${icons}/red.gif" title="fail" alt="fail"/>
-        </td>
-             -->
         <td width="76%" style="${td}">
           <st:nbsp/>
           XML filename pattern
@@ -90,12 +85,6 @@
             <f:textbox name="${inst.name}.unstable"
                        value="${inst.unstable}"/>
           </td>
-          <!--
-          <td width="8%" style="${td}">
-            <f:textbox name="${inst.name}.fail"
-                       value="${inst.fail}"/>
-          </td>
-               -->
           <j:choose>
             <j:set var="typeDescriptor"
                    value="${config.typeDescriptorMap.get(inst.name)}"/>
@@ -103,9 +92,11 @@
                    value="${typeDescriptor.mavenTargets}"/>
             <j:when test="${descriptor.freeStyle}">
               <!-- NORMAL XML FILE PATTERN -->
-              <td width="76" style="${td}">
-                <f:textbox name="${inst.name}.pattern"
-                           value="${inst.pattern}"/>
+              <td width="76%" style="${td}">
+                <f:textbox 
+                  width="100%"
+                  name="${inst.name}.pattern"
+                  value="${inst.pattern}"/>
               </td>
             </j:when>
             <j:otherwise>

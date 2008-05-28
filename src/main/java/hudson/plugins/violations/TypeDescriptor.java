@@ -10,6 +10,7 @@ import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
 import hudson.plugins.violations.types.cpd.CPDDescriptor;
 import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 import hudson.plugins.violations.types.simian.SimianDescriptor;
+import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
 
 /**
  * A descriptor for a violation type.
@@ -81,6 +82,7 @@ public abstract class TypeDescriptor {
         addDescriptor(PyLintDescriptor.DESCRIPTOR);
         addDescriptor(FxCopDescriptor.DESCRIPTOR);
         addDescriptor(SimianDescriptor.DESCRIPTOR);
+        addDescriptor(StyleCopDescriptor.DESCRIPTOR);
     }
 }
 

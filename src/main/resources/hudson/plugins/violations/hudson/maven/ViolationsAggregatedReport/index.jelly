@@ -39,7 +39,7 @@
                 <j:set var="prev" value="${report.previous()}"/>
                 <j:set var="td" value="padding-left:0.5em;padding-right:0.5em;
                                        border-width:0px 0px 0px 0px;"/>
-                <a href="${m.shortUrl}">
+                <a href="../${m.shortUrl}">
                   <img src="${imagesURL}/16x16/${mb.buildStatusUrl}"
                        alt="${mb.iconColor.description}"/>
                 </a>
@@ -58,6 +58,7 @@
                 <st:nbsp/>
                 ${m.displayName} (didn't run)
               </j:otherwise>
+            <br />
             </j:choose>
           </j:forEach>
         </j:when>

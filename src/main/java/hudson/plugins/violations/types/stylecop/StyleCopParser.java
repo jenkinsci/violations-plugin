@@ -44,7 +44,12 @@ public class StyleCopParser implements ViolationsParser {
             docBuilder = docBuilderFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(new FileInputStream(new File(projectPath, fileName)));
 
+            // Pre v4.3 uses SourceAnalysisViolations as the parent node name
             NodeList mainNode = doc.getElementsByTagName("SourceAnalysisViolations");
+            if (mainNode.getLength() == 0) {
+                // v4.3 uses StyleCopViolations as the parent node name
+                mainNode = doc.getElementsByTagName("StyleCopViolations");
+            }
 
             Element rootElement = (Element) mainNode.item(0);
             parseViolations(XmlElementUtil.getNamedChildElements(rootElement, "Violation"));

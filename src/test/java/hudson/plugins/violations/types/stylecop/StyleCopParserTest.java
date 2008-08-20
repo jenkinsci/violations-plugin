@@ -62,4 +62,12 @@ public class StyleCopParserTest {
         Violation otherV = iterator.next();
         assertTrue("compareTo() should return false", v.compareTo(otherV) != 0);
     }
+    
+    @Test
+    public void assertParsingVersion43() throws Exception {
+        FullBuildModel model = getFullBuildModel("stylecop-v4.3.xml");
+        
+        assertEquals("Number of violations is incorrect", 2, model.getCountNumber(StyleCopParser.TYPE_NAME));
+        assertEquals("Number of files is incorrect", 1, model.getFileModelMap().size());
+    }
 }

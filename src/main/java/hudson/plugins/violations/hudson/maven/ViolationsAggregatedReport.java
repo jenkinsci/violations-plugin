@@ -57,10 +57,12 @@ public class ViolationsAggregatedReport
                 b, a.getReport());
             reports.add(r);
             HealthReport x = a.getReport().getBuildHealth();
-            HealthReport aReport =
-                new HealthReport(
+            HealthReport aReport = null;
+            if (x != null) {
+                aReport = new HealthReport(
                     x.getScore(),
                     x.getDescription() + " in " + r.getDisplayName());
+            }
             if (aReport != null) {
                 healthReport = HealthReport.min(healthReport, aReport);
             }

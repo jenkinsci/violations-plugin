@@ -25,7 +25,7 @@ public class AbsoluteFileFinder {
     public File getFileForName(String name) {
         for (String p : sourcePaths) {
             File f = new File(new File(p), name);
-            if (f.exists()) {
+            if (f.isFile()) {
                 return f;
             }
         }

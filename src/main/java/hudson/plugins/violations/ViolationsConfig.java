@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Set;
+import java.util.TreeSet;
 import java.io.Serializable;
+import  hudson.plugins.violations.model.Suppression;
 
 /**
  * The configuration class for the violations plugin.
  */
 public class ViolationsConfig implements Cloneable, Serializable {
     private static final int LIMIT_DEFAULT = 100;
+
+    private Set<Suppression> suppressions = new TreeSet<Suppression>();
 
     private TreeMap<String, TypeConfig> typeConfigs
         = new TreeMap<String, TypeConfig>();
@@ -36,6 +41,17 @@ public class ViolationsConfig implements Cloneable, Serializable {
             typeConfigs.put(
                 type, new TypeConfig(type));
         }
+    }
+
+    /**
+     * Get the suppressions.
+     * THis is created lazily - so synchronize the call.
+     * @return the current set of violation suppressions.
+     */
+    public Set<Suppression> getSuppressions() {
+        if (suppressions == null)
+            suppressions = new TreeSet<Suppression>();
+        return suppressions;
     }
 
     /**
@@ -133,6 +149,7 @@ public class ViolationsConfig implements Cloneable, Serializable {
     private final static String[] ENCODING_STRINGS = new String[] {
         "default",
         "Cp1252",
+        //"MS-932",  -- check again
         "ISO8859_1",
         "UTF-8",
         "UTF-16",

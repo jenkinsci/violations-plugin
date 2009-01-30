@@ -193,7 +193,7 @@ public class ViolationsReport
      */
     public Object getDynamic(
         String token, StaplerRequest req, StaplerResponse rsp) {
-        System.out.println("LOOKING for " + req.getRestOfPath());
+        //System.out.println("LOOKING for " + req.getRestOfPath());
         String name =  req.getRestOfPath();
         if (name.equals("")) {
             return null;

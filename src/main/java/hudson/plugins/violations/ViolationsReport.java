@@ -19,6 +19,9 @@ import org.kohsuke.stapler.StaplerResponse;
 import hudson.model.HealthReport;
 import hudson.model.AbstractBuild;
 import hudson.model.Result;
+import hudson.model.AbstractProject;
+import hudson.model.Project;
+import hudson.maven.MavenModule;
 
 import hudson.plugins.violations.parse.ParseXML;
 import hudson.plugins.violations.parse.BuildModelParser;
@@ -26,10 +29,14 @@ import hudson.plugins.violations.render.FileModelProxy;
 import hudson.plugins.violations.render.NoViolationsFile;
 import hudson.plugins.violations.model.BuildModel;
 import hudson.plugins.violations.model.FileModel;
+import hudson.plugins.violations.model.Suppression;
 import hudson.plugins.violations.util.RecurDynamic;
 import hudson.plugins.violations.util.HelpHudson;
 
 import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
+import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
+import hudson.plugins.violations.hudson.maven.*;
+
 
 
 /**
@@ -209,6 +216,59 @@ public class ViolationsReport
             return new RecurDynamic(
                 "", name, new NoViolationsFile(name, build));
         }
+    }
+
+    /**
+     * get the configuration for this job.
+     * @return the configuration of the job.
+     */
+    public ViolationsConfig getLiveConfig() {
+        AbstractProject<?, ?> abstractProject = build.getProject();
+        AbstractProject notQuestion = (AbstractProject) abstractProject;
+        if (abstractProject instanceof Project) {
+            Project project = (Project) abstractProject;
+            ViolationsPublisher publisher
+                = (ViolationsPublisher) project.getPublisher(
+                    ViolationsPublisher.DESCRIPTOR);
+            return publisher == null
+                ? null
+                : publisher.getConfig();
+        } else if (notQuestion instanceof MavenModule) {
+            MavenModule mavenModule = (MavenModule) notQuestion;
+            ViolationsMavenReporter reporter
+                = (ViolationsMavenReporter) mavenModule.getReporters().
+                get(ViolationsMavenReporter.DESCRIPTOR);
+            return reporter == null
+                ? null
+                : reporter.getConfig();
+        }
+        return null;
+    }
+
+    /**
+     * Add a suppression to the set of suppressions.
+     * @param suppression the suppression to add.
+     */
+    public void addSuppression(Suppression suppression)
+        throws IOException {
+        ViolationsConfig config = getLiveConfig();
+        if (config != null) {
+            config.getSuppressions().add(suppression);
+            ((AbstractProject)build.getParent()).save();
+        }
+    }
+
+    /**
+     * Remove a suppression to the set of suppressions.
+     * @param suppression the suppression to remove.
+     */
+    public void removeSuppression(Suppression suppression)
+        throws IOException {
+        ViolationsConfig config = getLiveConfig();
+        if (config != null) {
+            config.getSuppressions().remove(suppression);
+             ((AbstractProject)build.getParent()).save();
+       }
     }
 
     /**

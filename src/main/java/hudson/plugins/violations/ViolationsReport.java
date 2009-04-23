@@ -493,7 +493,12 @@ public class ViolationsReport
     private boolean isUnstable() {
          for (String t: violations.keySet()) {
             int count = violations.get(t);
-            if (count >= config.getTypeConfigs().get(t).getUnstable()) {
+            Integer unstableLimit
+                = config.getTypeConfigs().get(t).getUnstable();
+            if (unstableLimit == null) {
+                continue;
+            }
+            if (count >= unstableLimit) {
                 return true;
             }
         }

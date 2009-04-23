@@ -12,7 +12,7 @@
   <packaging>hpi</packaging>
   <version>0.7.4-SNAPSHOT</version>
   <name>Hudson Violations plugin</name>
-  <url>http://hudson.gotdns.com/wiki/display/HUDSON/Violations</url>
+  <url>http://wiki.hudson-ci.org/display/HUDSON/Violations</url>
  
   <build>
      <plugins>

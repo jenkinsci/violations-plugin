@@ -21,7 +21,9 @@ import hudson.model.AbstractBuild;
 import hudson.model.Result;
 import hudson.model.AbstractProject;
 import hudson.model.Project;
+/** cannot be used in a slave
 import hudson.maven.MavenModule;
+/**/
 
 import hudson.plugins.violations.parse.ParseXML;
 import hudson.plugins.violations.parse.BuildModelParser;
@@ -35,7 +37,9 @@ import hudson.plugins.violations.util.HelpHudson;
 
 import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
 import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
+/** cannot be used in a slave
 import hudson.plugins.violations.hudson.maven.*;
+/**/
 
 
 
@@ -233,6 +237,7 @@ public class ViolationsReport
             return publisher == null
                 ? null
                 : publisher.getConfig();
+            /** Remove the following as it cannot be uesed in a slave
         } else if (notQuestion instanceof MavenModule) {
             MavenModule mavenModule = (MavenModule) notQuestion;
             ViolationsMavenReporter reporter
@@ -241,6 +246,7 @@ public class ViolationsReport
             return reporter == null
                 ? null
                 : reporter.getConfig();
+                /**/
         }
         return null;
     }

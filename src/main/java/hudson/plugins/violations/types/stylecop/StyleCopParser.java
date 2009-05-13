@@ -23,6 +23,7 @@ import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.types.fxcop.XmlElementUtil;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
 import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.ParseUtil;
 
 /**
  * Parses a StyleCop (http://code.msdn.microsoft.com/sourceanalysis/) xml report file.
@@ -33,8 +34,13 @@ public class StyleCopParser implements ViolationsParser {
     static final String TYPE_NAME = "stylecop";
     private FullBuildModel model;
     private File reportParentFile;
+    private File projectPath;
 
-    public void parse(FullBuildModel model, File projectPath, String fileName, String[] sourcePaths) throws IOException {
+    public void parse(
+        FullBuildModel model,
+        File projectPath,
+        String fileName, String[] sourcePaths) throws IOException {
+        this.projectPath = projectPath;
         this.model = model;
         this.reportParentFile = new File(fileName).getParentFile();
         
@@ -125,7 +131,8 @@ public class StyleCopParser implements ViolationsParser {
             // Add the violation to the model
             String displayName;
             if (reportParentFile == null) {
-                displayName = getString(element,"Source");
+                displayName = ParseUtil.resolveAbsoluteName(
+                    projectPath, getString(element,"Source"));
             } else {
                 displayName = reportParentFile.getPath() + File.separator + getString(element,"Source");
             }

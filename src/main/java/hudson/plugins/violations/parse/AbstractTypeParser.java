@@ -179,24 +179,6 @@ public abstract class AbstractTypeParser
      *         name if the name cannot be resolved.
      */
     protected String resolveName(String absoluteName) {
-        String remote = projectPath.getAbsolutePath().replace('\\', '/');
-        String lcRemote = remote.toLowerCase(Locale.US);
-        String name = absoluteName.replace('\\', '/');
-        String lcName = name.toLowerCase(Locale.US);
-        if (lcName.startsWith(lcRemote)) {
-            name = name.substring(lcRemote.length());
-        } else {
-            // for absolute name discard dos drive
-            int colPos = name.indexOf(':');
-            int dirPos = name.indexOf('/');
-            if (colPos != -1 && (dirPos == -1 || dirPos > colPos)) {
-                name = name.substring(colPos + 1);
-            }
-        }
-        // if name starts with a / strip it.
-        if (name.startsWith("/")) {
-            name = name.substring(1);
-        }
-        return name;
+        return ParseUtil.resolveAbsoluteName(projectPath, absoluteName);
     }
 }

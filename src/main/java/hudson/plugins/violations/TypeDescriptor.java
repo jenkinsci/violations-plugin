@@ -7,6 +7,7 @@ import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
 import hudson.plugins.violations.types.pmd.PMDDescriptor;
 import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
 import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
+import hudson.plugins.violations.types.gendarme.GendarmeDescriptor;
 import hudson.plugins.violations.types.cpd.CPDDescriptor;
 import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 import hudson.plugins.violations.types.simian.SimianDescriptor;
@@ -83,6 +84,7 @@ public abstract class TypeDescriptor {
         addDescriptor(FxCopDescriptor.DESCRIPTOR);
         addDescriptor(SimianDescriptor.DESCRIPTOR);
         addDescriptor(StyleCopDescriptor.DESCRIPTOR);
+        addDescriptor(GendarmeDescriptor.DESCRIPTOR);
     }
 }
 

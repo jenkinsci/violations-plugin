@@ -1,26 +1,22 @@
 package hudson.plugins.violations;
 
+import hudson.Extension;
+import hudson.tasks.BuildStepMonitor;
 import java.io.File;
 import java.io.IOException;
-
-import java.util.Map;
 
 import hudson.FilePath;
 import hudson.Launcher;
 
+import hudson.model.AbstractBuild;
 import hudson.model.Action;
-import hudson.model.Build;
 import hudson.model.BuildListener;
-import hudson.model.Descriptor;
 import hudson.model.AbstractProject;
-import hudson.model.Result;
 import hudson.tasks.Publisher;
-
-import org.kohsuke.stapler.StaplerRequest;
-import hudson.maven.AbstractMavenProject;
-import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Recorder;
 
 import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
+import hudson.tasks.BuildStepDescriptor;
 
 
 /**
@@ -29,7 +25,7 @@ import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
  *
  * @author Peter Reilly
  */
-public class ViolationsPublisher extends Publisher {
+public class ViolationsPublisher extends Recorder {
 
     private static final String VIOLATIONS = "violations";
 
@@ -65,8 +61,9 @@ public class ViolationsPublisher extends Publisher {
      * @throws IOException
      *             if problem parsing the xml files
      */
+    @Override
     public boolean perform(
-        Build<?, ?> build, Launcher launcher,
+        AbstractBuild<?, ?> build, Launcher launcher,
         BuildListener listener) throws InterruptedException, IOException {
 
         FilePath htmlPath   = new FilePath(
@@ -74,7 +71,7 @@ public class ViolationsPublisher extends Publisher {
         FilePath targetPath = new FilePath(
             new File(build.getRootDir(), VIOLATIONS));
 
-        ViolationsReport report = build.getProject().getWorkspace().act(
+        ViolationsReport report = build.getWorkspace().act(
             new ViolationsCollector(false, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);
@@ -89,20 +86,27 @@ public class ViolationsPublisher extends Publisher {
      * @param project the project to create the action for.
      * @return the created violations project action.
      */
+    @Override
     public Action getProjectAction(AbstractProject<?, ?> project) {
         return new ViolationsProjectAction(project);
+    }
+
+    public BuildStepMonitor getRequiredMonitorService() {
+        return BuildStepMonitor.BUILD;
     }
 
     /**
      * Get the descriptor.
      * @return the violations publisher descriptor.
      */
-    public Descriptor<Publisher> getDescriptor() {
+    @Override
+    public BuildStepDescriptor<Publisher> getDescriptor() {
         return DESCRIPTOR;
     }
 
     /** The descriptor for this publisher - used in project config page. */
-    public static final Descriptor<Publisher> DESCRIPTOR
+    @Extension
+    public static final BuildStepDescriptor<Publisher> DESCRIPTOR
         = new ViolationsFreestyleDescriptor();
 
 }

@@ -2,7 +2,6 @@ package hudson.plugins.violations.hudson;
 
 import java.util.Map;
 
-import hudson.model.Descriptor;
 import hudson.model.AbstractProject;
 import hudson.tasks.Publisher;
 
@@ -13,6 +12,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.plugins.violations.ViolationsPublisher;
 import hudson.plugins.violations.ViolationsConfig;
 import hudson.plugins.violations.TypeConfig;
+import net.sf.json.JSONObject;
 
 
 /**
@@ -55,7 +55,7 @@ public final class ViolationsFreestyleDescriptor
      * @return a new ViolationsPublisher.
      */
     @Override
-    public Publisher newInstance(StaplerRequest req) {
+    public Publisher newInstance(StaplerRequest req, JSONObject formData) {
         ViolationsPublisher pub = new ViolationsPublisher();
         req.bindParameters(pub, "violations.");
         req.bindParameters(pub.getConfig(), "config.");

@@ -171,7 +171,7 @@ public abstract class AbstractViolationsBuildAction
         throws IOException {
         String type = req.getParameter("type");
 
-        if (ChartUtil.awtProblem) {
+        if (ChartUtil.awtProblemCause != null) {
             // not available. send out error message
             rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
             return;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import hudson.model.AbstractBuild;
 import hudson.model.HealthReport;
 
 import hudson.maven.MavenModuleSetBuild;
@@ -61,7 +60,8 @@ public class ViolationsAggregatedReport
             if (x != null) {
                 aReport = new HealthReport(
                     x.getScore(),
-                    x.getDescription() + " in " + r.getDisplayName());
+                    Messages._ViolationsAggregatedReport_HealthDescription(
+                        x.getDescription(), r.getDisplayName()));
             }
             if (aReport != null) {
                 healthReport = HealthReport.min(healthReport, aReport);

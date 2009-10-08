@@ -1,5 +1,6 @@
 package hudson.plugins.violations.hudson.maven;
 
+import hudson.Extension;
 import hudson.maven.MavenBuild;
 import hudson.maven.MavenReporter;
 import hudson.maven.MavenReporterDescriptor;
@@ -7,7 +8,6 @@ import hudson.maven.MavenModule;
 import hudson.maven.MavenBuildProxy;
 import hudson.maven.MojoInfo;
 
-import org.kohsuke.stapler.StaplerRequest;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,12 +18,8 @@ import hudson.plugins.violations.ViolationsProjectAction;
 import hudson.plugins.violations.ViolationsBuildAction;
 import hudson.plugins.violations.ViolationsReport;
 import hudson.plugins.violations.ViolationsCollector;
-import hudson.plugins.violations.hudson.*;
 import hudson.model.BuildListener;
-import hudson.model.Result;
 import hudson.Launcher;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import hudson.model.Action;
 import hudson.FilePath;
@@ -31,6 +27,7 @@ import hudson.FilePath;
 public class ViolationsMavenReporter extends MavenReporter {
     private static final String VIOLATIONS = "violations";
 
+    @Extension
     public static final ViolationsMavenDescriptor DESCRIPTOR
         = new ViolationsMavenDescriptor();
 
@@ -63,6 +60,7 @@ public class ViolationsMavenReporter extends MavenReporter {
      * - so if the maven args are pmd:pmd checkstyle:checkstyle
      * this will get called twice.
      */
+    @Override
     public boolean postExecute(
         MavenBuildProxy build, MavenProject pom, MojoInfo mojo,
         BuildListener listener, Throwable error)
@@ -95,7 +93,7 @@ public class ViolationsMavenReporter extends MavenReporter {
         FilePath targetPath = new FilePath(
             new File(build.getRootDir(), VIOLATIONS));
 
-        ViolationsReport report = build.getProject().getWorkspace().act(
+        ViolationsReport report = build.getWorkspace().act(
             new ViolationsCollector(true, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);

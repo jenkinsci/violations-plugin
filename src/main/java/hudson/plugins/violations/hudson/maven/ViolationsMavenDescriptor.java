@@ -4,13 +4,12 @@ import java.util.Map;
 
 import hudson.maven.MavenReporter;
 import hudson.maven.MavenReporterDescriptor;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
 import hudson.plugins.violations.ViolationsConfig;
 import hudson.plugins.violations.ViolationsPublisher;
 import hudson.plugins.violations.TypeConfig;
-
-import hudson.plugins.violations.hudson.*;
 
 public class ViolationsMavenDescriptor
     extends MavenReporterDescriptor {
@@ -39,7 +38,7 @@ public class ViolationsMavenDescriptor
 
     /** {@inheritDoc} */
     @Override
-    public MavenReporter newInstance(final StaplerRequest req)
+    public MavenReporter newInstance(final StaplerRequest req, JSONObject formData)
         throws FormException {
         ViolationsMavenReporter pub = new ViolationsMavenReporter();
         req.bindParameters(pub, "violations.");

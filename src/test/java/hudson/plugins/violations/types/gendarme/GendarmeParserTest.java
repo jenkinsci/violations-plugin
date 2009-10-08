@@ -34,7 +34,8 @@ public class GendarmeParserTest {
 	
 	@Test
 	public void testParseViolationData() throws IOException {
-		FullBuildModel model = getFullBuildModel("Gendarme.xml");
+		FullBuildModel model = getFullBuildModel(
+                        "Gendarme" + (File.separatorChar == '/' ? "_unix" : "") + ".xml");
 		
 		assertEquals("Number of violations is incorrect", 3, model.getCountNumber(GendarmeParser.TYPE_NAME));
 		for(String fileModelKey : model.getFileModelMap().keySet()){

@@ -36,7 +36,6 @@ import hudson.plugins.violations.util.RecurDynamic;
 import hudson.plugins.violations.util.HelpHudson;
 
 import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
-import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
 /** cannot be used in a slave
 import hudson.plugins.violations.hudson.maven.*;
 /**/
@@ -144,10 +143,10 @@ public class ViolationsReport
             config.getTypeConfigs().get(type).getHealthFor(count);
         if (h < 0) {
             return new HealthReport(
-                0, "No xml report files found for " + type);
+                0, Messages._ViolationsReport_NoReport(type));
         } else {
             return new HealthReport(
-                h, "Number of " + type + " violations is " + count);
+                h, Messages._ViolationsReport_ViolationsCount(type, count));
         }
     }
 

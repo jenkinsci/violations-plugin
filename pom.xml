@@ -29,6 +29,11 @@
   		<email>mathias.kluba@gmail.com</email>
   		<url>http://grozeille.com</url>
   	</contributor>
+    <contributor>
+        <name>Cliffano Subagio</name>
+        <email>blah@cliffano.com</email>
+        <timezone>+10</timezone>
+    </contributor>
   </contributors>
  
   <build>

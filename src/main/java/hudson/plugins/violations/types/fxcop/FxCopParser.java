@@ -128,7 +128,7 @@ public class FxCopParser implements ViolationsParser {
 
     private void parseAccessors(Element accessorsElement, String parentName) {
         if (accessorsElement != null) {
-            for (Element member : XmlElementUtil.getNamedChildElements(accessorsElement, "Accessors")) {
+            for (Element member : XmlElementUtil.getNamedChildElements(accessorsElement, "Accessor")) {
                 parseMember(member, parentName);
             }
         }

@@ -52,7 +52,7 @@ public class JsLintParser extends AbstractTypeParser {
         violation.setType(TYPE_NAME);
         violation.setLine(getString("line"));
         violation.setMessage(getString("reason"));
-        //violation.setSource(getString("evidence"));
+        violation.setSource(getString("evidence"));
         violation.setSeverity(Severity.MEDIUM);
         
         getParser().next();

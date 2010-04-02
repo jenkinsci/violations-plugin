@@ -62,12 +62,12 @@ public class JsLintParserTest {
         assertEquals("Expected 'Version' to have an indentation at 5 instead at 3.", v.getPopupMessage());
         assertEquals(10, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
-        //assertEquals("1',", v.getSource());
+        assertEquals("1',", v.getSource());
         v = iterator.next();
         assertEquals("Expected 'Browser' to have an indentation at 5 instead at 3.", v.getPopupMessage());
         assertEquals(12, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
-        //assertEquals("  Browser: (function(){", v.getSource());
+        assertEquals("  Browser: (function(){", v.getSource());
         
         // check the last violation
         while (iterator.hasNext()) {
@@ -76,7 +76,7 @@ public class JsLintParserTest {
         assertEquals("Too many errors. (0% scanned).", v.getPopupMessage());
         assertEquals(46, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
-        //assertEquals("", v.getSource());
+        assertEquals("", v.getSource());
     }
     
     private void assertScriptaculous(FullBuildModel model) {
@@ -87,12 +87,12 @@ public class JsLintParserTest {
         assertEquals("Expected 'Version' to have an indentation at 5 instead at 3.", v.getPopupMessage());
         assertEquals(27, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
-        //assertEquals("3',", v.getSource());
+        assertEquals("3',", v.getSource());
         v = iterator.next();
         assertEquals("Expected 'require' to have an indentation at 5 instead at 3.", v.getPopupMessage());
         assertEquals(28, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
-        //assertEquals("  require: function(libraryName) {", v.getSource());
+        assertEquals("  require: function(libraryName) {", v.getSource());
         
         // check the last violation
         while (iterator.hasNext()) {
@@ -101,6 +101,6 @@ public class JsLintParserTest {
         assertEquals("Too many errors. (83% scanned).", v.getPopupMessage());
         assertEquals(57, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
-        //assertEquals("", v.getSource());
+        assertEquals("", v.getSource());
     }
 }

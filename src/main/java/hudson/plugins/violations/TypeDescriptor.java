@@ -12,6 +12,7 @@ import hudson.plugins.violations.types.cpd.CPDDescriptor;
 import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 import hudson.plugins.violations.types.simian.SimianDescriptor;
 import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
+import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
 import hudson.plugins.violations.types.jslint.JsLintDescriptor;
 
 /**
@@ -86,6 +87,7 @@ public abstract class TypeDescriptor {
         addDescriptor(SimianDescriptor.DESCRIPTOR);
         addDescriptor(StyleCopDescriptor.DESCRIPTOR);
         addDescriptor(GendarmeDescriptor.DESCRIPTOR);
+        addDescriptor(JcReportDescriptor.DESCRIPTOR);
         addDescriptor(JsLintDescriptor.DESCRIPTOR);
     }
 }

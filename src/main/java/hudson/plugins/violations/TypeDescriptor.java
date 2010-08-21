@@ -14,6 +14,7 @@ import hudson.plugins.violations.types.simian.SimianDescriptor;
 import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
 import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
 import hudson.plugins.violations.types.jslint.JsLintDescriptor;
+import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
 
 /**
  * A descriptor for a violation type.
@@ -89,6 +90,7 @@ public abstract class TypeDescriptor {
         addDescriptor(GendarmeDescriptor.DESCRIPTOR);
         addDescriptor(JcReportDescriptor.DESCRIPTOR);
         addDescriptor(JsLintDescriptor.DESCRIPTOR);
+        addDescriptor(CodenarcDescriptor.DESCRIPTOR);
     }
 }
 

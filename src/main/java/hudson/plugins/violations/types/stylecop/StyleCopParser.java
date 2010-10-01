@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import hudson.util.IOException2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -62,9 +63,9 @@ public class StyleCopParser implements ViolationsParser {
             
             findSourceFiles(model, projectPath.getPath(), sourcePaths);            
         } catch (ParserConfigurationException pce) {
-            throw new IOException(pce);
+            throw new IOException2(pce);
         } catch (SAXException se) {
-            throw new IOException(se);
+            throw new IOException2(se);
         }    
     }
     

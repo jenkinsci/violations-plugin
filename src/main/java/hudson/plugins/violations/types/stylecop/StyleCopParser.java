@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import hudson.FilePath;
+import hudson.plugins.violations.parse.ParseUtil;
 import hudson.util.IOException2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,7 +42,9 @@ public class StyleCopParser implements ViolationsParser {
         File projectPath,
         String fileName, String[] sourcePaths) throws IOException {
         this.model = model;
-        this.reportParentFile = new File(fileName).getAbsoluteFile().getParentFile();
+        this.reportParentFile = new File(fileName).getParentFile();
+        if (this.reportParentFile==null)
+            this.reportParentFile = projectPath;
         
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -129,6 +132,7 @@ public class StyleCopParser implements ViolationsParser {
             
             // Add the violation to the model
             String displayName = new FilePath(reportParentFile).child(getString(element,"Source")).getRemote();
+            displayName = ParseUtil.resolveAbsoluteName(reportParentFile,displayName);
 
             /* TODO: apply heuristics to fine the source.
 

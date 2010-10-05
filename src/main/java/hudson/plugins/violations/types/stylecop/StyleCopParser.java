@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import hudson.FilePath;
 import hudson.util.IOException2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,7 +25,6 @@ import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.types.fxcop.XmlElementUtil;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
 import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.parse.ParseUtil;
 
 /**
  * Parses a StyleCop (http://code.msdn.microsoft.com/sourceanalysis/) xml report file.
@@ -35,15 +35,13 @@ public class StyleCopParser implements ViolationsParser {
     static final String TYPE_NAME = "stylecop";
     private FullBuildModel model;
     private File reportParentFile;
-    private File projectPath;
 
     public void parse(
         FullBuildModel model,
         File projectPath,
         String fileName, String[] sourcePaths) throws IOException {
-        this.projectPath = projectPath;
         this.model = model;
-        this.reportParentFile = new File(fileName).getParentFile();
+        this.reportParentFile = new File(fileName).getAbsoluteFile().getParentFile();
         
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -130,13 +128,20 @@ public class StyleCopParser implements ViolationsParser {
             }            
             
             // Add the violation to the model
-            String displayName;
-            if (reportParentFile == null) {
-                displayName = ParseUtil.resolveAbsoluteName(
-                    projectPath, getString(element,"Source"));
-            } else {
-                displayName = reportParentFile.getPath() + File.separator + getString(element,"Source");
-            }
+            String displayName = new FilePath(reportParentFile).child(getString(element,"Source")).getRemote();
+
+            /* TODO: apply heuristics to fine the source.
+
+                StyleCop just puts whatever path representation it gets from MSBuild into @Source,
+                which can be relative (to the current directory MSBuild run in, which we won't know.)
+                In such a case, there's really no reliable way for us to deterministically figure out
+                where the source code is in the source tree.
+
+                The resolution against 'reportParentFile' is quite arbitrary in that sense and only
+                works if the report is created into the same directory as the MSBuild current directory,
+                but it is a backward compatible behaviour.
+             */
+
             FullFileModel fileModel = model.getFileModel(displayName);
             fileModel.addViolation(violation);
         }

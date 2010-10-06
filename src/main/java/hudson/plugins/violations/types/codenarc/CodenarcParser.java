@@ -67,6 +67,9 @@ public class CodenarcParser extends AbstractTypeParser {
     <Violation ruleName='GrailsPublicControllerMethod' priority='2' lineNumber='226'>
       <SourceLine><![CDATA[def sendValidationEmail(def person) {]]></SourceLine>
     </Violation>
+    <Violation ruleName="AbcComplexity" priority="2" lineNumber="">
+      <Message><![CDATA[The ABC score for method [foobar] is [92.0]]]></Message>
+    </Violation>
   </File>
 </Package>
 */
@@ -100,14 +103,18 @@ public class CodenarcParser extends AbstractTypeParser {
         Violation ret = new Violation();
         ret.setType("codenarc");
         ret.setLine(getString("lineNumber"));
-        ret.setMessage(getString("ruleName"));
+        ret.setSource(getString("ruleName"));
         setSeverity(ret, getString("priority"));
         getParser().next();
 
-        // get the contents of the embedded SourceLine element
-        expectNextTag("SourceLine");
-        ret.setSource(getNextText("Missing SourceLine"));
 
+        // get the contents of the embedded SourceLine or Message element
+        try {
+            expectNextTag("SourceLine");
+        } catch (IOException ioe) {
+            expectNextTag("Message");
+        }
+        ret.setSource(getNextText("Missing SourceLine or Message"));
         //TODO: the following depends upon a patch to CodeNarc 0.9 - so should be exception tolerant
         // get the contents of the embedded Description element
         //expectNextTag("Description");

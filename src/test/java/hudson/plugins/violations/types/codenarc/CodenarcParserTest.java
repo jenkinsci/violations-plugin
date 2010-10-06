@@ -40,7 +40,7 @@ public class CodenarcParserTest {
     public void testParseFullBuildModelFromFile() throws Exception {
         FullBuildModel model = getFullBuildModel("CodeNarcXmlReport.xml");
         
-        assertEquals("Number of violations is incorrect", 9, model.getCountNumber("codenarc"));
+        assertEquals("Number of violations is incorrect", 10, model.getCountNumber("codenarc"));
         assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
     }
 

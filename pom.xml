@@ -10,7 +10,7 @@
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.7.7-SNAPSHOT</version>
+  <version>0.7.7</version>
   <name>Hudson Violations plugin</name>
   <url>http://wiki.hudson-ci.org/display/HUDSON/Violations</url>
   <issueManagement>
@@ -88,4 +88,10 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/violations-0.7.7</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/violations-0.7.7</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/hudson/plugins/violations/tags/violations-0.7.7</url>
+  </scm>
 </project>

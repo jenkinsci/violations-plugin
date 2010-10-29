@@ -44,4 +44,8 @@ public class CodenarcParserTest {
         assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
     }
 
+    @Test
+    public void testParser2() throws Exception {
+        FullBuildModel model = getFullBuildModel("CodeNarcReport2.xml");
+    }
 }

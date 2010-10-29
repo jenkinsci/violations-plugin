@@ -1,6 +1,8 @@
 package hudson.plugins.violations.model;
 
-import  hudson.plugins.violations.TypeDescriptor;
+import hudson.plugins.violations.TypeDescriptor;
+
+import static hudson.Util.*;
 
 /**
  * A class contains information on a violation.
@@ -189,7 +191,7 @@ public class Violation implements Comparable<Violation> {
         if (f != 0) {
             return f;
         }
-        f = message.compareTo(other.message);
+        f = fixNull(message).compareTo(fixNull(other.message));
         if (f != 0) {
             return f;
         }

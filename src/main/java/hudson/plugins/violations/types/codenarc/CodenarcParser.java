@@ -111,10 +111,11 @@ public class CodenarcParser extends AbstractTypeParser {
         // get the contents of the embedded SourceLine or Message element
         try {
             expectNextTag("SourceLine");
+            getNextText("Missing SourceLine"); // ignored
         } catch (IOException ioe) {
             expectNextTag("Message");
+            ret.setMessage(getNextText("Missing Message"));
         }
-        ret.setSource(getNextText("Missing SourceLine or Message"));
         //TODO: the following depends upon a patch to CodeNarc 0.9 - so should be exception tolerant
         // get the contents of the embedded Description element
         //expectNextTag("Description");

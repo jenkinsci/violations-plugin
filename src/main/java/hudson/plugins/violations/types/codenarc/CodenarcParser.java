@@ -112,6 +112,8 @@ public class CodenarcParser extends AbstractTypeParser {
         try {
             expectNextTag("SourceLine");
             getNextText("Missing SourceLine"); // ignored
+            // no message --- use the rule name as the default, which is the most descriptive
+            ret.setMessage(ret.getSource());
         } catch (IOException ioe) {
             expectNextTag("Message");
             ret.setMessage(getNextText("Missing Message"));

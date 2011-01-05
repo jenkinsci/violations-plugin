@@ -1,18 +1,17 @@
 package hudson.plugins.violations.parse;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import hudson.plugins.violations.util.CloseUtil;
+import hudson.util.IOException2;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.FileInputStream;
-import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import hudson.plugins.violations.util.CloseUtil;
 
 /**
  * Control class to parse xml files.
@@ -46,7 +45,7 @@ public final class ParseXML {
         } catch (IOException ex) {
             throw ex;
         } catch (Exception ex) {
-            throw new IOException(ex);
+            throw new IOException2(ex);
         }
     }
 
@@ -75,7 +74,7 @@ public final class ParseXML {
             throw ex;
         } catch (Exception ex) {
             seenException = true;
-            throw new IOException(ex);
+            throw new IOException2(ex);
         } finally {
             CloseUtil.close(in, seenException);
         }

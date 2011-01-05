@@ -8,6 +8,7 @@ import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.parse.ParseUtil;
 import hudson.plugins.violations.types.fxcop.XmlElementUtil;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
+import hudson.util.IOException2;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,9 +74,9 @@ public class GendarmeParser implements ViolationsParser {
             parseViolations(XmlElementUtil.getNamedChildElements(resultsElement, "rule"));
             
 		} catch (ParserConfigurationException pce) {
-			throw new IOException(pce);
+			throw new IOException2(pce);
 		} catch (SAXException se) {
-			throw new IOException(se);
+			throw new IOException2(se);
 		}		
 	}
 

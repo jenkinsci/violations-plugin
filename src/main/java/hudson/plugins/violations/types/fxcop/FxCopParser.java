@@ -1,5 +1,12 @@
 package hudson.plugins.violations.types.fxcop;
 
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.util.IOException2;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,11 +20,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import hudson.plugins.violations.ViolationsParser;
-import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.model.Violation;
 
 /**
  * Parses a fxcop xml report file.
@@ -50,9 +52,9 @@ public class FxCopParser implements ViolationsParser {
             parseTargets(XmlElementUtil.getFirstElementByTagName(rootElement, "Targets"));
             // TODO parse notes
         } catch (ParserConfigurationException pce) {
-            throw new IOException(pce);
+            throw new IOException2(pce);
         } catch (SAXException se) {
-            throw new IOException(se);
+            throw new IOException2(se);
         }
     }
 

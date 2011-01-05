@@ -1,22 +1,20 @@
 package hudson.plugins.violations;
 
-import java.io.File;
-import java.io.IOException;
-
-import java.util.logging.Logger;
-
-import org.apache.tools.ant.types.FileSet;
-
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
-import hudson.model.BuildListener;
-import hudson.remoting.VirtualChannel;
-
-import hudson.plugins.violations.util.StringUtil;
+import hudson.plugins.violations.generate.GenerateXML;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.generate.GenerateXML;
+import hudson.plugins.violations.util.StringUtil;
+import hudson.remoting.VirtualChannel;
+import hudson.util.IOException2;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Logger;
+
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * Collects the violations xml files, analyses them, renders
@@ -123,7 +121,7 @@ public class ViolationsCollector implements FileCallable<ViolationsReport> {
         try {
             new GenerateXML(targetDir , model, config).execute();
         } catch (InterruptedException ex) {
-            throw new IOException(ex);
+            throw new IOException2(ex);
         }
 
         // -----

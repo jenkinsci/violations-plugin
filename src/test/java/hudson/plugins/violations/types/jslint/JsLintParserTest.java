@@ -1,35 +1,23 @@
 package hudson.plugins.violations.types.jslint;
 
 import static org.junit.Assert.*;
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.ViolationsParserTest;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.types.jslint.JsLintParser;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Iterator;
 
 import org.junit.Test;
 
-public class JsLintParserTest {
+public class JsLintParserTest extends ViolationsParserTest {
     
-    private FullBuildModel getFullBuildModel(String filename) throws IOException {
-        URL url = getClass().getResource(filename);
-        File xmlFile;
-        try {
-            xmlFile = new File(url.toURI());
-        } catch(URISyntaxException e) {
-            xmlFile = new File(url.getPath());
-        }
-        
-        JsLintParser parser = new JsLintParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
-        return model;
+    protected FullBuildModel getFullBuildModel(String filename) throws IOException {
+    	ViolationsParser parser = new JsLintParser();
+    	return getFullBuildModel(parser, filename);
     }
 
     @Test
@@ -73,6 +61,7 @@ public class JsLintParserTest {
         while (iterator.hasNext()) {
             v = iterator.next();
         }
+        
         assertEquals("Too many errors. (0% scanned).", v.getPopupMessage());
         assertEquals(46, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());
@@ -98,6 +87,7 @@ public class JsLintParserTest {
         while (iterator.hasNext()) {
             v = iterator.next();
         }
+        
         assertEquals("Too many errors. (83% scanned).", v.getPopupMessage());
         assertEquals(57, v.getLine());
         assertEquals(Severity.MEDIUM, v.getSeverity());

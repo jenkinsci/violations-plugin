@@ -1,15 +1,12 @@
 package hudson.plugins.violations.types.codenarc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.types.codenarc.CodenarcParser;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Iterator;
 
 import org.junit.Test;
 

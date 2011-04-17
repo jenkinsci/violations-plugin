@@ -33,7 +33,7 @@ public class Violation implements Comparable<Violation> {
     }
 
     /**
-     * Set the line number that the violation occuried.
+     * Set the line number in that the violation occurred.
      * @param line the value to use.
      */
     public void setLine(int line) {
@@ -54,7 +54,7 @@ public class Violation implements Comparable<Violation> {
     }
 
     /**
-     * Get the line number where the violation occuried.
+     * Get the line number where the violation occurred.
      * @return the line number (0 if no line number).
      */
     public int getLine() {
@@ -70,7 +70,7 @@ public class Violation implements Comparable<Violation> {
     }
 
     /**
-     * Get the severityLevel number where the violation occuried.
+     * Get the severityLevel number where the violation occurred.
      * @return the severityLevel number (0 if no severityLevel number).
      */
     public int getSeverityLevel() {
@@ -147,7 +147,7 @@ public class Violation implements Comparable<Violation> {
 
     /**
      * Set the source of the violation.
-     * This is normally a languange independant code for
+     * This is normally a language independent code for
      * the violation.
      * @param source the value to use.
      */

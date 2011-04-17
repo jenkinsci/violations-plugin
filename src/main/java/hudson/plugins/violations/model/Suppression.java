@@ -4,7 +4,7 @@ import hudson.plugins.violations.util.Equals;
 import hudson.plugins.violations.util.HashCodes;
 
 /**
- * Supppres a violation.
+ * Suppress a violation.
  * Can be at a project or at a file level.
  */
 public class Suppression {

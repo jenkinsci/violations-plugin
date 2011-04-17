@@ -5,7 +5,7 @@ package hudson.plugins.violations.util;
  */
 public final class StringUtil {
 
-    /** private contstructor */
+    /** private constructor */
     private StringUtil() {
     }
 

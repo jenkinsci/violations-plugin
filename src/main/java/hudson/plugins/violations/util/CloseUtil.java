@@ -12,7 +12,7 @@ public final class CloseUtil {
     private static final Logger LOG = Logger.getLogger(
         CloseUtil.class.getName());
 
-    /** private contstructor */
+    /** private constructor */
     private CloseUtil() {
     }
 

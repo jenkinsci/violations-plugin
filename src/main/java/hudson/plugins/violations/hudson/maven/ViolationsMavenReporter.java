@@ -125,4 +125,5 @@ public class ViolationsMavenReporter extends MavenReporter {
         return ret;
     }
     
+    private static final long serialVersionUID = 1L;
 }

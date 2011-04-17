@@ -84,9 +84,9 @@ public class StyleCopParser implements ViolationsParser {
         }
         
         Map<String, FullFileModel> fileModelMap = model.getFileModelMap();
-        for (String key : fileModelMap.keySet()) {
-            FullFileModel fileModel = fileModelMap.get(key);
-            File sourceFile = finder.getFileForName(fileModel.getDisplayName());
+        for (Map.Entry<String, FullFileModel> entry : fileModelMap.entrySet()) {
+        	FullFileModel fileModel = entry.getValue();
+        	File sourceFile = finder.getFileForName(fileModel.getDisplayName());
             if (sourceFile != null) {
                 fileModel.setSourceFile(sourceFile);
                 fileModel.setLastModified(sourceFile.lastModified());

@@ -49,7 +49,7 @@ public class ViolationsMavenAggregatedBuildAction
     }
 
     /**
-     * get rhe previous valid build result.
+     * get the previous valid build result.
      * @return the previous violations build action.
      */
     @Override

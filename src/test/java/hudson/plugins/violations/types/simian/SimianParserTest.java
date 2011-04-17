@@ -3,31 +3,19 @@ package hudson.plugins.violations.types.simian;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.net.URISyntaxException;
-import java.net.URL;
 
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.ViolationsParserTest;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Violation;
 
-public class SimianParserTest {
+public class SimianParserTest extends ViolationsParserTest {
 
-    private FullBuildModel getFullBuildModel(String filename) throws IOException {
-        URL url = getClass().getResource(filename);
-        File xmlFile;
-        try {
-            xmlFile = new File(url.toURI());
-        } catch(URISyntaxException e) {
-            xmlFile = new File(url.getPath());
-        }
-        
-        SimianParser parser = new SimianParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
-        return model;
+    protected FullBuildModel getFullBuildModel(String filename) throws IOException {
+    	ViolationsParser parser = new SimianParser();
+    	return getFullBuildModel(parser, filename);
     }
     
     @Test

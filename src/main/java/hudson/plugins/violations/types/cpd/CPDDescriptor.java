@@ -1,10 +1,10 @@
 package hudson.plugins.violations.types.cpd;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.ViolationsParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The descriptor class for CPD violations type.

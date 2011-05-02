@@ -1,7 +1,7 @@
 package hudson.plugins.violations.generate;
 
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Some helper methods for encoding xml and html strings.

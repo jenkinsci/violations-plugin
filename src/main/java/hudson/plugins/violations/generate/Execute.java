@@ -1,7 +1,7 @@
 package hudson.plugins.violations.generate;
 
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Interface for classes to output. This is used

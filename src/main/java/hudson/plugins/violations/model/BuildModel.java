@@ -1,15 +1,15 @@
 package hudson.plugins.violations.model;
 
-import java.util.TreeSet;
-import java.util.Map;
+import hudson.plugins.violations.render.FileModelProxy;
+
+import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.Collection;
-
-import java.io.File;
-import hudson.plugins.violations.render.FileModelProxy;
+import java.util.TreeSet;
 
 
 /**

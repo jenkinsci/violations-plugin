@@ -1,21 +1,17 @@
 package hudson.plugins.violations.parse;
 
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.util.CloseUtil;
+import hudson.util.IOException2;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
-import java.util.Locale;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import hudson.util.IOException2;
-
-import hudson.plugins.violations.ViolationsParser;
-
-import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.util.CloseUtil;
 
 /**
  * An abstract xml parsing class for parsing

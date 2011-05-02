@@ -1,13 +1,12 @@
 package hudson.plugins.violations.parse;
 
+import hudson.plugins.violations.ViolationsParser;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.util.IOException2;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
-
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,8 +14,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import hudson.plugins.violations.ViolationsParser;
    
 public abstract class ViolationsDOMParser
     implements ViolationsParser {

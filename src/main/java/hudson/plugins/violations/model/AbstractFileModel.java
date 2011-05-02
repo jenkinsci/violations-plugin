@@ -1,12 +1,11 @@
 package hudson.plugins.violations.model;
 
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.SortedMap;
-
 import java.io.File;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * An base class containing attributes

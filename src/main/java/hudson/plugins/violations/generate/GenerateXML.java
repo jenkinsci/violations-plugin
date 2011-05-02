@@ -1,13 +1,11 @@
 package hudson.plugins.violations.generate;
 
-import java.io.IOException;
-
+import hudson.FilePath;
 import hudson.plugins.violations.ViolationsConfig;
-
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 
-import hudson.FilePath;
+import java.io.IOException;
 
 /**
  * Generate the xml files for a publish invocation.

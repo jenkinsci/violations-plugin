@@ -1,28 +1,27 @@
 package hudson.plugins.violations.hudson.maven;
 
 import hudson.Extension;
-import hudson.maven.MavenBuild;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.maven.MavenBuildProxy;
+import hudson.maven.MavenBuildProxy.BuildCallable;
 import hudson.maven.MavenReporter;
 import hudson.maven.MavenReporterDescriptor;
-import hudson.maven.MavenModule;
-import hudson.maven.MavenBuildProxy;
 import hudson.maven.MojoInfo;
+import hudson.maven.MavenBuild;
+import hudson.maven.MavenModule;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.plugins.violations.ViolationsBuildAction;
+import hudson.plugins.violations.ViolationsCollector;
+import hudson.plugins.violations.ViolationsConfig;
+import hudson.plugins.violations.ViolationsProjectAction;
+import hudson.plugins.violations.ViolationsReport;
 
 import java.io.File;
 import java.io.IOException;
 
-import hudson.maven.MavenBuildProxy.BuildCallable;
-
-import hudson.plugins.violations.ViolationsConfig;
-import hudson.plugins.violations.ViolationsProjectAction;
-import hudson.plugins.violations.ViolationsBuildAction;
-import hudson.plugins.violations.ViolationsReport;
-import hudson.plugins.violations.ViolationsCollector;
-import hudson.model.BuildListener;
-import hudson.Launcher;
 import org.apache.maven.project.MavenProject;
-import hudson.model.Action;
-import hudson.FilePath;
 
 public class ViolationsMavenReporter extends MavenReporter {
     private static final String VIOLATIONS = "violations";

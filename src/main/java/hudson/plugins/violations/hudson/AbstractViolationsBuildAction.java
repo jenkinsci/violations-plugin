@@ -1,44 +1,39 @@
 package hudson.plugins.violations.hudson;
+import hudson.model.Action;
+import hudson.model.HealthReport;
+import hudson.model.HealthReportingAction;
+import hudson.model.AbstractBuild;
+import hudson.model.Actionable;
+import hudson.plugins.violations.MagicNames;
+import hudson.plugins.violations.ViolationsReport;
+import hudson.plugins.violations.graph.SeverityTypeDataSet;
+import hudson.plugins.violations.util.StringUtil;
+import hudson.util.ChartUtil;
+import hudson.util.ColorPalette;
+import hudson.util.DataSetBuilder;
+import hudson.util.ShiftedCategoryAxis;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Calendar;
 
-import java.awt.Color;
-import java.awt.BasicStroke;
-
-import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.LogarithmicAxis;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
-
-import org.kohsuke.stapler.StaplerResponse;
-import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerProxy;
-
-import hudson.model.Action;
-import hudson.model.Actionable;
-import hudson.model.HealthReportingAction;
-import hudson.model.HealthReport;
-import hudson.model.AbstractBuild;
-
-import hudson.util.ChartUtil;
-import hudson.util.DataSetBuilder;
-import hudson.util.ShiftedCategoryAxis;
-import hudson.util.ColorPalette;
-
-import hudson.plugins.violations.graph.SeverityTypeDataSet;
-import hudson.plugins.violations.util.StringUtil;
-
-import hudson.plugins.violations.MagicNames;
-import hudson.plugins.violations.ViolationsReport;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 
 /**

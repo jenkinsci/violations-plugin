@@ -1,18 +1,17 @@
 package hudson.plugins.violations.generate;
 
-import java.io.PrintWriter;
-import java.io.IOException;
-
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.HashMap;
-import java.util.Map;
-
+import hudson.plugins.violations.model.FileSummary;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.model.FileSummary;
 import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Class to output the full build model (not the files).

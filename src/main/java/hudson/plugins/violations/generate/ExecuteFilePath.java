@@ -1,13 +1,12 @@
 package hudson.plugins.violations.generate;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-
 import hudson.FilePath;
-
 import hudson.plugins.violations.util.CloseUtil;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 /**
  * A controller class to execute a xml parser object.

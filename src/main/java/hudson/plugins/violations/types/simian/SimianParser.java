@@ -1,5 +1,11 @@
 package hudson.plugins.violations.types.simian;
 
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.StringUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,12 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
-
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.parse.AbstractTypeParser;
-import hudson.plugins.violations.util.StringUtil;
 
 /**
  * Parser for Simian XML files.

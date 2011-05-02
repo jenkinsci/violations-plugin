@@ -1,16 +1,14 @@
 package hudson.plugins.violations.types.codenarc;
 
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlPullParserException;
-
-
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
-
-import hudson.plugins.violations.util.HashMapWithDefault;
 import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.HashMapWithDefault;
+
+import java.io.IOException;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * Parses a codenarc xml report file.

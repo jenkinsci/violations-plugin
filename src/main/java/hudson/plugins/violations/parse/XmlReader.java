@@ -26,12 +26,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.HttpURLConnection;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.text.MessageFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Character stream that handles (or at least attemtps to) all the necessary Voodo to figure out the charset encoding of

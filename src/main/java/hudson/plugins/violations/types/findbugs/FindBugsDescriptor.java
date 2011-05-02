@@ -1,19 +1,18 @@
 package hudson.plugins.violations.types.findbugs;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import hudson.plugins.violations.TypeDescriptor;
+import hudson.plugins.violations.parse.AbstractParser;
+import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.parse.ParseXML;
+import hudson.plugins.violations.util.CloseUtil;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.xmlpull.v1.XmlPullParser;
-
-import hudson.plugins.violations.TypeDescriptor;
-import hudson.plugins.violations.util.CloseUtil;
-import hudson.plugins.violations.parse.AbstractTypeParser;
-import hudson.plugins.violations.parse.AbstractParser;
-import hudson.plugins.violations.parse.ParseXML;
 
 /**
  * The descriptor class for findbugs violations type.

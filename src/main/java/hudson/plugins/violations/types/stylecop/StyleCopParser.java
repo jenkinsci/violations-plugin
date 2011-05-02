@@ -1,9 +1,19 @@
 package hudson.plugins.violations.types.stylecop;
 
+import hudson.FilePath;
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.ParseUtil;
+import hudson.plugins.violations.types.fxcop.XmlElementUtil;
+import hudson.plugins.violations.util.AbsoluteFileFinder;
+import hudson.util.IOException2;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.File;
-
 import java.util.List;
 import java.util.Map;
 
@@ -11,21 +21,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import hudson.FilePath;
-import hudson.plugins.violations.parse.ParseUtil;
-import hudson.util.IOException2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import hudson.plugins.violations.ViolationsParser;
-import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.types.fxcop.XmlElementUtil;
-import hudson.plugins.violations.util.AbsoluteFileFinder;
-import hudson.plugins.violations.model.Violation;
 
 /**
  * Parses a StyleCop (http://code.msdn.microsoft.com/sourceanalysis/) xml report file.

@@ -1,16 +1,16 @@
 package hudson.plugins.violations.types.simian;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.model.Violation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Iterator;
 
-import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.Violation;
+import org.junit.Test;
 
 public class SimianParserTest {
 

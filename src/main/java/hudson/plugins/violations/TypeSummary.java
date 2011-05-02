@@ -1,8 +1,8 @@
 package hudson.plugins.violations;
 
-import java.io.Serializable;
-
 import hudson.plugins.violations.model.Severity;
+
+import java.io.Serializable;
 
 /**
  * A summary report for a type.

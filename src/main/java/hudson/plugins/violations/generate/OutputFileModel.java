@@ -1,25 +1,24 @@
 package hudson.plugins.violations.generate;
 
-import java.io.PrintWriter;
-import java.io.IOException;
+import hudson.plugins.violations.ViolationsConfig;
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.util.CloseUtil;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.Reader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.io.BufferedReader;
-
-import java.util.Set;
-import java.util.Map;
-import java.util.TreeSet;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import hudson.plugins.violations.util.CloseUtil;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.ViolationsConfig;
+import java.util.TreeSet;
 
 /**
  * Class to output a file model.

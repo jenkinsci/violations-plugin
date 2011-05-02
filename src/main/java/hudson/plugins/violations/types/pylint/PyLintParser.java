@@ -1,20 +1,18 @@
 package hudson.plugins.violations.types.pylint;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import hudson.plugins.violations.ViolationsParser;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parser for parsing PyLint reports.

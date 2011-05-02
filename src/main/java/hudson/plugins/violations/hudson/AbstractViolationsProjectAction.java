@@ -1,19 +1,16 @@
 package hudson.plugins.violations.hudson;
 
+import hudson.model.Action;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Actionable;
+import hudson.plugins.violations.MagicNames;
+
 import java.io.IOException;
 
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.kohsuke.stapler.StaplerProxy;
-import hudson.model.ProminentProjectAction;
-
-import hudson.model.Action;
-import hudson.model.Actionable;
-import hudson.model.AbstractProject;
-import hudson.model.AbstractBuild;
-import hudson.model.Result;
-
-import hudson.plugins.violations.MagicNames;
 
 /**
  * Project level action.

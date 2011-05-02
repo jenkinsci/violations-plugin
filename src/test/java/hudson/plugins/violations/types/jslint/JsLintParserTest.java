@@ -1,10 +1,9 @@
 package hudson.plugins.violations.types.jslint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.types.jslint.JsLintParser;
 
 import java.io.File;
 import java.io.IOException;

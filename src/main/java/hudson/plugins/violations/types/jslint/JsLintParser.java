@@ -1,14 +1,13 @@
 package hudson.plugins.violations.types.jslint;
 
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlPullParserException;
-
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
-
 import hudson.plugins.violations.parse.AbstractTypeParser;
+
+import java.io.IOException;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 public class JsLintParser extends AbstractTypeParser {
 

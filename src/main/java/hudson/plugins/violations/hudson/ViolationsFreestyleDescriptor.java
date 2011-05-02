@@ -1,18 +1,18 @@
 package hudson.plugins.violations.hudson;
 
-import java.util.Map;
-
+import hudson.maven.AbstractMavenProject;
 import hudson.model.AbstractProject;
+import hudson.plugins.violations.TypeConfig;
+import hudson.plugins.violations.ViolationsConfig;
+import hudson.plugins.violations.ViolationsPublisher;
+import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 
-import org.kohsuke.stapler.StaplerRequest;
-import hudson.maven.AbstractMavenProject;
-import hudson.tasks.BuildStepDescriptor;
+import java.util.Map;
 
-import hudson.plugins.violations.ViolationsPublisher;
-import hudson.plugins.violations.ViolationsConfig;
-import hudson.plugins.violations.TypeConfig;
 import net.sf.json.JSONObject;
+
+import org.kohsuke.stapler.StaplerRequest;
 
 
 /**

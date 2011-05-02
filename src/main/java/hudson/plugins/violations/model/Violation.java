@@ -1,8 +1,7 @@
 package hudson.plugins.violations.model;
 
+import static hudson.Util.fixNull;
 import hudson.plugins.violations.TypeDescriptor;
-
-import static hudson.Util.*;
 
 /**
  * A class contains information on a violation.

@@ -2,8 +2,8 @@
 // COPIED from maven plexus util source
 package hudson.plugins.violations.parse;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * The XmlReaderException is thrown by the XmlReader constructors if the charset encoding can not be determined

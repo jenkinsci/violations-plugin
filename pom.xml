@@ -194,7 +194,7 @@
     </profiles>
     <dependencies>
         <dependency>
-            <groupId>org.jvnet.hudson.main</groupId>
+            <groupId>org.jenkins-ci.main</groupId>
             <artifactId>maven-plugin</artifactId>
         </dependency>
         <dependency>

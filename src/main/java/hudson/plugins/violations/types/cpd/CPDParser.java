@@ -51,7 +51,7 @@ public class CPDParser extends ViolationsDOMParser {
         List<FileElement> fileElements = new ArrayList<FileElement>();
         // There should now be two or more file elements
         // and a codefragmentelement
-        
+
         NodeList nl = parent.getElementsByTagName("file");
         if (nl == null) {
             return;

@@ -14,7 +14,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class ViolationsMavenDescriptor
     extends MavenReporterDescriptor {
-    
+
     public ViolationsMavenDescriptor() {
         super(ViolationsMavenReporter.class);
     }

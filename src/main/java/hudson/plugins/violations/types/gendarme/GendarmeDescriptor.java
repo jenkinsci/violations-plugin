@@ -10,15 +10,15 @@ import hudson.plugins.violations.ViolationsParser;
  */
 public class GendarmeDescriptor extends TypeDescriptor {
 
-	/** The descriptor for the Mono Source Analysis violations type. */
-	public static final GendarmeDescriptor DESCRIPTOR = new GendarmeDescriptor();
-	
-	protected GendarmeDescriptor() {
-		super(GendarmeParser.TYPE_NAME);
-	}
+    /** The descriptor for the Mono Source Analysis violations type. */
+    public static final GendarmeDescriptor DESCRIPTOR = new GendarmeDescriptor();
 
-	@Override
-	public ViolationsParser createParser() {
-		return new GendarmeParser();
-	}
+    protected GendarmeDescriptor() {
+        super(GendarmeParser.TYPE_NAME);
+    }
+
+    @Override
+    public ViolationsParser createParser() {
+        return new GendarmeParser();
+    }
 }

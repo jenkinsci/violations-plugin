@@ -97,7 +97,7 @@ public class ViolationsMavenReporter extends MavenReporter {
         report.setConfig(config);
         report.setBuild(build);
         report.setBuildResult();
-        
+
         ViolationsBuildAction buildAction = getCreateBuildAction(build);
         buildAction.setReport(report);
         return true;
@@ -123,5 +123,5 @@ public class ViolationsMavenReporter extends MavenReporter {
         }
         return ret;
     }
-    
+
 }

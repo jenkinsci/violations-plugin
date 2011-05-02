@@ -158,7 +158,7 @@ public class OutputFileModel implements Execute {
             throw ex;
         }
     }
-    
+
     private void outputContents() throws IOException {
         sourceReader = new BufferedReader(open());
         int lineNumber = 1;

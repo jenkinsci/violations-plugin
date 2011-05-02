@@ -7,10 +7,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class XmlElementUtil {
-	
-	private XmlElementUtil()  {		
-	}
-	
+
+    private XmlElementUtil()  {
+    }
+
     public static List<Element> getNamedChildElements(Element parent, String name) {
         List<Element> elements = new ArrayList<Element>();
         if (parent != null) {
@@ -24,13 +24,13 @@ public class XmlElementUtil {
         }
         return elements;
     }
-    
+
     public static Element getFirstElementByTagName(Element parent, String tagName) {
-    	List<Element> foundElements = getNamedChildElements(parent, tagName);
-    	if (foundElements.size() > 0) {
-    		return foundElements.get(0);
-    	} else {
-    		return null;
-    	}
+        List<Element> foundElements = getNamedChildElements(parent, tagName);
+        if (foundElements.size() > 0) {
+            return foundElements.get(0);
+        } else {
+            return null;
+        }
     }
 }

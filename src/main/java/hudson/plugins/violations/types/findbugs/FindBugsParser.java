@@ -70,7 +70,7 @@ public class FindBugsParser extends AbstractTypeParser {
         }
         return filename + ".java";
     }
-    
+
     private String getRelativeName(String name, File file) {
         if (file != null && file.exists()) {
             String absolute = file.getAbsolutePath();

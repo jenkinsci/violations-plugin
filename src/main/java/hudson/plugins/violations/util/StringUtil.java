@@ -17,12 +17,12 @@ public final class StringUtil {
     public static boolean isBlank(String str) {
         return str == null ? true : "".equals(str.trim());
     }
-    
+
     /**
      * Returns a relative path from the self to the other path.
      * Note that the self and other paths must have '/' as the separator.
      * @param self the path to get a relative path from.
-     * @param other the path to get a relative path to. 
+     * @param other the path to get a relative path to.
      * @return a string containing a relative path from self to other path.
      */
     public static String relativePath(final String self, final String other) {

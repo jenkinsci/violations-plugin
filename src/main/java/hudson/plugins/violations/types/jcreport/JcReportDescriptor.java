@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * The descriptor class for jcreport violations type.
- * http://www.jcoderz.org/fawkez/wiki/JcReport 
+ * http://www.jcoderz.org/fawkez/wiki/JcReport
  * @author Andreas.Mandel@gmail.com
  */
 public final class JcReportDescriptor

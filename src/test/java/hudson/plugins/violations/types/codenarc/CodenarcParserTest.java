@@ -16,7 +16,7 @@ import org.junit.Test;
  * @author Robin Bramley, Opsera Ltd.
  */
 public class CodenarcParserTest {
-    
+
     private FullBuildModel getFullBuildModel(String filename) throws IOException {
         URL url = getClass().getResource(filename);
         File xmlFile;
@@ -25,18 +25,18 @@ public class CodenarcParserTest {
         } catch(URISyntaxException e) {
             xmlFile = new File(url.getPath());
         }
-        
+
         CodenarcParser parser = new CodenarcParser();
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
         model.cleanup();
         return model;
     }
-    
+
     @Test
     public void testParseFullBuildModelFromFile() throws Exception {
         FullBuildModel model = getFullBuildModel("CodeNarcXmlReport.xml");
-        
+
         assertEquals("Number of violations is incorrect", 10, model.getCountNumber("codenarc"));
         assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
     }

@@ -14,9 +14,9 @@ import org.junit.Test;
 
 public class GendarmeParserTest {
 
-	static final Logger logger = Logger.getLogger(GendarmeParserTest.class.toString());
-	
-	private FullBuildModel getFullBuildModel(String filename) throws IOException {
+    static final Logger logger = Logger.getLogger(GendarmeParserTest.class.toString());
+
+    private FullBuildModel getFullBuildModel(String filename) throws IOException {
         URL url = getClass().getResource(filename);
         File xmlFile;
         try {
@@ -24,25 +24,25 @@ public class GendarmeParserTest {
         } catch(URISyntaxException e) {
             xmlFile = new File(url.getPath());
         }
-        
+
         GendarmeParser parser = new GendarmeParser();
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
         model.cleanup();
         return model;
     }
-	
-	@Test
-	public void testParseViolationData() throws IOException {
-		FullBuildModel model = getFullBuildModel(
+
+    @Test
+    public void testParseViolationData() throws IOException {
+        FullBuildModel model = getFullBuildModel(
                         "Gendarme" + (File.separatorChar == '/' ? "_unix" : "") + ".xml");
-		
-		assertEquals("Number of violations is incorrect", 3, model.getCountNumber(GendarmeParser.TYPE_NAME));
-		for(String fileModelKey : model.getFileModelMap().keySet()){
-			FullFileModel ffmodel = model.getFileModelMap().get(fileModelKey);
-			logger.info(fileModelKey+".displayName="+ffmodel.getDisplayName());
-			logger.info(fileModelKey+".path="+(ffmodel.getSourceFile() == null? "null" : ffmodel.getSourceFile().getAbsolutePath()));
-		}
+
+        assertEquals("Number of violations is incorrect", 3, model.getCountNumber(GendarmeParser.TYPE_NAME));
+        for(String fileModelKey : model.getFileModelMap().keySet()){
+            FullFileModel ffmodel = model.getFileModelMap().get(fileModelKey);
+            logger.info(fileModelKey+".displayName="+ffmodel.getDisplayName());
+            logger.info(fileModelKey+".path="+(ffmodel.getSourceFile() == null? "null" : ffmodel.getSourceFile().getAbsolutePath()));
+        }
         assertEquals("Number of files is incorrect", 2, model.getFileModelMap().size());
-	}
+    }
 }

@@ -25,7 +25,7 @@ public class TypeConfig implements Cloneable, Serializable {
 
     private int min = DEFAULT_MIN;  // Sunny report
     private int max = DEFAULT_MAX;  // Stormy report
-    private Integer unstable = DEFAULT_UNSTABLE; // unstable 
+    private Integer unstable = DEFAULT_UNSTABLE; // unstable
     private Integer fail = null;
     private boolean usePattern = false; // for maven2
 
@@ -86,7 +86,7 @@ public class TypeConfig implements Cloneable, Serializable {
     public void setMin(int min) {
         this.min = min;
     }
- 
+
    /**
      * Get the unstable value
      * @return the unstable value
@@ -111,7 +111,7 @@ public class TypeConfig implements Cloneable, Serializable {
         }
         this.unstable = unstable;
     }
- 
+
 
     /**
      * Set the fail value.

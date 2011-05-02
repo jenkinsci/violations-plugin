@@ -11,7 +11,7 @@ import java.net.URL;
 import org.junit.Test;
 
 public class FxCopParserTest {
-    
+
     private FullBuildModel getFullBuildModel(String filename) throws IOException {
         URL url = getClass().getResource(filename);
         File xmlFile;
@@ -20,18 +20,18 @@ public class FxCopParserTest {
         } catch(URISyntaxException e) {
             xmlFile = new File(url.getPath());
         }
-        
+
         FxCopParser parser = new FxCopParser();
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
         model.cleanup();
         return model;
     }
-    
+
     @Test
     public void testParseFullBuildModelFileStringStringArray() throws Exception {
         FullBuildModel model = getFullBuildModel("fxcop.xml");
-        
+
         assertEquals("Number of violations is incorrect", 2, model.getCountNumber("fxcop"));
         assertEquals("Number of files is incorrect", 2, model.getFileModelMap().size());
     }

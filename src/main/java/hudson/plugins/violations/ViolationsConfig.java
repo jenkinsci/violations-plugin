@@ -155,14 +155,14 @@ public class ViolationsConfig implements Cloneable, Serializable {
         "UTF-8",
         "UTF-16",
     };
-    
+
     private final static List<String> ENCODINGS = new ArrayList<String>();
     static {
         for (String m: ENCODING_STRINGS) {
             ENCODINGS.add(m);
         }
     }
-        
+
     public List<String> getEncodings() {
         return ENCODINGS;
     }

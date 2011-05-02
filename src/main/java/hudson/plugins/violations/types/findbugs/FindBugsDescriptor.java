@@ -56,7 +56,7 @@ public final class FindBugsDescriptor
         return ret;
     }
 
-    
+
     private static Map<String, String> messageMap
         = new HashMap<String, String>();
 

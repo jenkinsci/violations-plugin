@@ -39,7 +39,7 @@ public class CodenarcParser extends AbstractTypeParser {
         // loop through the child elements, getting the "file" ones
         while (skipToTag("Package")) {
             String path = checkNotBlank("path");
-            
+
             getParser().next();
             while (skipToTag("File")) {
                 parseFileElement(path);
@@ -77,7 +77,7 @@ public class CodenarcParser extends AbstractTypeParser {
      */
     private void parseFileElement(String path)
         throws IOException, XmlPullParserException {
-        
+
         //TODO: This doesn't always work if files are under e.g. workspace/trunk [workaround is to use the faux project path]
         String absoluteFileName = fixAbsolutePath(getProjectPath().getAbsolutePath() + "/" + path + "/" + checkNotBlank("name"));
         getParser().next();  // consume "file" tag

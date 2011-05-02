@@ -26,7 +26,7 @@ public class PyLintParser implements ViolationsParser {
 
     /** Regex pattern for the PyLint errors. */
     private final transient Pattern pattern;
-    private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder(); 
+    private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder();
 
     /**
      * Constructor - create the pattern.
@@ -38,12 +38,12 @@ public class PyLintParser implements ViolationsParser {
     /** {@inheritDoc} */
     public void parse( FullBuildModel model, File projectPath, String fileName,
         String[] sourcePaths) throws IOException {
-        
-    	BufferedReader reader = null;
-        
-    	absoluteFileFinder.addSourcePath(projectPath.getAbsolutePath());
-    	absoluteFileFinder.addSourcePaths(sourcePaths);
-        
+
+        BufferedReader reader = null;
+
+        absoluteFileFinder.addSourcePath(projectPath.getAbsolutePath());
+        absoluteFileFinder.addSourcePaths(sourcePaths);
+
         try {
             reader = new BufferedReader(
                 new FileReader(new File(projectPath, fileName)));
@@ -77,13 +77,13 @@ public class PyLintParser implements ViolationsParser {
             violation.setSource(pyLintViolation.getViolationId());
             setServerityLevel(violation, pyLintViolation.getViolationId());
 
-            FullFileModel fileModel = getFileModel(model, 
-            		pyLintViolation.getFileName(), 
-            		absoluteFileFinder.getFileForName(pyLintViolation.getFileName()));
+            FullFileModel fileModel = getFileModel(model,
+                    pyLintViolation.getFileName(),
+                    absoluteFileFinder.getFileForName(pyLintViolation.getFileName()));
             fileModel.addViolation(violation);
         }
     }
-    
+
     private FullFileModel getFileModel(FullBuildModel model, String name, File sourceFile) {
         FullFileModel fileModel = model.getFileModel(name);
         File other = fileModel.getSourceFile();
@@ -94,12 +94,12 @@ public class PyLintParser implements ViolationsParser {
                     || other.exists()))) {
             return fileModel;
         }
-        
+
         fileModel.setSourceFile(sourceFile);
         fileModel.setLastModified(sourceFile.lastModified());
         return fileModel;
     }
-    
+
 
     /**
      * Returns a pylint violation (if it is one)
@@ -151,7 +151,7 @@ public class PyLintParser implements ViolationsParser {
                 break;
         }
     }
-    
+
     class PyLintViolation {
         private final transient String lineStr;
         private final transient String message;

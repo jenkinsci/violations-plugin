@@ -83,7 +83,7 @@ public abstract class AbstractViolationsBuildAction
         return getReport();
     }
 
-    
+
     /**
      * Get the build that owns this action.
      * @return the build.
@@ -96,7 +96,7 @@ public abstract class AbstractViolationsBuildAction
      * Get the build report.
      * @return the build report (null if not available).
      */
-    @Override
+    //@Override
     public HealthReport getBuildHealth() {
         return getReport().getBuildHealth();
     }
@@ -267,5 +267,5 @@ public abstract class AbstractViolationsBuildAction
         return chart;
     }
 
-    
+
 }

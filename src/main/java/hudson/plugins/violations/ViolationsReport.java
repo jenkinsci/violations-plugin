@@ -337,7 +337,7 @@ public class ViolationsReport
                 tBuild = build;
             }
         }
-        
+
         AbstractViolationsBuildAction r
             = tBuild.getAction(AbstractViolationsBuildAction.class);
         if (r == null) {
@@ -377,7 +377,7 @@ public class ViolationsReport
         }
         return h.getIconUrl();
     }
-    
+
     /**
      * Report class for a particular type.
      */
@@ -542,7 +542,7 @@ public class ViolationsReport
             build.setResult(Result.UNSTABLE);
         }
     }
-    
+
     private static final long serialVersionUID = 1L;
 
     public static ViolationsReport findViolationsReport(
@@ -574,7 +574,7 @@ public class ViolationsReport
         public ViolationsReportIterator(AbstractBuild<?, ?> curr) {
             this.curr = curr;
         }
-        @Override
+        //@Override
         public Iterator<ViolationsReport> iterator() {
             return this;
         }

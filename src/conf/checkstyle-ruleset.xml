@@ -85,7 +85,7 @@
         <module name="EmptyStatement" />
         <module name="EqualsHashCode" />
         <module name="IllegalInstantiation">
-            <property name="classes" value="java.lang.Boolean" />
+            <property name="classes" value="java.lang.Boolean,java.lang.Integer" />
         </module>
         <module name="InnerAssignment" />
         <module name="MagicNumber" />

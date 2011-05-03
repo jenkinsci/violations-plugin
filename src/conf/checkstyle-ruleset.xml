@@ -33,7 +33,10 @@
         <module name="UnusedImports" />
 
         <!-- size limits -->
-        <module name="LineLength" />
+        <module name="LineLength">
+            <property name="ignorePattern" value="^ *\* *[^ ]+$" />
+            <property name="max" value="130" />
+        </module>
         <module name="MethodLength" />
         <module name="ParameterNumber" />
 

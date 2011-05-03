@@ -40,14 +40,16 @@ public class Suppression {
         return reason;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
-        if (o == null) {
+        if (!(o instanceof Suppression)) {
             return false;
+        } else {
+            final Suppression other = (Suppression) o;
+            return Equals.equals(
+                type, other.type, source, other.source, fileName, other.fileName);
         }
-        Suppression other = (Suppression) o;
-        return Equals.equals(
-            type, other.type, source, other.source, fileName, other.fileName);
     }
 
     @Override

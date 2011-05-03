@@ -218,7 +218,6 @@ public class ViolationsReport
      */
     public ViolationsConfig getLiveConfig() {
         AbstractProject<?, ?> abstractProject = build.getProject();
-        AbstractProject notQuestion = (AbstractProject) abstractProject;
         if (abstractProject instanceof Project) {
             Project project = (Project) abstractProject;
             ViolationsPublisher publisher
@@ -361,7 +360,6 @@ public class ViolationsReport
      * @return the icon name.
      */
     public String getIcon(String t) {
-        Integer v = violations.get(t);
         HealthReport h = getHealthReportFor(t);
         if (h == null) {
             return null;
@@ -372,7 +370,7 @@ public class ViolationsReport
     /**
      * Report class for a particular type.
      */
-    public class TypeReport {
+    public static class TypeReport {
         private final String type;
         private final String icon;
         private final int    number;

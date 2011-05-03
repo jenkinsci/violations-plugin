@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,8 +84,7 @@ public class StyleCopParser implements ViolationsParser {
         }
 
         Map<String, FullFileModel> fileModelMap = model.getFileModelMap();
-        for (String key : fileModelMap.keySet()) {
-            FullFileModel fileModel = fileModelMap.get(key);
+        for (final FullFileModel fileModel : fileModelMap.values()) {
             File sourceFile = finder.getFileForName(fileModel.getDisplayName());
             if (sourceFile != null) {
                 fileModel.setSourceFile(sourceFile);

@@ -171,8 +171,6 @@ public abstract class AbstractViolationsBuildAction
             rsp.sendRedirect2(req.getContextPath() + "/images/headless.png");
             return;
         }
-        Calendar t = getBuild().getTimestamp();
-
         if (!StringUtil.isBlank(type)) {
             ChartUtil.generateGraph(
                 req, rsp, new SeverityTypeDataSet(

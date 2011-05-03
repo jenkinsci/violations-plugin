@@ -53,7 +53,7 @@ public class GendarmeParser implements ViolationsParser {
         this.projectPath = projectPath;
         this.model = model;
         this.reportParentFile = new File(fileName).getParentFile();
-        this.sourcePaths = sourcePaths;
+        this.sourcePaths = sourcePaths.clone();
 
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;

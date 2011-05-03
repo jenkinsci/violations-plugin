@@ -130,13 +130,6 @@ public class FindBugsParser extends AbstractTypeParser {
         endElement();
     }
 
-    private void getBugInstances()
-        throws IOException, XmlPullParserException {
-        while (skipToTag("BugInstance")) {
-            getBugInstance();
-        }
-    }
-
     private String convertType(String x) {
         String y = FindBugsDescriptor.getMessageMap().get(x);
         return (y == null) ? x : y;
@@ -204,7 +197,6 @@ public class FindBugsParser extends AbstractTypeParser {
         throws IOException, XmlPullParserException {
         String type = getParser().getAttributeValue("", "type");
         String priority = getParser().getAttributeValue("", "priority");
-        String category = getParser().getAttributeValue("", "category");
         getParser().next();
 
         classname = null;

@@ -152,7 +152,7 @@ public class PyLintParser implements ViolationsParser {
         }
     }
 
-    class PyLintViolation {
+    static class PyLintViolation {
         private final transient String lineStr;
         private final transient String message;
         private final transient String fileName;

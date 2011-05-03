@@ -111,7 +111,7 @@ public abstract class ViolationsDOMParser
      * @param sourcePaths the value to use
      */
     public void setSourcePaths(String[] sourcePaths) {
-        this.sourcePaths = sourcePaths;
+        this.sourcePaths = sourcePaths.clone();
     }
 
     /**
@@ -119,7 +119,7 @@ public abstract class ViolationsDOMParser
      * @return the source paths.
      */
     protected String[] getSourcePaths() {
-        return sourcePaths;
+        return sourcePaths.clone();
     }
 
     // -----------------------------------------------

@@ -200,4 +200,14 @@ public class Violation implements Comparable<Violation> {
             return 1;
         }
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Violation) {
+            return compareTo((Violation) obj) == 0;
+        } else {
+            return false;
+        }
+    }
 }

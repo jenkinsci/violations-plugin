@@ -38,7 +38,7 @@ public class CPDParser extends ViolationsDOMParser {
         }
     }
 
-    private class FileElement {
+    private static class FileElement {
         private int line;
         private String path;
     }

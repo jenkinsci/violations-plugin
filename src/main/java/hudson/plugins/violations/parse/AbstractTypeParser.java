@@ -102,7 +102,7 @@ public abstract class AbstractTypeParser
      * @param sourcePaths the value to use
      */
     public void setSourcePaths(String[] sourcePaths) {
-        this.sourcePaths = sourcePaths;
+        this.sourcePaths = sourcePaths.clone();
     }
 
     /**

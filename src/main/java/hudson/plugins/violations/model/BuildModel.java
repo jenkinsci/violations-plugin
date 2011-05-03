@@ -181,7 +181,7 @@ public class BuildModel {
          */
         public FileCount(String name, int[] counts, FileModelProxy proxy) {
             this.name = name;
-            this.counts = counts;
+            this.counts = counts.clone();
             int t = 0;
             for (int i = 0; i < counts.length; ++i) {
                 t += counts[i];
@@ -257,6 +257,16 @@ public class BuildModel {
                 return 1;
             }
             return name.compareTo(other.name);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof FileCount) {
+                return compareTo((FileCount) obj) == 0;
+            } else {
+                return false;
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ import org.xmlpull.v1.XmlPullParserException;
  */
 public class SimianParser extends AbstractTypeParser {
 
-    class DuplicationBlock {
+    static class DuplicationBlock {
         String absolutePath;
         String fileName;
         int startLineNumber;

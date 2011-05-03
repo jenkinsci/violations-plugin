@@ -34,7 +34,7 @@ public class TypeSummary implements Serializable {
      * @return the severity array.
      */
     public int[] getSeverityArray() {
-        return severityArray;
+        return severityArray.clone();
     }
 
     private static final long serialVersionUID = 1L;

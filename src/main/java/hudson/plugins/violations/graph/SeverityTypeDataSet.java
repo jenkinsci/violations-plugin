@@ -158,6 +158,16 @@ public class SeverityTypeDataSet  {
                 : number < other.number ? 1
                 : -1;
         }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Row)) {
+                return false;
+            } else {
+                return compareTo((Row) obj) == 0;
+            }
+        }
     }
     private static final Row HIGH_ROW = new Row(Severity.HIGH, 0);
     private static final Row MEDIUM_ROW = new Row(Severity.MEDIUM, 1);

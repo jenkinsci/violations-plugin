@@ -9,6 +9,7 @@ import hudson.util.IOException2;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -102,7 +103,7 @@ public abstract class AbstractTypeParser
      * @param sourcePaths the value to use
      */
     public void setSourcePaths(String[] sourcePaths) {
-        this.sourcePaths = sourcePaths.clone();
+        this.sourcePaths = Arrays.copyOf(sourcePaths, sourcePaths.length);
     }
 
     /**
@@ -110,7 +111,7 @@ public abstract class AbstractTypeParser
      * @return the source paths.
      */
     protected String[] getSourcePaths() {
-        return sourcePaths;
+        return Arrays.copyOf(sourcePaths, sourcePaths.length);
     }
 
     // -----------------------------------------------

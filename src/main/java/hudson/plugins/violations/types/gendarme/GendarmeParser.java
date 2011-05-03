@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -53,7 +54,7 @@ public class GendarmeParser implements ViolationsParser {
         this.projectPath = projectPath;
         this.model = model;
         this.reportParentFile = new File(fileName).getParentFile();
-        this.sourcePaths = sourcePaths.clone();
+        this.sourcePaths = Arrays.copyOf(sourcePaths, sourcePaths.length);
 
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;

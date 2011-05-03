@@ -26,7 +26,7 @@ public class JsLintParserTest {
 
         JsLintParser parser = new JsLintParser();
         FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
+        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), new String[0]);
         model.cleanup();
         return model;
     }

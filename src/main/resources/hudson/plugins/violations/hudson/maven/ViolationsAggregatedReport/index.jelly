@@ -11,14 +11,16 @@
 
     <j:if test="${url.baseUrl == null}">
       <st:include it="${it.build.parent}" page="sidepanel.jelly" />
+      <j:set var="relativeUrl" value="../lastBuild"/>
     </j:if>
     <j:if test="${url.baseUrl != null}">
       <st:include it="${it.build}" page="sidepanel.jelly" />
+      <j:set var="relativeUrl" value=".."/>
     </j:if>
     <l:main-panel>
       <h1>
         <img src="${rootURL}/plugin/violations/images/48x48/dialog-warning.png"/>
-        Aggregated Violations Report ${url.baseUrl} for build ${it.build.number}
+        Aggregated Violations Report for build ${it.build.number}
       </h1>
 
       <h2>Aggregated</h2>
@@ -39,6 +41,7 @@
                 <j:set var="prev" value="${report.previous()}"/>
                 <j:set var="td" value="padding-left:0.5em;padding-right:0.5em;
                                        border-width:0px 0px 0px 0px;"/>
+                <h3>
                 <a href="../${m.shortUrl}">
                   <img src="${imagesURL}/16x16/${mb.buildStatusUrl}"
                        alt="${mb.iconColor.description}"/>
@@ -47,10 +50,11 @@
                 <a href="../${m.shortUrl}">
                   ${m.displayName}
                 </a>
+                </h3>
                 <br />
                 <v:reporttable report="${report}" icon="true"/>
-                <a href="../${m.shortUrl}violations">
-                  <img src="../${m.shortUrl}violations/graph" />
+                <a href="${relativeUrl}/${m.shortUrl}violations">
+                  <img src="${relativeUrl}/${m.shortUrl}violations/graph" />
                 </a>
               </j:when>
               <j:otherwise> <!-- module build non-existent, so no link -->

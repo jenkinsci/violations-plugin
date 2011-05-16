@@ -1,9 +1,9 @@
 package hudson.plugins.violations.types.stylecop;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.types.stylecop.StyleCopParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import org.junit.Test;
 
 public class StyleCopParserTest {
-    
+
     private FullBuildModel getFullBuildModel(String filename) throws IOException {
         URL url = getClass().getResource(filename);
         File xmlFile;
@@ -23,18 +23,18 @@ public class StyleCopParserTest {
         } catch(URISyntaxException e) {
             xmlFile = new File(url.getPath());
         }
-        
+
         StyleCopParser parser = new StyleCopParser();
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
         model.cleanup();
         return model;
     }
-    
+
     @Test
     public void testParseFullBuildModelFileStringStringArray() throws Exception {
         FullBuildModel model = getFullBuildModel("onefile.xml");
-        
+
         assertEquals("Number of violations is incorrect", 3, model.getCountNumber(StyleCopParser.TYPE_NAME));
         assertEquals("Number of files is incorrect", 1, model.getFileModelMap().size());
     }
@@ -50,7 +50,7 @@ public class StyleCopParserTest {
         assertEquals("Severity level in violation is incorrect", 2, v.getSeverityLevel());
         assertEquals("Severity in violation is incorrect", "Medium", v.getSeverity());
     }
-    
+
     /**
      * Test to catch a NPE in Violation.compareTo() because violation has to little data
      */
@@ -62,11 +62,11 @@ public class StyleCopParserTest {
         Violation otherV = iterator.next();
         assertTrue("compareTo() should return false", v.compareTo(otherV) != 0);
     }
-    
+
     @Test
     public void assertParsingVersion43() throws Exception {
         FullBuildModel model = getFullBuildModel("stylecop-v4.3.xml");
-        
+
         assertEquals("Number of violations is incorrect", 2, model.getCountNumber(StyleCopParser.TYPE_NAME));
         assertEquals("Number of files is incorrect", 1, model.getFileModelMap().size());
     }

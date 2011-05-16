@@ -1,17 +1,15 @@
 package  hudson.plugins.violations.hudson.maven;
 
+import hudson.maven.MavenBuild;
+import hudson.maven.MavenModuleSetBuild;
+import hudson.model.HealthReport;
+import hudson.plugins.violations.ViolationsBuildAction;
+import hudson.plugins.violations.ViolationsReport;
+import hudson.plugins.violations.model.BuildModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import hudson.model.HealthReport;
-
-import hudson.maven.MavenModuleSetBuild;
-import hudson.maven.MavenBuild;
-
-import  hudson.plugins.violations.model.BuildModel;
-import  hudson.plugins.violations.ViolationsBuildAction;
-import  hudson.plugins.violations.ViolationsReport;
 
 public class ViolationsAggregatedReport
     extends ViolationsReport {

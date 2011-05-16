@@ -1,9 +1,9 @@
 package hudson.plugins.violations.types.stylecop;
 
+import hudson.plugins.violations.TypeDescriptor;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import hudson.plugins.violations.TypeDescriptor;
 
 /**
  * The descriptor class for StyleCop (MS Source Analysis) violations type.

@@ -3,43 +3,43 @@ package hudson.plugins.violations.types.gendarme;
 import java.net.URL;
 
 public class GendarmeRule {
-	private String name;
-	
-	private String typeName;
+    private String name;
 
-	private GendarmeRuleType type;
-	
-	private URL url;
-	
-	public String getTypeName() {
-		return typeName;
-	}
+    private String typeName;
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
-	
-	public String getName() {
-		return name;
-	}
+    private GendarmeRuleType type;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private URL url;
 
-	public GendarmeRuleType getType() {
-		return type;
-	}
+    public String getTypeName() {
+        return typeName;
+    }
 
-	public void setType(GendarmeRuleType type) {
-		this.type = type;
-	}
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
-	public URL getUrl() {
-		return url;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setUrl(URL url) {
-		this.url = url;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public GendarmeRuleType getType() {
+        return type;
+    }
+
+    public void setType(GendarmeRuleType type) {
+        this.type = type;
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public void setUrl(URL url) {
+        this.url = url;
+    }
 }

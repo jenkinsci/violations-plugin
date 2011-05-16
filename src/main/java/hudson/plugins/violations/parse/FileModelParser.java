@@ -1,14 +1,13 @@
 package hudson.plugins.violations.parse;
 
-import java.io.IOException;
+import hudson.plugins.violations.model.FileModel;
+import hudson.plugins.violations.model.Violation;
+
 import java.io.File;
+import java.io.IOException;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
-
-import hudson.plugins.violations.model.FileModel;
-import hudson.plugins.violations.model.Violation;
 
 /**
  * Parses file model xml file.

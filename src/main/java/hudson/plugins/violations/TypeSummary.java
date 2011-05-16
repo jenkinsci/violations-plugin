@@ -1,8 +1,8 @@
 package hudson.plugins.violations;
 
-import java.io.Serializable;
-
 import hudson.plugins.violations.model.Severity;
+
+import java.io.Serializable;
 
 /**
  * A summary report for a type.
@@ -34,7 +34,7 @@ public class TypeSummary implements Serializable {
      * @return the severity array.
      */
     public int[] getSeverityArray() {
-        return severityArray;
+        return severityArray.clone();
     }
 
     private static final long serialVersionUID = 1L;

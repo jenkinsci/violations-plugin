@@ -2,8 +2,8 @@
 // COPIED from maven plexus util source
 package hudson.plugins.violations.parse;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * The XmlReaderException is thrown by the XmlReader constructors if the charset encoding can not be determined
@@ -12,7 +12,7 @@ import java.io.IOException;
  * The exception returns the unconsumed InputStream to allow the application to do an alternate processing with the
  * stream. Note that the original InputStream given to the XmlReader cannot be used as that one has been already read.
  * <p>
- * 
+ *
  * @author Alejandro Abdelnur
  * @version revision 1.1 taken on 26/06/2007 from Rome (see https://rome.dev.java.net/source/browse/rome/src/java/com/sun/syndication/io/XmlReaderException.java)
  */
@@ -35,7 +35,7 @@ public class XmlReaderException extends IOException
      * <p>
      * Instances of this exception are thrown by the XmlReader.
      * <p>
-     * 
+     *
      * @param msg
      *            message describing the reason for the exception.
      * @param bomEnc
@@ -46,7 +46,7 @@ public class XmlReaderException extends IOException
      *            XML prolog encoding.
      * @param is
      *            the unconsumed InputStream.
-     * 
+     *
      */
     public XmlReaderException( String msg, String bomEnc, String xmlGuessEnc, String xmlEnc, InputStream is )
     {
@@ -58,7 +58,7 @@ public class XmlReaderException extends IOException
      * <p>
      * Instances of this exception are thrown by the XmlReader.
      * <p>
-     * 
+     *
      * @param msg
      *            message describing the reason for the exception.
      * @param ctMime
@@ -73,7 +73,7 @@ public class XmlReaderException extends IOException
      *            XML prolog encoding.
      * @param is
      *            the unconsumed InputStream.
-     * 
+     *
      */
     public XmlReaderException( String msg, String ctMime, String ctEnc, String bomEnc, String xmlGuessEnc,
                                String xmlEnc, InputStream is )
@@ -90,9 +90,9 @@ public class XmlReaderException extends IOException
     /**
      * Returns the BOM encoding found in the InputStream.
      * <p>
-     * 
+     *
      * @return the BOM encoding, null if none.
-     * 
+     *
      */
     public String getBomEncoding()
     {
@@ -102,9 +102,9 @@ public class XmlReaderException extends IOException
     /**
      * Returns the encoding guess based on the first bytes of the InputStream.
      * <p>
-     * 
+     *
      * @return the encoding guess, null if it couldn't be guessed.
-     * 
+     *
      */
     public String getXmlGuessEncoding()
     {
@@ -114,9 +114,9 @@ public class XmlReaderException extends IOException
     /**
      * Returns the encoding found in the XML prolog of the InputStream.
      * <p>
-     * 
+     *
      * @return the encoding of the XML prolog, null if none.
-     * 
+     *
      */
     public String getXmlEncoding()
     {
@@ -126,10 +126,10 @@ public class XmlReaderException extends IOException
     /**
      * Returns the MIME type in the content-type used to attempt determining the encoding.
      * <p>
-     * 
+     *
      * @return the MIME type in the content-type, null if there was not content-type or the encoding detection did not
      *         involve HTTP.
-     * 
+     *
      */
     public String getContentTypeMime()
     {
@@ -139,10 +139,10 @@ public class XmlReaderException extends IOException
     /**
      * Returns the encoding in the content-type used to attempt determining the encoding.
      * <p>
-     * 
+     *
      * @return the encoding in the content-type, null if there was not content-type, no encoding in it or the encoding
      *         detection did not involve HTTP.
-     * 
+     *
      */
     public String getContentTypeEncoding()
     {
@@ -153,9 +153,9 @@ public class XmlReaderException extends IOException
      * Returns the unconsumed InputStream to allow the application to do an alternate encoding detection on the
      * InputStream.
      * <p>
-     * 
+     *
      * @return the unconsumed InputStream.
-     * 
+     *
      */
     public InputStream getInputStream()
     {

@@ -12,7 +12,7 @@ import java.io.InputStream;
  * The exception returns the unconsumed InputStream to allow the application to do an alternate processing with the
  * stream. Note that the original InputStream given to the XmlStreamReader cannot be used as that one has been already read.
  * <p>
- * 
+ *
  * @author Alejandro Abdelnur
  * @version revision 1.1 taken on 26/06/2007 from Rome (see https://rome.dev.java.net/source/browse/rome/src/java/com/sun/syndication/io/XmlReaderException.java)
  */
@@ -23,7 +23,7 @@ public class XmlStreamReaderException extends XmlReaderException
      * <p>
      * Instances of this exception are thrown by the XmlReader.
      * <p>
-     * 
+     *
      * @param msg
      *            message describing the reason for the exception.
      * @param bomEnc
@@ -34,7 +34,7 @@ public class XmlStreamReaderException extends XmlReaderException
      *            XML prolog encoding.
      * @param is
      *            the unconsumed InputStream.
-     * 
+     *
      */
     public XmlStreamReaderException( String msg, String bomEnc, String xmlGuessEnc, String xmlEnc, InputStream is )
     {
@@ -46,7 +46,7 @@ public class XmlStreamReaderException extends XmlReaderException
      * <p>
      * Instances of this exception are thrown by the XmlReader.
      * <p>
-     * 
+     *
      * @param msg
      *            message describing the reason for the exception.
      * @param ctMime
@@ -61,7 +61,7 @@ public class XmlStreamReaderException extends XmlReaderException
      *            XML prolog encoding.
      * @param is
      *            the unconsumed InputStream.
-     * 
+     *
      */
     public XmlStreamReaderException( String msg, String ctMime, String ctEnc, String bomEnc, String xmlGuessEnc,
                                String xmlEnc, InputStream is )

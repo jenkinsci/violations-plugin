@@ -1,9 +1,9 @@
 package hudson.plugins.violations.util;
 
-import java.io.IOException;
 import java.io.Closeable;
-import java.util.logging.Logger;
+import java.io.IOException;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A utility class to close closables.

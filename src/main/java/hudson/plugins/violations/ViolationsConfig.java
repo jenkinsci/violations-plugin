@@ -1,13 +1,14 @@
 package hudson.plugins.violations;
 
+import hudson.plugins.violations.model.Suppression;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
-import java.io.Serializable;
-import  hudson.plugins.violations.model.Suppression;
 
 /**
  * The configuration class for the violations plugin.
@@ -154,14 +155,14 @@ public class ViolationsConfig implements Cloneable, Serializable {
         "UTF-8",
         "UTF-16",
     };
-    
+
     private final static List<String> ENCODINGS = new ArrayList<String>();
     static {
         for (String m: ENCODING_STRINGS) {
             ENCODINGS.add(m);
         }
     }
-        
+
     public List<String> getEncodings() {
         return ENCODINGS;
     }

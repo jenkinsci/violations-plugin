@@ -54,5 +54,15 @@ public class FileSummary implements Comparable<FileSummary> {
         return fileModel.getDisplayName().compareTo(
             other.fileModel.getDisplayName());
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FileSummary) {
+            return compareTo((FileSummary) obj) == 0;
+        } else {
+            return false;
+        }
+    }
 }
 

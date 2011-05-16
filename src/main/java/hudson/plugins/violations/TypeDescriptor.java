@@ -1,20 +1,20 @@
 package hudson.plugins.violations;
 
-import java.util.List;
-import java.util.TreeMap;
-
 import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
-import hudson.plugins.violations.types.pmd.PMDDescriptor;
+import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
+import hudson.plugins.violations.types.cpd.CPDDescriptor;
 import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
 import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
 import hudson.plugins.violations.types.gendarme.GendarmeDescriptor;
-import hudson.plugins.violations.types.cpd.CPDDescriptor;
+import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
+import hudson.plugins.violations.types.jslint.JsLintDescriptor;
+import hudson.plugins.violations.types.pmd.PMDDescriptor;
 import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 import hudson.plugins.violations.types.simian.SimianDescriptor;
 import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
-import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
-import hudson.plugins.violations.types.jslint.JsLintDescriptor;
-import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
+
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * A descriptor for a violation type.

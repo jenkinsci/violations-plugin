@@ -1,20 +1,18 @@
 package hudson.plugins.violations.render;
 
-import java.util.Map;
-import java.util.Set;
 import hudson.model.AbstractBuild;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import hudson.plugins.violations.generate.XMLUtil;
+import hudson.plugins.violations.model.FileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.FileModelParser;
+import hudson.plugins.violations.parse.ParseXML;
 
 import java.io.File;
-
-import hudson.plugins.violations.parse.ParseXML;
-import hudson.plugins.violations.parse.FileModelParser;
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.model.FileModel;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.generate.XMLUtil;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**

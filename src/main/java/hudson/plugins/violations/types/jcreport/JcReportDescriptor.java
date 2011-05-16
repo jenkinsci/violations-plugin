@@ -1,14 +1,14 @@
 package hudson.plugins.violations.types.jcreport;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.parse.AbstractTypeParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The descriptor class for jcreport violations type.
- * http://www.jcoderz.org/fawkez/wiki/JcReport 
+ * http://www.jcoderz.org/fawkez/wiki/JcReport
  * @author Andreas.Mandel@gmail.com
  */
 public final class JcReportDescriptor

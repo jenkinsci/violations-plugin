@@ -1,38 +1,38 @@
 package hudson.plugins.violations.types.stylecop;
 
+import hudson.FilePath;
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.model.FullBuildModel;
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.ParseUtil;
+import hudson.plugins.violations.types.fxcop.XmlElementUtil;
+import hudson.plugins.violations.util.AbsoluteFileFinder;
+import hudson.util.IOException2;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.File;
-
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import hudson.FilePath;
-import hudson.plugins.violations.parse.ParseUtil;
-import hudson.util.IOException2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import hudson.plugins.violations.ViolationsParser;
-import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.types.fxcop.XmlElementUtil;
-import hudson.plugins.violations.util.AbsoluteFileFinder;
-import hudson.plugins.violations.model.Violation;
-
 /**
  * Parses a StyleCop (http://code.msdn.microsoft.com/sourceanalysis/) xml report file.
- * 
+ *
  */
 public class StyleCopParser implements ViolationsParser {
-    
+
     static final String TYPE_NAME = "stylecop";
     private FullBuildModel model;
     private File reportParentFile;
@@ -45,7 +45,7 @@ public class StyleCopParser implements ViolationsParser {
         this.reportParentFile = new File(fileName).getParentFile();
         if (this.reportParentFile==null)
             this.reportParentFile = projectPath;
-        
+
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
         try {
@@ -61,15 +61,15 @@ public class StyleCopParser implements ViolationsParser {
 
             Element rootElement = (Element) mainNode.item(0);
             parseViolations(XmlElementUtil.getNamedChildElements(rootElement, "Violation"));
-            
-            findSourceFiles(model, projectPath.getPath(), sourcePaths);            
+
+            findSourceFiles(model, projectPath.getPath(), sourcePaths);
         } catch (ParserConfigurationException pce) {
             throw new IOException2(pce);
         } catch (SAXException se) {
             throw new IOException2(se);
-        }    
+        }
     }
-    
+
     /**
      * Go through all violations and see if the source files can be found.
      * @param model model containing all violations
@@ -82,10 +82,9 @@ public class StyleCopParser implements ViolationsParser {
         if (sourcePaths != null) {
             finder.addSourcePaths(sourcePaths);
         }
-        
+
         Map<String, FullFileModel> fileModelMap = model.getFileModelMap();
-        for (String key : fileModelMap.keySet()) {
-            FullFileModel fileModel = fileModelMap.get(key);
+        for (final FullFileModel fileModel : fileModelMap.values()) {
             File sourceFile = finder.getFileForName(fileModel.getDisplayName());
             if (sourceFile != null) {
                 fileModel.setSourceFile(sourceFile);
@@ -93,7 +92,7 @@ public class StyleCopParser implements ViolationsParser {
             }
         }
     }
-    
+
     /***
      * Returns the value for the named attribute if it exists
      * @param element the element to check for an attribute
@@ -114,22 +113,22 @@ public class StyleCopParser implements ViolationsParser {
      */
     private void parseViolations(List<Element> elements) throws IOException {
         for (Element element : elements) {
-            
+
             Violation violation = new Violation();
             violation.setLine(getString(element, "LineNumber"));
             violation.setMessage(element.getTextContent() + " (" + getString(element, "RuleId") + ")");
             violation.setSeverity(Severity.MEDIUM);
             violation.setSeverityLevel(Severity.MEDIUM_VALUE);
             violation.setType(TYPE_NAME);
-            
+
             String temp = getString(element, "RuleNamespace");
             int i = temp.lastIndexOf('.');
             if (i != -1) {
                 violation.setSource(temp.substring(i));
             } else {
                 violation.setSource(getString(element,"RuleId"));
-            }            
-            
+            }
+
             // Add the violation to the model
             String displayName = new FilePath(reportParentFile).child(getString(element,"Source")).getRemote();
             displayName = ParseUtil.resolveAbsoluteName(reportParentFile,displayName);

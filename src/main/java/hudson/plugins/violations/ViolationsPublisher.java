@@ -1,22 +1,20 @@
 package hudson.plugins.violations;
 
 import hudson.Extension;
-import hudson.tasks.BuildStepMonitor;
-import java.io.File;
-import java.io.IOException;
-
 import hudson.FilePath;
 import hudson.Launcher;
-
-import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 
-import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
-import hudson.tasks.BuildStepDescriptor;
+import java.io.File;
+import java.io.IOException;
 
 
 /**

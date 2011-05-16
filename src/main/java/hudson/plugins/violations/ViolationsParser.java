@@ -1,9 +1,9 @@
 package hudson.plugins.violations;
 
+import hudson.plugins.violations.model.FullBuildModel;
+
 import java.io.File;
 import java.io.IOException;
-
-import hudson.plugins.violations.model.FullBuildModel;
 
 /**
  * Interface that violations parsers need

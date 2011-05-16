@@ -1,7 +1,7 @@
 package hudson.plugins.violations.parse;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Locale;
 
 
 public class ParseUtil {

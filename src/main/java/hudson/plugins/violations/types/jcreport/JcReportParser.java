@@ -20,7 +20,7 @@ public class JcReportParser extends AbstractTypeParser {
     private static final Map<String, String> SEVERITIES
         = new HashMap<String, String>();
 
-    // see 
+    // see
     static {
         SEVERITIES.put("error", Severity.HIGH);
         SEVERITIES.put("cpd", Severity.MEDIUM_HIGH);
@@ -40,14 +40,14 @@ public class JcReportParser extends AbstractTypeParser {
      * @throws XmlPullParserException if there is a problem parsing the file.
      */
     protected void execute()
-        throws IOException, XmlPullParserException 
+        throws IOException, XmlPullParserException
     {
 
         // Ensure that the top level tag is "report"
         expectNextTag("report");
         getParser().next(); // consume the "report" tag
         // loop through the child elements, getting the "file" ones
-        while (skipToTag("file")) 
+        while (skipToTag("file"))
         {
             parseFileElement();
         }
@@ -55,7 +55,7 @@ public class JcReportParser extends AbstractTypeParser {
     }
 
     private void parseFileElement()
-        throws IOException, XmlPullParserException 
+        throws IOException, XmlPullParserException
     {
 
         final String name = getString("name");
@@ -63,9 +63,9 @@ public class JcReportParser extends AbstractTypeParser {
         if (null != name && name.length() > 0)
         {
           FullFileModel fileModel = null;
-  
+
           // Loop through the child elements, getting the "item" ones
-          while (skipToTag("item")) 
+          while (skipToTag("item"))
           {
               final Violation violation = parseItemElement();
               if (null != violation)
@@ -84,7 +84,7 @@ public class JcReportParser extends AbstractTypeParser {
     }
 
     private Violation parseItemElement()
-        throws IOException, XmlPullParserException 
+        throws IOException, XmlPullParserException
     {
         final String severity = SEVERITIES.get(getString("severity"));
         Violation ret = null;

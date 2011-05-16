@@ -23,8 +23,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Parses a fxcop xml report file.
- * 
- * 
+ *
+ *
  * This does not uses the XML Pull parser as it can not handle the FxCop XML
  * files. The bug is registered at Sun as http: //bugs.sun.com/bugdatabase/view_bug.do?bug_id=4508058
  */
@@ -37,7 +37,7 @@ public class FxCopParser implements ViolationsParser {
     public void parse(FullBuildModel model, File projectPath, String fileName, String[] sourcePaths) throws IOException {
         this.projectPath = projectPath;
         this.model = model;
-        
+
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
         try {
@@ -48,7 +48,7 @@ public class FxCopParser implements ViolationsParser {
 
             Element rootElement = (Element) mainNode.item(0);
             parseRules(XmlElementUtil.getFirstElementByTagName(rootElement, "Rules"));
-			parseNamespaces(XmlElementUtil.getFirstElementByTagName(rootElement, "Namespaces"), null);
+            parseNamespaces(XmlElementUtil.getFirstElementByTagName(rootElement, "Namespaces"), null);
             parseTargets(XmlElementUtil.getFirstElementByTagName(rootElement, "Targets"));
             // TODO parse notes
         } catch (ParserConfigurationException pce) {
@@ -59,14 +59,14 @@ public class FxCopParser implements ViolationsParser {
     }
 
     private void parseRules(Element rulesElement) {
-    	if (rulesElement != null) {
+        if (rulesElement != null) {
             for (Element rule : XmlElementUtil.getNamedChildElements(rulesElement, "Rule")) {
-            	ruleSet.addRule(rule);
+                ruleSet.addRule(rule);
             }
         }
-	}
+    }
 
-	private void parseTargets(Element targetsElement) {
+    private void parseTargets(Element targetsElement) {
         if (targetsElement != null) {
             for (Element target : XmlElementUtil.getNamedChildElements(targetsElement, "Target")) {
                 String name = getString(target, "Name");
@@ -164,24 +164,24 @@ public class FxCopParser implements ViolationsParser {
         // Path, File, Line, Level
         String typeName = getString(parent, "TypeName");
         String category = getString(parent, "Category");
-		String checkId = getString(parent, "CheckId");
+        String checkId = getString(parent, "CheckId");
 
         Violation violation = new Violation();
         violation.setType("fxcop");
         violation.setSource(category + "#" + checkId);
         setSeverityLevel(violation, getString(issue, "Level"));
-        
+
         StringBuilder msgBuilder = new StringBuilder();
         if (subName != null) {
-        	msgBuilder.append(subName);
-        	msgBuilder.append(" ");
+            msgBuilder.append(subName);
+            msgBuilder.append(" ");
         }
-        
+
         FxCopRule rule = ruleSet.getRule(category, checkId);
         if (rule != null) {
-        	msgBuilder.append("<a href=\"");
-        	msgBuilder.append(rule.getUrl());
-        	msgBuilder.append("\">");
+            msgBuilder.append("<a href=\"");
+            msgBuilder.append(rule.getUrl());
+            msgBuilder.append("\">");
             msgBuilder.append(typeName);
             msgBuilder.append("</a>");
             violation.setPopupMessage(rule.getDescription());

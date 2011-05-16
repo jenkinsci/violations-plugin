@@ -1,24 +1,18 @@
 package hudson.plugins.violations.types.findbugs;
 
-import java.io.IOException;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.AbsoluteFileFinder;
+import hudson.plugins.violations.util.HashMapWithDefault;
+import hudson.plugins.violations.util.StringUtil;
+
 import java.io.File;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
-
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.util.AbsoluteFileFinder;
-import hudson.plugins.violations.util.StringUtil;
-import hudson.plugins.violations.util.HashMapWithDefault;
-import hudson.plugins.violations.model.Violation;
-
-import hudson.plugins.violations.parse.AbstractTypeParser;
 
 /**
  * Parses a find bugs xml report file.
@@ -76,7 +70,7 @@ public class FindBugsParser extends AbstractTypeParser {
         }
         return filename + ".java";
     }
-    
+
     private String getRelativeName(String name, File file) {
         if (file != null && file.exists()) {
             String absolute = file.getAbsolutePath();
@@ -134,13 +128,6 @@ public class FindBugsParser extends AbstractTypeParser {
         checkNextEvent(XmlPullParser.TEXT, "Expecting text");
         absoluteFileFinder.addSourcePath(getParser().getText());
         endElement();
-    }
-
-    private void getBugInstances()
-        throws IOException, XmlPullParserException {
-        while (skipToTag("BugInstance")) {
-            getBugInstance();
-        }
     }
 
     private String convertType(String x) {
@@ -210,7 +197,6 @@ public class FindBugsParser extends AbstractTypeParser {
         throws IOException, XmlPullParserException {
         String type = getParser().getAttributeValue("", "type");
         String priority = getParser().getAttributeValue("", "priority");
-        String category = getParser().getAttributeValue("", "category");
         getParser().next();
 
         classname = null;

@@ -1,23 +1,14 @@
 package hudson.plugins.violations.graph;
 
-import org.jfree.data.category.CategoryDataset;
-
-import hudson.util.DataSetBuilder;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
-
-import hudson.plugins.violations.ViolationsReport;
 import hudson.plugins.violations.TypeSummary;
-
+import hudson.plugins.violations.ViolationsReport;
 import hudson.plugins.violations.model.Severity;
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
+import hudson.util.DataSetBuilder;
 import hudson.util.ShiftedCategoryAxis;
 import hudson.util.StackedAreaRenderer2;
 
-
 import java.awt.Color;
-import org.jfree.chart.renderer.category.StackedAreaRenderer;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.ui.RectangleInsets;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -26,6 +17,11 @@ import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.StackedAreaRenderer;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
 
 
 
@@ -161,6 +157,16 @@ public class SeverityTypeDataSet  {
             return number == other.number ? 0
                 : number < other.number ? 1
                 : -1;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Row)) {
+                return false;
+            } else {
+                return compareTo((Row) obj) == 0;
+            }
         }
     }
     private static final Row HIGH_ROW = new Row(Severity.HIGH, 0);

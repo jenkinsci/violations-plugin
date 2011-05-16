@@ -1,13 +1,12 @@
 package hudson.plugins.violations.parse;
 
+import hudson.plugins.violations.ViolationsParser;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.util.IOException2;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.File;
-
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,8 +15,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import hudson.plugins.violations.ViolationsParser;
-   
 public abstract class ViolationsDOMParser
     implements ViolationsParser {
 
@@ -114,7 +111,7 @@ public abstract class ViolationsDOMParser
      * @param sourcePaths the value to use
      */
     public void setSourcePaths(String[] sourcePaths) {
-        this.sourcePaths = sourcePaths;
+        this.sourcePaths = sourcePaths.clone();
     }
 
     /**
@@ -122,7 +119,7 @@ public abstract class ViolationsDOMParser
      * @return the source paths.
      */
     protected String[] getSourcePaths() {
-        return sourcePaths;
+        return sourcePaths.clone();
     }
 
     // -----------------------------------------------

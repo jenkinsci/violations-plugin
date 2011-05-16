@@ -21,7 +21,7 @@ public final class HelpHudson {
     public static int findBuildNumber(StaplerRequest req) {
         String requestURI = req.getOriginalRequestURI();
         String contextPath = req.getContextPath();
-        if (contextPath != "") {
+        if (contextPath.length() != 0) {
             if (!requestURI.startsWith(contextPath)) {
                 return 0;
             }

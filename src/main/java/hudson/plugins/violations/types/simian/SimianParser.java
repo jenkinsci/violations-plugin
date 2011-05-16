@@ -1,5 +1,11 @@
 package hudson.plugins.violations.types.simian;
 
+import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.StringUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,27 +14,21 @@ import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import hudson.plugins.violations.model.FullFileModel;
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.parse.AbstractTypeParser;
-import hudson.plugins.violations.util.StringUtil;
-
 /**
  * Parser for Simian XML files.
- * 
+ *
  * Simian (Similarity Analyser) identifies duplication in any text files.
- * @see http://www.redhillconsulting.com.au/products/simian/ 
+ * @see http://www.redhillconsulting.com.au/products/simian/
  */
 public class SimianParser extends AbstractTypeParser {
-    
-    class DuplicationBlock {
+
+    static class DuplicationBlock {
         String absolutePath;
         String fileName;
         int startLineNumber;
         int endLineNumber;
     }
-    
+
     static final String TYPE_NAME = "simian";
     private static final int LOW_LIMIT = 10;
     private static final int MEDIUM_LIMIT = 50;
@@ -36,10 +36,10 @@ public class SimianParser extends AbstractTypeParser {
     @Override
     protected void execute() throws IOException, XmlPullParserException {
         expectNextTag("simian");
-        getParser().next(); 
+        getParser().next();
 
         while (skipToTag("check")) {
-            getParser().next(); 
+            getParser().next();
             while (skipToTag("set")) {
                 getParser().next();
                 parseSetElement();
@@ -47,7 +47,7 @@ public class SimianParser extends AbstractTypeParser {
             }
             endElement();
         }
-        
+
         endElement();
     }
 
@@ -63,14 +63,14 @@ public class SimianParser extends AbstractTypeParser {
             getParser().next();
             endElement();
         }
-        
+
         for (DuplicationBlock block : blocks) {
             List<DuplicationBlock> otherBlocks = new ArrayList<DuplicationBlock>(blocks);
             otherBlocks.remove(block);
-                        
+
             Violation violation = createViolation(block);
             setViolationMessages(violation, block, otherBlocks);
-            
+
             FullFileModel fileModel = getFileModel(block.absolutePath);
             fileModel.addViolation(violation);
         }
@@ -83,7 +83,7 @@ public class SimianParser extends AbstractTypeParser {
      * @throws IOException thrown by XmlPullParser
      */
     private DuplicationBlock parseBlockElement() throws XmlPullParserException, IOException {
-        DuplicationBlock block = new DuplicationBlock(); 
+        DuplicationBlock block = new DuplicationBlock();
         block.absolutePath = fixAbsolutePath(checkNotBlank("sourceFile")).replace('\\', '/');
         block.fileName = new File(block.absolutePath).getName();
         block.startLineNumber = Integer.parseInt(getString("startLineNumber"));
@@ -93,9 +93,9 @@ public class SimianParser extends AbstractTypeParser {
 
     /**
      * Sets the message and popupMessage on the violation and using the other blocks as references.
-     * The popupMessage will set to something along the line 
+     * The popupMessage will set to something along the line
      * "Duplication of 20 lines from line 23, line 45 in ClassFoo.java".
-     * The message will be set to something along the line 
+     * The message will be set to something along the line
      * "Duplication of 20 lines from <a href=''>line 23</a>, <a href=''>line 45 in ClassFoo.java</a>".
      * @param violation the violation to update the messages on
      * @param block the current block that is referencing the other blocks
@@ -106,9 +106,9 @@ public class SimianParser extends AbstractTypeParser {
         popupMessage.append(block.endLineNumber - block.startLineNumber + 1);
         popupMessage.append(" lines from ");
         StringBuilder message = new StringBuilder(popupMessage);
-        
+
         int i = 0;
-        int size = otherBlocks.size();        
+        int size = otherBlocks.size();
         for (Iterator<DuplicationBlock> iterator = otherBlocks.iterator(); iterator.hasNext();) {
             DuplicationBlock otherViolation = iterator.next();
             String hrefString = getOtherHrefString(block, otherViolation);
@@ -119,12 +119,12 @@ public class SimianParser extends AbstractTypeParser {
             message.append(duplicationString);
             message.append("</a>");
             popupMessage.append(duplicationString);
-            
+
             String postfix;
             i++;
             if (i < (size - 1)) {
                 postfix = ", ";
-            } else if (i == (size - 1)){ 
+            } else if (i == (size - 1)){
                 postfix = " and ";
             } else {
                 postfix = ".";
@@ -135,7 +135,7 @@ public class SimianParser extends AbstractTypeParser {
         violation.setPopupMessage(popupMessage.toString());
         violation.setMessage(message.toString());
     }
-    
+
     /**
      * Returns a href for the blocks.
      * @param self the current block.
@@ -146,7 +146,7 @@ public class SimianParser extends AbstractTypeParser {
         String path = StringUtil.relativePath(self.absolutePath + "/bats", other.absolutePath);
         return path + "#line" + other.startLineNumber;
     }
-    
+
     /**
      * Returns a string describing the duplication with line numbers.
      * @param self the current block
@@ -183,7 +183,7 @@ public class SimianParser extends AbstractTypeParser {
               : Severity.HIGH);
         return violation;
     }
-    
+
     /**
      * Sets violation severity.
      * @param v violation to update.

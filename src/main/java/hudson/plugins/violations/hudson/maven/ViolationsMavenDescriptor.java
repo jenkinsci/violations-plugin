@@ -1,19 +1,20 @@
 package hudson.plugins.violations.hudson.maven;
 
-import java.util.Map;
-
 import hudson.maven.MavenReporter;
 import hudson.maven.MavenReporterDescriptor;
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
-
+import hudson.plugins.violations.TypeConfig;
 import hudson.plugins.violations.ViolationsConfig;
 import hudson.plugins.violations.ViolationsPublisher;
-import hudson.plugins.violations.TypeConfig;
+
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.kohsuke.stapler.StaplerRequest;
 
 public class ViolationsMavenDescriptor
     extends MavenReporterDescriptor {
-    
+
     public ViolationsMavenDescriptor() {
         super(ViolationsMavenReporter.class);
     }

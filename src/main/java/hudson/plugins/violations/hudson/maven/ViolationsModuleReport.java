@@ -1,7 +1,6 @@
 package hudson.plugins.violations.hudson.maven;
 
 import hudson.maven.MavenBuild;
-
 import hudson.plugins.violations.ViolationsReport;
 
 /**

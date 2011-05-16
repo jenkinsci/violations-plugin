@@ -1,10 +1,10 @@
 package hudson.plugins.violations.types.checkstyle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.parse.AbstractTypeParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The descriptor class for Checkstyle violations type.

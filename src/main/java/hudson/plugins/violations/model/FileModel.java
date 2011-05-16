@@ -1,9 +1,9 @@
 package hudson.plugins.violations.model;
 
-import java.util.TreeSet;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 
 /**

@@ -1,44 +1,35 @@
 package hudson.plugins.violations;
 
-import java.lang.ref.WeakReference;
-import java.io.IOException;
+import hudson.model.HealthReport;
+import hudson.model.Result;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Project;
+import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
+import hudson.plugins.violations.model.BuildModel;
+import hudson.plugins.violations.model.FileModel;
+import hudson.plugins.violations.model.Suppression;
+import hudson.plugins.violations.parse.BuildModelParser;
+import hudson.plugins.violations.parse.ParseXML;
+import hudson.plugins.violations.render.FileModelProxy;
+import hudson.plugins.violations.render.NoViolationsFile;
+import hudson.plugins.violations.util.HelpHudson;
+import hudson.plugins.violations.util.RecurDynamic;
+
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Iterator;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-
-import hudson.model.HealthReport;
-import hudson.model.AbstractBuild;
-import hudson.model.Result;
-import hudson.model.AbstractProject;
-import hudson.model.Project;
-/** cannot be used in a slave
-import hudson.maven.MavenModule;
-/**/
-
-import hudson.plugins.violations.parse.ParseXML;
-import hudson.plugins.violations.parse.BuildModelParser;
-import hudson.plugins.violations.render.FileModelProxy;
-import hudson.plugins.violations.render.NoViolationsFile;
-import hudson.plugins.violations.model.BuildModel;
-import hudson.plugins.violations.model.FileModel;
-import hudson.plugins.violations.model.Suppression;
-import hudson.plugins.violations.util.RecurDynamic;
-import hudson.plugins.violations.util.HelpHudson;
-
-import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
-/** cannot be used in a slave
-import hudson.plugins.violations.hudson.maven.*;
-/**/
 
 
 
@@ -227,7 +218,6 @@ public class ViolationsReport
      */
     public ViolationsConfig getLiveConfig() {
         AbstractProject<?, ?> abstractProject = build.getProject();
-        AbstractProject notQuestion = (AbstractProject) abstractProject;
         if (abstractProject instanceof Project) {
             Project project = (Project) abstractProject;
             ViolationsPublisher publisher
@@ -337,7 +327,7 @@ public class ViolationsReport
                 tBuild = build;
             }
         }
-        
+
         AbstractViolationsBuildAction r
             = tBuild.getAction(AbstractViolationsBuildAction.class);
         if (r == null) {
@@ -370,18 +360,17 @@ public class ViolationsReport
      * @return the icon name.
      */
     public String getIcon(String t) {
-        Integer v = violations.get(t);
         HealthReport h = getHealthReportFor(t);
         if (h == null) {
             return null;
         }
         return h.getIconUrl();
     }
-    
+
     /**
      * Report class for a particular type.
      */
-    public class TypeReport {
+    public static class TypeReport {
         private final String type;
         private final String icon;
         private final int    number;
@@ -542,7 +531,7 @@ public class ViolationsReport
             build.setResult(Result.UNSTABLE);
         }
     }
-    
+
     private static final long serialVersionUID = 1L;
 
     public static ViolationsReport findViolationsReport(
@@ -574,7 +563,7 @@ public class ViolationsReport
         public ViolationsReportIterator(AbstractBuild<?, ?> curr) {
             this.curr = curr;
         }
-        @Override
+        //@Override
         public Iterator<ViolationsReport> iterator() {
             return this;
         }

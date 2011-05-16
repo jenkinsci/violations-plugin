@@ -1,15 +1,15 @@
 package hudson.plugins.violations.model;
 
-import java.util.TreeSet;
-import java.util.Map;
+import hudson.plugins.violations.render.FileModelProxy;
+
+import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.Collection;
-
-import java.io.File;
-import hudson.plugins.violations.render.FileModelProxy;
+import java.util.TreeSet;
 
 
 /**
@@ -181,7 +181,7 @@ public class BuildModel {
          */
         public FileCount(String name, int[] counts, FileModelProxy proxy) {
             this.name = name;
-            this.counts = counts;
+            this.counts = counts.clone();
             int t = 0;
             for (int i = 0; i < counts.length; ++i) {
                 t += counts[i];
@@ -257,6 +257,16 @@ public class BuildModel {
                 return 1;
             }
             return name.compareTo(other.name);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof FileCount) {
+                return compareTo((FileCount) obj) == 0;
+            } else {
+                return false;
+            }
         }
     }
 }

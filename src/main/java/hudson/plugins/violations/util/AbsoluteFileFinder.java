@@ -10,17 +10,17 @@ import java.util.List;
  * file name.
  */
 public class AbsoluteFileFinder {
-	private transient List<String> sourcePaths = new ArrayList<String>();
+    private transient List<String> sourcePaths = new ArrayList<String>();
 
-	public void addSourcePath(String path) {
-		sourcePaths.add(path);
-	}
-	
-	public void addSourcePaths(String[] paths) {
-		for (String path : paths) {
-			sourcePaths.add(path);
-		}
-	}
+    public void addSourcePath(String path) {
+        sourcePaths.add(path);
+    }
+
+    public void addSourcePaths(String[] paths) {
+        for (String path : paths) {
+            sourcePaths.add(path);
+        }
+    }
 
     public File getFileForName(String name) {
         for (String p : sourcePaths) {

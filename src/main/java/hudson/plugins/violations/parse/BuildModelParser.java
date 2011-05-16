@@ -1,12 +1,11 @@
 package hudson.plugins.violations.parse;
 
+import hudson.plugins.violations.model.BuildModel;
+import hudson.plugins.violations.model.Severity;
+
 import java.io.IOException;
 
 import org.xmlpull.v1.XmlPullParserException;
-
-
-import hudson.plugins.violations.model.BuildModel;
-import hudson.plugins.violations.model.Severity;
 
 /**
  * Parses a violatios build xml report file.

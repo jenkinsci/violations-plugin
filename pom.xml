@@ -11,11 +11,11 @@
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
   <version>0.7.8-SNAPSHOT</version>
-  <name>Hudson Violations plugin</name>
-  <url>http://wiki.hudson-ci.org/display/HUDSON/Violations</url>
+  <name>Jenkins Violations plugin</name>
+  <url>wiki.jenkins-ci.org/display/JENKINS/Violations</url>
   <issueManagement>
-  	<system>Bugzilla</system>
-  	<url>https://hudson.dev.java.net/issues/buglist.cgi?Submit+query=Submit+query&amp;component=hudson&amp;subcomponent=violations&amp;issue_status=NEW&amp;issue_status=STARTED&amp;issue_status=REOPENED&amp;version=current&amp;email1=&amp;emailtype1=exact&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=exact&amp;emailreporter2=1&amp;issueidtype=include&amp;issue_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;short_desc=&amp;short_desc_type=fulltext&amp;long_desc=&amp;long_desc_type=fulltext&amp;issue_file_loc=&amp;issue_file_loc_type=fulltext&amp;status_whiteboard=&amp;status_whiteboard_type=fulltext&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Issue+Number</url>
+    <system>JIRA</system>
+    <url>http://issues.jenkins-ci.org/secure/IssueNavigator.jspa?reset=true&amp;jqlQuery=project+%3D+JENKINS+AND+status+in+%28Open%2C+%22In+Progress%22%2C+Reopened%29+AND+component+%3D+%27violations%27</url>
   </issueManagement>
   <developers>
     <developer>
@@ -24,11 +24,11 @@
     </developer>
   </developers>
   <contributors>
-  	<contributor>
-  		<name>Mathias Kluba</name>
-  		<email>mathias.kluba@gmail.com</email>
-  		<url>http://grozeille.com</url>
-  	</contributor>
+    <contributor>
+      <name>Mathias Kluba</name>
+        <email>mathias.kluba@gmail.com</email>
+        <url>http://grozeille.com</url>
+      </contributor>
     <contributor>
         <name>Cliffano Subagio</name>
         <email>blah@cliffano.com</email>
@@ -88,4 +88,9 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <scm>
+    <connection>scm:git:git://github.com/jenkinsci/violations-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/violations-plugin.git</developerConnection>
+  </scm>
 </project>

@@ -10,7 +10,7 @@
 
   <artifactId>violations</artifactId>
   <packaging>hpi</packaging>
-  <version>0.7.8-SNAPSHOT</version>
+  <version>0.7.8</version>
   <name>Jenkins Violations plugin</name>
   <url>wiki.jenkins-ci.org/display/JENKINS/Violations</url>
   <issueManagement>

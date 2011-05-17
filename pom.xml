@@ -47,6 +47,12 @@
            <xmlOutput>false</xmlOutput>
         </configuration>
      </plugin>
+     <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
     </plugins>
  </build>
  

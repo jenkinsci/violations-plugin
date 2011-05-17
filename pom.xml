@@ -2,27 +2,42 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.jvnet.hudson.plugins</groupId>
+    <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.319</version>
-    <relativePath>../pom.xml</relativePath>
+    <version>1.399</version>
+    <relativePath />
   </parent>
 
   <artifactId>violations</artifactId>
-  <packaging>hpi</packaging>
   <version>0.7.9-SNAPSHOT</version>
+  <packaging>hpi</packaging>
+
   <name>Jenkins Violations plugin</name>
   <url>wiki.jenkins-ci.org/display/JENKINS/Violations</url>
+
+  <scm>
+    <connection>scm:git:git://github.com/jenkinsci/violations-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/violations-plugin.git</developerConnection>
+  </scm>
+
+  <properties>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <issueManagement>
     <system>JIRA</system>
     <url>http://issues.jenkins-ci.org/secure/IssueNavigator.jspa?reset=true&amp;jqlQuery=project+%3D+JENKINS+AND+status+in+%28Open%2C+%22In+Progress%22%2C+Reopened%29+AND+component+%3D+%27violations%27</url>
   </issueManagement>
+
   <developers>
     <developer>
       <id>peterkittreilly</id>
       <name>Peter Reilly</name>
     </developer>
   </developers>
+
   <contributors>
     <contributor>
       <name>Mathias Kluba</name>
@@ -37,7 +52,7 @@
   </contributors>
  
   <build>
-     <plugins>
+    <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
@@ -47,14 +62,8 @@
            <xmlOutput>false</xmlOutput>
         </configuration>
      </plugin>
-     <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <goals>deploy</goals>
-        </configuration>
-      </plugin>
     </plugins>
- </build>
+  </build>
  
   <reporting>
     <plugins>
@@ -66,12 +75,12 @@
            <findbugsXmlOutput>true</findbugsXmlOutput>
            <xmlOutput>false</xmlOutput>
         </configuration>
-     </plugin>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>checkstyle.xml</configLocation>
+          <configLocation>${basedir}/src/checkstyle/checkstyle.xml</configLocation>
         </configuration>
       </plugin>
     </plugins>
@@ -79,7 +88,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jvnet.hudson.main</groupId>
+      <groupId>org.jenkins-ci.main</groupId>
       <artifactId>maven-plugin</artifactId>
     </dependency>
     <dependency>
@@ -90,21 +99,23 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.3.1</version>
+      <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
   
-  <scm>
-    <connection>scm:git:git://github.com/jenkinsci/violations-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/violations-plugin.git</developerConnection>
-  </scm>
-  
-  <distributionManagement>
+  <repositories>
     <repository>
-      <id>maven.jenkins-ci.org</id>
-      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
     </repository>
-  </distributionManagement>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>

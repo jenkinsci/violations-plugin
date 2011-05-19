@@ -49,6 +49,11 @@
         <email>blah@cliffano.com</email>
         <timezone>+10</timezone>
     </contributor>
+    <contributor>
+      <name>Mirko Friedenhagen</name>
+      <email>mfriedenhagen@gmail.com</email>
+      <timezone>+1</timezone>
+    </contributor>
   </contributors>
  
   <build>

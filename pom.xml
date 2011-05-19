@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>violations</artifactId>
-  <version>0.7.9-SNAPSHOT</version>
+  <version>0.7.9</version>
   <packaging>hpi</packaging>
 
   <name>Jenkins Violations plugin</name>

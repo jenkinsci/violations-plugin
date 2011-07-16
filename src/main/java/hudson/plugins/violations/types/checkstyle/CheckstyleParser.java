@@ -21,7 +21,7 @@ public class CheckstyleParser extends AbstractTypeParser {
         = new HashMapWithDefault<String, String>(Severity.MEDIUM);
 
     static {
-        SEVERITIES.put("error", Severity.MEDIUM_HIGH);
+        SEVERITIES.put("error", Severity.HIGH);
         SEVERITIES.put("warning", Severity.MEDIUM);
         SEVERITIES.put("info", Severity.LOW);
     }

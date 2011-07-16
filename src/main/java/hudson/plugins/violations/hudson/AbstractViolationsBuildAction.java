@@ -1,4 +1,5 @@
 package hudson.plugins.violations.hudson;
+
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -75,7 +76,7 @@ public abstract class AbstractViolationsBuildAction
     /**
      * The object to use then the URL is pressed
      * This handles the url's from "${buildpage}/violations/" except
-     * for any overridded by do methods in this class (in this
+     * for any overridden by do methods in this class (in this
      * instance doGraph).
      * @return the violations report.
      */

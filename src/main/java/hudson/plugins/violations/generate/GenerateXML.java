@@ -21,7 +21,7 @@ public class GenerateXML {
      * Create and configure the GenerateXML object.
      * @param targetDir the directory to place the files in.
      * @param model     the full build model to write out.
-     * @param config    the current configation, used for limiting the
+     * @param config    the current configuration, used for limiting the
      *                  violations per file written out.
      */
     public GenerateXML(FilePath targetDir, FullBuildModel model,

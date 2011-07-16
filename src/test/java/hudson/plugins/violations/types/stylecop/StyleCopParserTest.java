@@ -1,34 +1,22 @@
 package hudson.plugins.violations.types.stylecop;
 
 import static org.junit.Assert.*;
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.ViolationsParserTest;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.types.stylecop.StyleCopParser;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Iterator;
 
 import org.junit.Test;
 
-public class StyleCopParserTest {
+public class StyleCopParserTest extends ViolationsParserTest {
     
-    private FullBuildModel getFullBuildModel(String filename) throws IOException {
-        URL url = getClass().getResource(filename);
-        File xmlFile;
-        try {
-            xmlFile = new File(url.toURI());
-        } catch(URISyntaxException e) {
-            xmlFile = new File(url.getPath());
-        }
-        
-        StyleCopParser parser = new StyleCopParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
-        return model;
+    protected FullBuildModel getFullBuildModel(String filename) throws IOException {
+    	ViolationsParser parser = new StyleCopParser();
+    	return getFullBuildModel(parser, filename);
     }
     
     @Test

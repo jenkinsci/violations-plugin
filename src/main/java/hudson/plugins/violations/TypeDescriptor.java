@@ -9,12 +9,14 @@ import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
 import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
 import hudson.plugins.violations.types.gendarme.GendarmeDescriptor;
 import hudson.plugins.violations.types.cpd.CPDDescriptor;
+import hudson.plugins.violations.types.cpplint.CppLintDescriptor;
 import hudson.plugins.violations.types.pylint.PyLintDescriptor;
 import hudson.plugins.violations.types.simian.SimianDescriptor;
 import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
 import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
 import hudson.plugins.violations.types.jslint.JsLintDescriptor;
 import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
+import hudson.plugins.violations.types.pep8.Pep8Descriptor;
 
 /**
  * A descriptor for a violation type.
@@ -84,6 +86,7 @@ public abstract class TypeDescriptor {
         addDescriptor(CPDDescriptor.DESCRIPTOR);
         addDescriptor(CheckstyleDescriptor.DESCRIPTOR);
         addDescriptor(PyLintDescriptor.DESCRIPTOR);
+        addDescriptor(CppLintDescriptor.DESCRIPTOR);
         addDescriptor(FxCopDescriptor.DESCRIPTOR);
         addDescriptor(SimianDescriptor.DESCRIPTOR);
         addDescriptor(StyleCopDescriptor.DESCRIPTOR);
@@ -91,6 +94,7 @@ public abstract class TypeDescriptor {
         addDescriptor(JcReportDescriptor.DESCRIPTOR);
         addDescriptor(JsLintDescriptor.DESCRIPTOR);
         addDescriptor(CodenarcDescriptor.DESCRIPTOR);
+        addDescriptor(Pep8Descriptor.DESCRIPTOR);
     }
 }
 

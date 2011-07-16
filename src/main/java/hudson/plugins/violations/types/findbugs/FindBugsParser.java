@@ -1,24 +1,18 @@
 package hudson.plugins.violations.types.findbugs;
 
-import java.io.IOException;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.AbsoluteFileFinder;
+import hudson.plugins.violations.util.HashMapWithDefault;
+import hudson.plugins.violations.util.StringUtil;
+
 import java.io.File;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-
-
-import hudson.plugins.violations.model.Severity;
-import hudson.plugins.violations.util.AbsoluteFileFinder;
-import hudson.plugins.violations.util.StringUtil;
-import hudson.plugins.violations.util.HashMapWithDefault;
-import hudson.plugins.violations.model.Violation;
-
-import hudson.plugins.violations.parse.AbstractTypeParser;
 
 /**
  * Parses a find bugs xml report file.

@@ -16,7 +16,7 @@ public class HealthNumber {
     private final int max;
 
     /**
-     * Constructer the class.
+     * Constructor the class.
      * @param min the min (sunny) value.
      * @param max the max (stormy) value.
      */

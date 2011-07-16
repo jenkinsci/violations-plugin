@@ -47,7 +47,7 @@ public class OutputFileModel implements Execute {
     /**
      * Create a class to output a file model.
      * @param fileModel the model to output.
-     * @param config    the configuration - used to suppress outputing
+     * @param config    the configuration - used to suppress outputting
      *                  violations.
      */
     public OutputFileModel(FullFileModel fileModel,

@@ -71,7 +71,7 @@ public class ViolationsMavenDescriptor
     }
 
     /**
-     * Return false that tihs is free style descriptor.
+     * Return false that this is free style descriptor.
      * @return false for this class.
      */
     public boolean isFreeStyle() {

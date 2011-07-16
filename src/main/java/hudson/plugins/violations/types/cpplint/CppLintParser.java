@@ -1,4 +1,13 @@
-package hudson.plugins.violations.types.pylint;
+package hudson.plugins.violations.types.cpplint;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import hudson.plugins.violations.ViolationsParser;
 import hudson.plugins.violations.model.FullBuildModel;
@@ -7,32 +16,22 @@ import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Parser for parsing PyLint reports.
+ * Parser for parsing CppLint reports.
  *
- * The parser only supports PyLint report that has the output format
- * 'parseable'.
- *
- * @author Erik Ramfelt
+ * @author Jos Houtman
  */
-public class PyLintParser implements ViolationsParser {
+public class CppLintParser implements ViolationsParser {
 
-    /** Regex pattern for the PyLint errors. */
+    /** Regex pattern for the CppLint errors. */
     private final transient Pattern pattern;
     private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder(); 
 
     /**
      * Constructor - create the pattern.
      */
-    public PyLintParser() {
-        pattern = Pattern.compile("(.*):(\\d+): \\[(\\D\\d*).*\\] (.*)");
+    public CppLintParser() {
+        pattern = Pattern.compile("(.*):(\\d+): (.*) \\[(.*)\\] \\[(.*)\\]");
     }
 
     /** {@inheritDoc} */
@@ -60,26 +59,26 @@ public class PyLintParser implements ViolationsParser {
     }
 
     /**
-     * Parses a PyLint line and adding a violation if regex
+     * Parses a CppLint line and adding a violation if regex
      * @param model build model to add violations to
      * @param line the line in the file.
      * @param projectPath the path to use to resolve the file.
      */
     public void parseLine(FullBuildModel model, String line, File projectPath) {
-        PyLintViolation pyLintViolation = getPyLintViolation(line);
+        CppLintViolation cppLintViolation = getCppLintViolation(line);
 
-        if (pyLintViolation != null) {
+        if (cppLintViolation != null) {
 
             Violation violation = new Violation();
-            violation.setType("pylint");
-            violation.setLine(pyLintViolation.getLineStr());
-            violation.setMessage(pyLintViolation.getMessage());
-            violation.setSource(pyLintViolation.getViolationId());
-            setServerityLevel(violation, pyLintViolation.getViolationId());
+            violation.setType("cpplint");
+            violation.setLine(cppLintViolation.getLineStr());
+            violation.setMessage(cppLintViolation.getMessage());
+            violation.setSource(cppLintViolation.getViolationId());
+            setServerityLevel(violation, cppLintViolation.getViolationId());
 
             FullFileModel fileModel = getFileModel(model, 
-            		pyLintViolation.getFileName(), 
-            		absoluteFileFinder.getFileForName(pyLintViolation.getFileName()));
+            		cppLintViolation.getFileName(), 
+            		absoluteFileFinder.getFileForName(cppLintViolation.getFileName()));
             fileModel.addViolation(violation);
         }
     }
@@ -102,70 +101,63 @@ public class PyLintParser implements ViolationsParser {
     
 
     /**
-     * Returns a pylint violation (if it is one)
-     * @param line a line from the PyLint parseable report
-     * @return a PyLintViolation if the line contains one; null otherwise
+     * Returns a cpplint violation (if it is one)
+     * @param line a line from the cppLint parseable report
+     * @return a CppLintViolation if the line contains one; null otherwise
      */
-    PyLintViolation getPyLintViolation(String line) {
+    CppLintViolation getCppLintViolation(String line) {
         Matcher matcher = pattern.matcher(line);
-        if (matcher.find() && matcher.groupCount() == 4) {
-            return new PyLintViolation(matcher);
+        if (matcher.find() && matcher.groupCount() == 5) {
+            return new CppLintViolation(matcher);
         }
         return null;
     }
 
     /**
-     * Returns the Severity level as an int from the PyLint message type.
+     * Returns the Severity level as an int from the Cpplint confidence message type.
      *
-     * The different message types are:
-     * (C) convention, for programming standard violation
-     * (R) refactor, for bad code smell
-     * (W) warning, for python specific problems
-     * (E) error, for much probably bugs in the code
-     * (F) fatal, if an error occured which prevented pylint from doing
-     *     further processing.
+     * The different message types are 1 through 5, indicating the confidence.
      *
-     * @param messageType the type of PyLint message
+     * @param messageType the type of CppLint message
      * @return an int is matched to the message type.
      */
-    private void setServerityLevel(Violation violation, String messageType) {
+    private void setServerityLevel(Violation violation, String confidenceType) {
 
-        switch (messageType.charAt(0)) {
-            case 'C':
+        switch (confidenceType.charAt(0)) {
+            case '1':
+	    case '2':
                 violation.setSeverity(Severity.LOW);
                 violation.setSeverityLevel(Severity.LOW_VALUE);
                 break;
-            case 'R':
+            case '3':
+	    case '4':
+	    default:
                 violation.setSeverity(Severity.MEDIUM_LOW);
                 violation.setSeverityLevel(Severity.MEDIUM_LOW_VALUE);
                 break;
-            case 'W':
-            default:
-                violation.setSeverity(Severity.MEDIUM);
-                violation.setSeverityLevel(Severity.MEDIUM_VALUE);
-                break;
-            case 'E':
-            case 'F':
+            case '5':
                 violation.setSeverity(Severity.HIGH);
                 violation.setSeverityLevel(Severity.HIGH_VALUE);
                 break;
         }
     }
     
-    class PyLintViolation {
+    class CppLintViolation {
         private final transient String lineStr;
         private final transient String message;
         private final transient String fileName;
         private final transient String violationId;
+	private final transient String confidence;
 
-        public PyLintViolation(Matcher matcher) {
-            if (matcher.groupCount() < 4) {
+        public CppLintViolation(Matcher matcher) {
+            if (matcher.groupCount() < 5) {
                 throw new IllegalArgumentException(
                     "The Regex matcher could not find enough information");
             }
             lineStr = matcher.group(2);
-            message = matcher.group(4);
-            violationId = matcher.group(3);
+            message = matcher.group(3);
+            violationId = matcher.group(4);
+            confidence = matcher.group(5);
             fileName = matcher.group(1);
         }
 
@@ -174,7 +166,7 @@ public class PyLintParser implements ViolationsParser {
         }
 
         public String getMessage() {
-            return message;
+            return message + " (" + confidence + ")";
         }
 
         public String getFileName() {
@@ -184,5 +176,9 @@ public class PyLintParser implements ViolationsParser {
         public String getViolationId() {
             return violationId;
         }
+
+	public String getConfidence() {
+	    return confidence;
+	}
     }
 }

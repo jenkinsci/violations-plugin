@@ -3,20 +3,20 @@ package hudson.plugins.violations.util;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * Some utility methds for hudson.
+ * Some utility methods for hudson.
  */
 public final class HelpHudson {
 
     private static final int BUILD_NUMBER_POS = 3;
 
-    /** Private construcor. */
+    /** Private constructor. */
     private HelpHudson() {
     }
 
     /**
      * get the build number from a uri.
      * @param req the request params
-     * @return the build numberr if presend, 0 ofherwise.
+     * @return the build number if present, 0 otherwise.
      */
     public static int findBuildNumber(StaplerRequest req) {
         String requestURI = req.getOriginalRequestURI();

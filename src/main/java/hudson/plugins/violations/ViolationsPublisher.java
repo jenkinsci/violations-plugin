@@ -33,7 +33,7 @@ public class ViolationsPublisher extends Recorder {
         new  ViolationsConfig();
 
     /**
-     * Get the confiation object for this violations publisher.
+     * Get the configuration object for this violations publisher.
      * @return the config.
      */
     public ViolationsConfig getConfig() {
@@ -44,16 +44,16 @@ public class ViolationsPublisher extends Recorder {
      * Get a copy of the configuration.
      * This is used to configure a new publisher in the config.jelly
      * script.
-     * @return a copy o the condig.
+     * @return a copy o the config.
      */
     public ViolationsConfig getOldConfig() {
         return config.clone();
     }
 
     /**
-     * Called by hudson at the end of a buuld.
+     * Called by hudson at the end of a build.
      * @param build the build
-     * @param launcher the laucher
+     * @param launcher the launcher
      * @param listener for reporting errors
      * @return true always.
      * @throws InterruptedException

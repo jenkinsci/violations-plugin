@@ -37,7 +37,7 @@ public class ViolationsMavenReporter extends MavenReporter {
     private transient boolean registered;
 
     /**
-     * Get the confiation object for this violations publisher.
+     * Get the configuration object for this violations publisher.
      * @return the config.
      */
     public ViolationsConfig getConfig() {
@@ -48,7 +48,7 @@ public class ViolationsMavenReporter extends MavenReporter {
      * Get a copy of the configuration.
      * This is used to configure a new publisher in the config.jelly
      * script.
-     * @return a copy o the condig.
+     * @return a copy o the config.
      */
     public ViolationsConfig getOldConfig() {
         return config.clone();
@@ -125,4 +125,5 @@ public class ViolationsMavenReporter extends MavenReporter {
         return ret;
     }
     
+    private static final long serialVersionUID = 1L;
 }

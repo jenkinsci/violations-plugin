@@ -1,4 +1,13 @@
-package hudson.plugins.violations.types.pylint;
+package hudson.plugins.violations.types.pep8;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import hudson.plugins.violations.ViolationsParser;
 import hudson.plugins.violations.model.FullBuildModel;
@@ -7,32 +16,29 @@ import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
- * Parser for parsing PyLint reports.
- *
- * The parser only supports PyLint report that has the output format
- * 'parseable'.
- *
- * @author Erik Ramfelt
+ * Parser for PEP 8 reports.
+ * 
+ * Supports only pep8 output where each line represents a
+ * single issue report (i.e. no verbose, show-pep8 or
+ * show-source arguments).
+ * 
+ * Adapted from the pylint parser.
+ * 
+ * @author Ali Rantakari
  */
-public class PyLintParser implements ViolationsParser {
+public class Pep8Parser implements ViolationsParser {
 
-    /** Regex pattern for the PyLint errors. */
+    /** Regex pattern for the PEP 8 errors. */
     private final transient Pattern pattern;
+    public static int MATCH_MIN_GROUP_COUNT = 4;
     private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder(); 
 
     /**
      * Constructor - create the pattern.
      */
-    public PyLintParser() {
-        pattern = Pattern.compile("(.*):(\\d+): \\[(\\D\\d*).*\\] (.*)");
+    public Pep8Parser() {
+        pattern = Pattern.compile("(.*):(\\d+):\\d+: (\\D\\d*) (.*)");
     }
 
     /** {@inheritDoc} */
@@ -60,26 +66,26 @@ public class PyLintParser implements ViolationsParser {
     }
 
     /**
-     * Parses a PyLint line and adding a violation if regex
+     * Parses a PEP 8 line and adding a violation if regex
      * @param model build model to add violations to
      * @param line the line in the file.
      * @param projectPath the path to use to resolve the file.
      */
     public void parseLine(FullBuildModel model, String line, File projectPath) {
-        PyLintViolation pyLintViolation = getPyLintViolation(line);
+        Pep8Violation pep8Violation = getPep8Violation(line);
 
-        if (pyLintViolation != null) {
+        if (pep8Violation != null) {
 
             Violation violation = new Violation();
-            violation.setType("pylint");
-            violation.setLine(pyLintViolation.getLineStr());
-            violation.setMessage(pyLintViolation.getMessage());
-            violation.setSource(pyLintViolation.getViolationId());
-            setServerityLevel(violation, pyLintViolation.getViolationId());
+            violation.setType("pep8");
+            violation.setLine(pep8Violation.getLineStr());
+            violation.setMessage(pep8Violation.getMessage());
+            violation.setSource(pep8Violation.getViolationId());
+            setServerityLevel(violation, pep8Violation.getViolationId());
 
             FullFileModel fileModel = getFileModel(model, 
-            		pyLintViolation.getFileName(), 
-            		absoluteFileFinder.getFileForName(pyLintViolation.getFileName()));
+            		pep8Violation.getFileName(), 
+            		absoluteFileFinder.getFileForName(pep8Violation.getFileName()));
             fileModel.addViolation(violation);
         }
     }
@@ -102,64 +108,51 @@ public class PyLintParser implements ViolationsParser {
     
 
     /**
-     * Returns a pylint violation (if it is one)
-     * @param line a line from the PyLint parseable report
-     * @return a PyLintViolation if the line contains one; null otherwise
+     * Returns a PEP 8 violation (if it is one)
+     * @param line a line from the PEP 8 report
+     * @return a Pep8Violation if the line contains one; null otherwise
      */
-    PyLintViolation getPyLintViolation(String line) {
+    Pep8Violation getPep8Violation(String line) {
         Matcher matcher = pattern.matcher(line);
-        if (matcher.find() && matcher.groupCount() == 4) {
-            return new PyLintViolation(matcher);
+        if (matcher.find() && matcher.groupCount() == MATCH_MIN_GROUP_COUNT) {
+            return new Pep8Violation(matcher);
         }
         return null;
     }
 
     /**
-     * Returns the Severity level as an int from the PyLint message type.
+     * Returns the Severity level as an int from the PEP 8 message type.
      *
-     * The different message types are:
-     * (C) convention, for programming standard violation
-     * (R) refactor, for bad code smell
-     * (W) warning, for python specific problems
-     * (E) error, for much probably bugs in the code
-     * (F) fatal, if an error occured which prevented pylint from doing
-     *     further processing.
+     * The different message types are W for warning and E for error.
+     * Because these are style guide warnings we set the severity
+     * values lower than what the apparent values would be.
      *
-     * @param messageType the type of PyLint message
+     * @param messageType the type of PEP 8 message
      * @return an int is matched to the message type.
      */
     private void setServerityLevel(Violation violation, String messageType) {
 
         switch (messageType.charAt(0)) {
-            case 'C':
-                violation.setSeverity(Severity.LOW);
-                violation.setSeverityLevel(Severity.LOW_VALUE);
-                break;
-            case 'R':
-                violation.setSeverity(Severity.MEDIUM_LOW);
-                violation.setSeverityLevel(Severity.MEDIUM_LOW_VALUE);
-                break;
-            case 'W':
-            default:
+            case 'E':
                 violation.setSeverity(Severity.MEDIUM);
                 violation.setSeverityLevel(Severity.MEDIUM_VALUE);
                 break;
-            case 'E':
-            case 'F':
-                violation.setSeverity(Severity.HIGH);
-                violation.setSeverityLevel(Severity.HIGH_VALUE);
+            case 'W':
+            default:
+                violation.setSeverity(Severity.LOW);
+                violation.setSeverityLevel(Severity.LOW_VALUE);
                 break;
         }
     }
     
-    class PyLintViolation {
+    class Pep8Violation {
         private final transient String lineStr;
         private final transient String message;
         private final transient String fileName;
         private final transient String violationId;
 
-        public PyLintViolation(Matcher matcher) {
-            if (matcher.groupCount() < 4) {
+        public Pep8Violation(Matcher matcher) {
+            if (matcher.groupCount() < Pep8Parser.MATCH_MIN_GROUP_COUNT) {
                 throw new IllegalArgumentException(
                     "The Regex matcher could not find enough information");
             }
@@ -186,3 +179,4 @@ public class PyLintParser implements ViolationsParser {
         }
     }
 }
+

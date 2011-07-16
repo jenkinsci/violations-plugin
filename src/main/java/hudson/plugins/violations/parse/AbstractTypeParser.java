@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
-import java.util.Locale;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 

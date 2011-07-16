@@ -2,10 +2,9 @@ package hudson.plugins.violations.model;
 
 import java.util.TreeSet;
 
-
 /**
  * A set of violations from a full file model for a
- * particualar type.
+ * particular type.
  */
 public class FileSummary implements Comparable<FileSummary> {
     private final FullFileModel fileModel;
@@ -38,8 +37,8 @@ public class FileSummary implements Comparable<FileSummary> {
     }
 
     /**
-     * Implemenate a compare to based on the number of violations.
-     * @param other the other summary to campare to.
+     * Implement a compare to based on the number of violations.
+     * @param other the other summary to compare to.
      * @return 0 if same, 1 if less and -1 if greater (need most at top)
      */
     public int compareTo(FileSummary other) {

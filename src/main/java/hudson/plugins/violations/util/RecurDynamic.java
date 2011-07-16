@@ -4,7 +4,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 /**
- * A helper class to recuruse down a uri path
+ * A helper class to recurse down a uri path
  * to an object.
  * I do not know how to do this any other way.
  */
@@ -32,7 +32,7 @@ public class RecurDynamic {
      * @param req   the http/stapler request object.
      * @param rsp   the http/stapler response object.
      * @return the end object if the token is the last token,
-     *         another RecurDynamic if not at rhe end of the path,
+     *         another RecurDynamic if not at the end of the path,
      *         null if the path does not match.
      */
     public Object getDynamic(
@@ -47,5 +47,3 @@ public class RecurDynamic {
         }
     }
 }
-
-

@@ -24,6 +24,7 @@ public class HashMapWithDefault<K, V> extends HashMap<K, V> {
      * @return the value for the key, or the default value if the key
      *         is not in the map.
      */
+    @Override
     public V get(Object k) {
         V ret = super.get(k);
         if (ret == null) {

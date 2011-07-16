@@ -1,35 +1,24 @@
 package hudson.plugins.violations.types.gendarme;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.ViolationsParserTest;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import org.junit.Test;
 
-public class GendarmeParserTest {
+public class GendarmeParserTest extends ViolationsParserTest {
 
 	static final Logger logger = Logger.getLogger(GendarmeParserTest.class.toString());
 	
-	private FullBuildModel getFullBuildModel(String filename) throws IOException {
-        URL url = getClass().getResource(filename);
-        File xmlFile;
-        try {
-            xmlFile = new File(url.toURI());
-        } catch(URISyntaxException e) {
-            xmlFile = new File(url.getPath());
-        }
-        
-        GendarmeParser parser = new GendarmeParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
-        return model;
+    protected FullBuildModel getFullBuildModel(String filename) throws IOException {
+    	ViolationsParser parser = new GendarmeParser();
+    	return getFullBuildModel(parser, filename);
     }
 	
 	@Test

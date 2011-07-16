@@ -15,7 +15,7 @@ public class XmlElementUtil {
         if (parent != null) {
             Node child = parent.getFirstChild();
             while (child != null) {
-                if ((child.getNodeType() == Node.ELEMENT_NODE) && (child.getNodeName() == name)) {
+                if ((child.getNodeType() == Node.ELEMENT_NODE) && (child.getNodeName().equals(name))) {
                     elements.add((Element) child);
                 }
                 child = child.getNextSibling();

@@ -1,15 +1,11 @@
 package hudson.plugins.violations.types.codenarc;
 
 import static org.junit.Assert.*;
+import hudson.plugins.violations.ViolationsParser;
+import hudson.plugins.violations.ViolationsParserTest;
 import hudson.plugins.violations.model.FullBuildModel;
-import hudson.plugins.violations.model.Violation;
-import hudson.plugins.violations.types.codenarc.CodenarcParser;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Iterator;
 
 import org.junit.Test;
 
@@ -18,22 +14,11 @@ import org.junit.Test;
  *
  * @author Robin Bramley, Opsera Ltd.
  */
-public class CodenarcParserTest {
+public class CodenarcParserTest extends ViolationsParserTest {
     
-    private FullBuildModel getFullBuildModel(String filename) throws IOException {
-        URL url = getClass().getResource(filename);
-        File xmlFile;
-        try {
-            xmlFile = new File(url.toURI());
-        } catch(URISyntaxException e) {
-            xmlFile = new File(url.getPath());
-        }
-        
-        CodenarcParser parser = new CodenarcParser();
-        FullBuildModel model = new FullBuildModel();
-        parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
-        model.cleanup();
-        return model;
+    protected FullBuildModel getFullBuildModel(String filename) throws IOException {
+    	ViolationsParser parser = new CodenarcParser();
+    	return getFullBuildModel(parser, filename);
     }
     
     @Test
@@ -47,5 +32,8 @@ public class CodenarcParserTest {
     @Test
     public void testParser2() throws Exception {
         FullBuildModel model = getFullBuildModel("CodeNarcReport2.xml");
+        
+        assertEquals("Number of violations is incorrect", 11, model.getCountNumber("codenarc"));
+        assertEquals("Number of files is incorrect", 1, model.getFileModelMap().size());
     }
 }

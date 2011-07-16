@@ -1,13 +1,6 @@
 package hudson.plugins.violations;
 
-import java.io.IOException;
-
-import java.text.NumberFormat;
-
-import hudson.model.Action;
-import hudson.model.Actionable;
 import hudson.model.AbstractProject;
-
 import hudson.plugins.violations.hudson.AbstractViolationsProjectAction;
 
 /**

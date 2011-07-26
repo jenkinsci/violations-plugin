@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
+import hudson.plugins.violations.types.csslint.CssLintDescriptor;
 import hudson.plugins.violations.types.pmd.PMDDescriptor;
 import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
 import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
@@ -93,6 +94,7 @@ public abstract class TypeDescriptor {
         addDescriptor(GendarmeDescriptor.DESCRIPTOR);
         addDescriptor(JcReportDescriptor.DESCRIPTOR);
         addDescriptor(JsLintDescriptor.DESCRIPTOR);
+        addDescriptor(CssLintDescriptor.DESCRIPTOR);
         addDescriptor(CodenarcDescriptor.DESCRIPTOR);
         addDescriptor(Pep8Descriptor.DESCRIPTOR);
     }

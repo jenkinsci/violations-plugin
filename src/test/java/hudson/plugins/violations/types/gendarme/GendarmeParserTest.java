@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.junit.Test;
+import org.jvnet.hudson.test.Bug;
 
 public class GendarmeParserTest extends ViolationsParserTest {
 
@@ -33,5 +34,19 @@ public class GendarmeParserTest extends ViolationsParserTest {
 			logger.info(fileModelKey+".path="+(ffmodel.getSourceFile() == null? "null" : ffmodel.getSourceFile().getAbsolutePath()));
 		}
         assertEquals("Number of files is incorrect", 2, model.getFileModelMap().size());
+	}
+
+	@Bug(11227)
+	@Test
+	public void assertThatMultipleDefectsInATargetIsCollected() throws IOException {
+		FullBuildModel model = getFullBuildModel("Gendarme-2" + (File.separatorChar == '/' ? "_unix" : "") + ".xml");
+		assertEquals("Number of violations is incorrect", 12, model.getCountNumber(GendarmeParser.TYPE_NAME));
+	}
+
+	@Bug(11227)
+	@Test
+	public void assertThatSourceFileForTypeDefectsIsAddedFileModel() throws IOException {
+		FullBuildModel model = getFullBuildModel("Gendarme-2" + (File.separatorChar == '/' ? "_unix" : "") + ".xml");
+		assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
 	}
 }

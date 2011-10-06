@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <gendarme-output date="2011-10-04 21:09:40">
   <files>
-    <file Name="Application, Version=3.3.2.36330, Culture=neutral, PublicKeyToken=null">c:\product\Application.dll</file>
-    <file Name="XmlRpc, Version=3.3.2.36331, Culture=neutral, PublicKeyToken=null">c:\product\XmlRpc.dll</file>
-    <file Name="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">c:\product\Framework.dll</file>
-    <file Name="Core, Version=3.3.2.36329, Culture=neutral, PublicKeyToken=null">c:\product\Core.dll</file>
-    <file Name="Estab, Version=3.3.2.36331, Culture=neutral, PublicKeyToken=null">c:\product\Estab.dll</file>
-    <file Name="Leave, Version=3.3.2.36332, Culture=neutral, PublicKeyToken=null">c:\product\Leave.dll</file>
-    <file Name="Sen, Version=3.3.2.36336, Culture=neutral, PublicKeyToken=null">c:\product\Sen.dll</file>
-    <file Name="Train, Version=3.3.2.36334, Culture=neutral, PublicKeyToken=null">c:\product\Train.dll</file>
-    <file Name="Trans, Version=3.3.2.36335, Culture=neutral, PublicKeyToken=null">c:\product\Trans.dll</file>
-    <file Name="Res, Version=3.3.2.36326, Culture=neutral, PublicKeyToken=null">c:\product\Res.dll</file>
-    <file Name="MainExe, Version=3.3.2.36337, Culture=neutral, PublicKeyToken=null">c:\product\MainExe.exe</file>
+    <file Name="Application, Version=3.3.2.36330, Culture=neutral, PublicKeyToken=null">product\Application.dll</file>
+    <file Name="XmlRpc, Version=3.3.2.36331, Culture=neutral, PublicKeyToken=null">product\XmlRpc.dll</file>
+    <file Name="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">product\Framework.dll</file>
+    <file Name="Core, Version=3.3.2.36329, Culture=neutral, PublicKeyToken=null">product\Core.dll</file>
+    <file Name="Estab, Version=3.3.2.36331, Culture=neutral, PublicKeyToken=null">product\Estab.dll</file>
+    <file Name="Leave, Version=3.3.2.36332, Culture=neutral, PublicKeyToken=null">product\Leave.dll</file>
+    <file Name="Sen, Version=3.3.2.36336, Culture=neutral, PublicKeyToken=null">product\Sen.dll</file>
+    <file Name="Train, Version=3.3.2.36334, Culture=neutral, PublicKeyToken=null">product\Train.dll</file>
+    <file Name="Trans, Version=3.3.2.36335, Culture=neutral, PublicKeyToken=null">product\Trans.dll</file>
+    <file Name="Res, Version=3.3.2.36326, Culture=neutral, PublicKeyToken=null">product\Res.dll</file>
+    <file Name="MainExe, Version=3.3.2.36337, Culture=neutral, PublicKeyToken=null">product\MainExe.exe</file>
   </files>
   <rules>
     <rule Name="AvoidAssemblyVersionMismatchRule" Type="Assembly" Uri="http://www.mono-project.com/Gendarme.Rules.BadPractice#AvoidAssemblyVersionMismatchRule">Gendarme.Rules.BadPractice.AvoidAssemblyVersionMismatchRule</rule>
@@ -234,34 +234,34 @@
       <problem>A constructor calls an unsealed virtual method.</problem>
       <solution>Avoid calling virtual methods from constructors or seal the the type/method.</solution>
       <target Name="Framework.Gui.MenuManagement.XmlMenu" Assembly="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.MenuManagement.Menu::Populate()" Source="c:\workspaceFramework\Framework.Gui\MenuManagement\Menu.cs(≈56)">Calling a virtual method, 'System.Void Framework.Gui.MenuManagement.Menu::CreateMenu()' from System.Void Framework.Gui.MenuManagement.XmlMenu::.ctor(System.String,Framework.Gui.MenuManagement.XmlMenu/GetSourceDelegate,Framework.Gui.CommandManagement.XmlCommandParser,System.Boolean).</defect>
+        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.MenuManagement.Menu::Populate()" Source="workspaceFramework\Framework.Gui\MenuManagement\Menu.cs(≈56)">Calling a virtual method, 'System.Void Framework.Gui.MenuManagement.Menu::CreateMenu()' from System.Void Framework.Gui.MenuManagement.XmlMenu::.ctor(System.String,Framework.Gui.MenuManagement.XmlMenu/GetSourceDelegate,Framework.Gui.CommandManagement.XmlCommandParser,System.Boolean).</defect>
       </target>
       <target Name="Framework.Gui.Repository.ContentViewParameter" Assembly="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ContentViewParameter::set_ViewCaption(System.String)" Source="c:\workspaceFramework\Framework.Gui\Repository\ContentViewParameter.cs(≈46)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject).</defect>
-        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ContentViewParameter::set_Filter(Framework.Model.PropertyData.IFilterObject)" Source="c:\workspaceFramework\Framework.Gui\Repository\ContentViewParameter.cs(≈72)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject).</defect>
-        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ContentViewParameter::set_ViewId(System.String)" Source="c:\workspaceFramework\Framework.Gui\Repository\ContentViewParameter.cs(≈40)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject,System.String).</defect>
+        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ContentViewParameter::set_ViewCaption(System.String)" Source="workspaceFramework\Framework.Gui\Repository\ContentViewParameter.cs(≈46)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject).</defect>
+        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ContentViewParameter::set_Filter(Framework.Model.PropertyData.IFilterObject)" Source="workspaceFramework\Framework.Gui\Repository\ContentViewParameter.cs(≈72)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject).</defect>
+        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ContentViewParameter::set_ViewId(System.String)" Source="workspaceFramework\Framework.Gui\Repository\ContentViewParameter.cs(≈40)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject,System.String).</defect>
       </target>
       <target Name="Framework.Gui.Repository.ConfigContentViewParameter" Assembly="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ConfigContentViewParameter::set_Content(Framework.Configurator.ClientConfigContent)" Source="c:\workspaceFramework\Framework.Gui\Repository\ConfigContentViewParameter.cs(≈21)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ConfigContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject,System.String,Framework.Configurator.ClientConfigContent).</defect>
+        <defect Severity="High" Confidence="High" Location="System.Void Framework.Gui.Repository.ConfigContentViewParameter::set_Content(Framework.Configurator.ClientConfigContent)" Source="workspaceFramework\Framework.Gui\Repository\ConfigContentViewParameter.cs(≈21)">Calling a virtual method, 'System.Void Framework.Model.PropertyData.PropertyObject::SetProperty(System.String,System.Object)' from System.Void Framework.Gui.Repository.ConfigContentViewParameter::.ctor(System.String,Framework.Model.PropertyData.IFilterObject,System.String,Framework.Configurator.ClientConfigContent).</defect>
       </target>
     </rule>
     <rule Name="DisposableFieldsShouldBeDisposedRule" Uri="http://www.mono-project.com/Gendarme.Rules.Correctness#DisposableFieldsShouldBeDisposedRule">
       <problem>This type contains disposable field(s) which aren't disposed.</problem>
       <solution>Ensure that every disposable field(s) is correctly disposed.</solution>
       <target Name="Framework.Components.Collections.CompositeEnumerator`2" Assembly="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="System.Collections.Generic.IEnumerator`1&lt;TList&gt; Framework.Components.Collections.CompositeEnumerator`2::lists" Source="c:\workspaceFramework\Framework.Components\Collections\CompositeList.cs(≈244)">Since lists is Disposable Dispose() should call lists.Dispose()</defect>
-        <defect Severity="High" Confidence="High" Location="System.Collections.Generic.IEnumerator`1&lt;T&gt; Framework.Components.Collections.CompositeEnumerator`2::current" Source="c:\workspaceFramework\Framework.Components\Collections\CompositeList.cs(≈244)">Since current is Disposable Dispose() should call current.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="System.Collections.Generic.IEnumerator`1&lt;TList&gt; Framework.Components.Collections.CompositeEnumerator`2::lists" Source="workspaceFramework\Framework.Components\Collections\CompositeList.cs(≈244)">Since lists is Disposable Dispose() should call lists.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="System.Collections.Generic.IEnumerator`1&lt;T&gt; Framework.Components.Collections.CompositeEnumerator`2::current" Source="workspaceFramework\Framework.Components\Collections\CompositeList.cs(≈244)">Since current is Disposable Dispose() should call current.Dispose()</defect>
       </target>
       <target Name="Framework.Model.PropertyData.PropertyObjectDecorator`1" Assembly="Framework, Version=3.3.2.36328, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="Framework.Model.PropertyData.PropertyObject Framework.Model.PropertyData.PropertyObjectDecorator`1::properties" Source="c:\workspaceFramework\Framework.Model\PropertyModel\DefaultModel\PropertyObjectDecorator.cs(≈21)">Since properties is Disposable Dispose() should call properties.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="Framework.Model.PropertyData.PropertyObject Framework.Model.PropertyData.PropertyObjectDecorator`1::properties" Source="workspaceFramework\Framework.Model\PropertyModel\DefaultModel\PropertyObjectDecorator.cs(≈21)">Since properties is Disposable Dispose() should call properties.Dispose()</defect>
       </target>
       <target Name="Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter" Assembly="Estab, Version=3.3.2.36331, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="Estab.Gui.Views.NodeHierarchy.NodeHierarchyForm Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter::form" Source="c:\workspaceEstablishment\Establishment.Gui\Views\NodeHierarchy\NodeHierarchyPresenter.cs(≈44)">Since form is Disposable Dispose() should call form.Dispose()</defect>
-        <defect Severity="High" Confidence="High" Location="System.Windows.Forms.TreeView Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter::calcTreeView" Source="c:\workspaceEstablishment\Establishment.Gui\Views\NodeHierarchy\NodeHierarchyPresenter.cs(≈44)">Since calcTreeView is Disposable Dispose() should call calcTreeView.Dispose()</defect>
-        <defect Severity="High" Confidence="High" Location="System.Windows.Forms.TreeView Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter::layoutTreeView" Source="c:\workspaceEstablishment\Establishment.Gui\Views\NodeHierarchy\NodeHierarchyPresenter.cs(≈44)">Since layoutTreeView is Disposable Dispose() should call layoutTreeView.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="Estab.Gui.Views.NodeHierarchy.NodeHierarchyForm Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter::form" Source="workspaceEstablishment\Establishment.Gui\Views\NodeHierarchy\NodeHierarchyPresenter.cs(≈44)">Since form is Disposable Dispose() should call form.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="System.Windows.Forms.TreeView Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter::calcTreeView" Source="workspaceEstablishment\Establishment.Gui\Views\NodeHierarchy\NodeHierarchyPresenter.cs(≈44)">Since calcTreeView is Disposable Dispose() should call calcTreeView.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="System.Windows.Forms.TreeView Estab.Gui.Views.NodeHierarchy.NodeHierarchyPresenter::layoutTreeView" Source="workspaceEstablishment\Establishment.Gui\Views\NodeHierarchy\NodeHierarchyPresenter.cs(≈44)">Since layoutTreeView is Disposable Dispose() should call layoutTreeView.Dispose()</defect>
       </target>
       <target Name="Leave.Gui.Views.LeaveGanttView.ViewInfo.LeaveFooter" Assembly="Leave, Version=3.3.2.36332, Culture=neutral, PublicKeyToken=null">
-        <defect Severity="High" Confidence="High" Location="Framework.Gui.MenuManagement.ContextMenuWrapper Leave.Gui.Views.LeaveGanttView.ViewInfo.LeaveFooter::menu" Source="c:\workspaceLeave\Leave.Gui\Views\LeaveGanttView\Column\LeaveFooter.cs(≈54)">Since menu is Disposable Dispose() should call menu.Dispose()</defect>
+        <defect Severity="Critical" Confidence="High" Location="Framework.Gui.MenuManagement.ContextMenuWrapper Leave.Gui.Views.LeaveGanttView.ViewInfo.LeaveFooter::menu" Source="workspaceLeave\Leave.Gui\Views\LeaveGanttView\Column\LeaveFooter.cs(≈54)">Since menu is Disposable Dispose() should call menu.Dispose()</defect>
       </target>
     </rule>
   </results>

@@ -169,6 +169,10 @@ public class GendarmeParser implements ViolationsParser {
 						violation.setSeverityLevel(Severity.HIGH_VALUE);
 						violation.setSeverity(Severity.HIGH);
 					}
+					else if(severityString.equals("Critical")){
+						violation.setSeverityLevel(Severity.HIGH_VALUE);
+						violation.setSeverity(Severity.HIGH);
+					}
 					else {
 						violation.setSeverityLevel(Severity.MEDIUM_VALUE);
 						violation.setSeverity(Severity.MEDIUM);

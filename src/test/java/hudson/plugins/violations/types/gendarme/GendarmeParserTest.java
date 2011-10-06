@@ -5,9 +5,12 @@ import hudson.plugins.violations.ViolationsParser;
 import hudson.plugins.violations.ViolationsParserTest;
 import hudson.plugins.violations.model.FullBuildModel;
 import hudson.plugins.violations.model.FullFileModel;
+import hudson.plugins.violations.model.Severity;
+import hudson.plugins.violations.model.Violation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.SortedSet;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -48,5 +51,18 @@ public class GendarmeParserTest extends ViolationsParserTest {
 	public void assertThatSourceFileForTypeDefectsIsAddedFileModel() throws IOException {
 		FullBuildModel model = getFullBuildModel("Gendarme-2" + (File.separatorChar == '/' ? "_unix" : "") + ".xml");
 		assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
+	}
+
+	@Bug(11227)
+	@Test
+	public void assertThatCriticalIssuesAreMarkedAsHigh() throws IOException {
+		FullBuildModel model = getFullBuildModel("Gendarme-2" + (File.separatorChar == '/' ? "_unix" : "") + ".xml");
+		
+		SortedSet<Violation> set = model.getFileModel(getOsDependentFilename("workspaceLeave\\Leave.Gui\\Views\\LeaveGanttView\\Column\\LeaveFooter.cs")).getTypeMap().get(GendarmeParser.TYPE_NAME);
+		assertEquals("The severity is incorrect", Severity.HIGH, set.first().getSeverity());
+	}
+	
+	private static String getOsDependentFilename(String windowsFilename) {
+		return (File.separatorChar == '\\' ? windowsFilename : windowsFilename.replace('\\', File.separatorChar));
 	}
 }

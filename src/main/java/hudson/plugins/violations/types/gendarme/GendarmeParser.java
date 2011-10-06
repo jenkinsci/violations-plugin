@@ -103,116 +103,120 @@ public class GendarmeParser implements ViolationsParser {
 				//String targetName = targetElement.getAttribute("Name");
 				String targetAssembly = targetElement.getAttribute("Assembly");
 				DotNetAssembly assembly = new DotNetAssembly(targetAssembly);
-				
-				Element defectElement = (Element) targetElement.getElementsByTagName("defect").item(0);
-				String severityString = defectElement.getAttribute("Severity");
-				String source = defectElement.getAttribute("Source");
-				//String location = defectElement.getAttribute("Location");
-				String confidence = defectElement.getAttribute("Confidence");
-				String filePath = "";
-				String fileName = "";
-				int line = 0;
 
-				if(rule.getType() == GendarmeRuleType.Method){
-					Pattern pattern = Pattern.compile("^(.*)\\(.([0-9]*)\\)$");
-					Matcher matcher = pattern.matcher(source);
-					logger.info("matcher.groupCount() : "+matcher.groupCount());
-					
-					logger.info("matcher.matches() : "+matcher.matches());
-					logger.info("source : "+source);
-					if(matcher.matches()) {
-						for(int cpt = 0; cpt < matcher.groupCount(); cpt++){
-							logger.info("group("+((int)(cpt+1))+"): "+matcher.group(cpt+1));
+				List<Element> defectElements = XmlElementUtil.getNamedChildElements(targetElement, "defect");
+				for (Element defectElement : defectElements) {
+					String severityString = defectElement.getAttribute("Severity");
+					String source = defectElement.getAttribute("Source");
+					//String location = defectElement.getAttribute("Location");
+					String confidence = defectElement.getAttribute("Confidence");
+					String filePath = "";
+					String fileName = "";
+					int line = 0;
+	
+					if(rule.getType() != GendarmeRuleType.Assembly){
+						Pattern pattern = Pattern.compile("^(.*)\\(.([0-9]*)\\)$");
+						Matcher matcher = pattern.matcher(source);
+						logger.info("matcher.groupCount() : "+matcher.groupCount());
+						
+						logger.info("matcher.matches() : "+matcher.matches());
+						logger.info("source : "+source);
+						if(matcher.matches()) {
+							for(int cpt = 0; cpt < matcher.groupCount(); cpt++){
+								logger.info("group("+((int)(cpt+1))+"): "+matcher.group(cpt+1));
+							}
+						}
+						if(matcher.matches()){
+							String fullPath = matcher.group(1);
+							File sourceFile = new File(fullPath);
+							fileName = sourceFile.getName();
+							filePath = sourceFile.getParent();
+							line = Integer.parseInt(matcher.group(2)); 
 						}
 					}
-					if(matcher.matches()){
-						String fullPath = matcher.group(1);
-						File sourceFile = new File(fullPath);
-						fileName = sourceFile.getName();
-						filePath = sourceFile.getParent();
-						line = Integer.parseInt(matcher.group(2)); 
+					
+					// create the violation
+					Violation violation = new Violation();
+	
+					// construct the error message
+					StringBuilder messageBuilder = new StringBuilder();
+					if(rule.getUrl() != null){
+						messageBuilder.append("<a href=\"").append(rule.getUrl().toString()).append("\">");
+						messageBuilder.append(rule.getName());
+						messageBuilder.append("</a>");
 					}
+					else {
+						messageBuilder.append(rule.getName());
+					}
+					
+					messageBuilder.append(" - ").append(problem).append("<br/>");
+					messageBuilder.append("Solution: ").append(solution).append("<br/>");
+					messageBuilder.append("Confidence: ").append(confidence);
+					
+					violation.setMessage(messageBuilder.toString());
+					violation.setPopupMessage(problem);	
+					
+					// construct the severity
+					if(severityString.equals("Low")){
+						violation.setSeverityLevel(Severity.LOW_VALUE);
+						violation.setSeverity(Severity.LOW);
+					}
+					else if(severityString.equals("Medium")){
+						violation.setSeverityLevel(Severity.MEDIUM_VALUE);
+						violation.setSeverity(Severity.MEDIUM);
+					}
+					else if(severityString.equals("High")){
+						violation.setSeverityLevel(Severity.HIGH_VALUE);
+						violation.setSeverity(Severity.HIGH);
+					}
+					else if(severityString.equals("Critical")){
+						violation.setSeverityLevel(Severity.HIGH_VALUE);
+						violation.setSeverity(Severity.HIGH);
+					}
+					else {
+						violation.setSeverityLevel(Severity.MEDIUM_VALUE);
+						violation.setSeverity(Severity.MEDIUM);
+					}
+					violation.setType(TYPE_NAME);
+					violation.setSource(rule.getName());
+	
+					// try to get the file
+					// TODO : test it with Linux Master => Windows Slave node. Unix/Windows path could be a problem.
+					FullFileModel fileModel;
+					if ((filePath.length() > 0) && (fileName.length() > 0)) {
+						violation.setLine(line);
+						// get the display name of the file
+						String displayName = ParseUtil.resolveAbsoluteName(this.projectPath, filePath + File.separatorChar + fileName);
+						// try to get the source file, add it if not already
+						// exists
+						fileModel = model.getFileModel(displayName);
+						if (fileModel.getSourceFile() == null) {
+							finder.addSourcePath(filePath);
+							File sourceFile = finder.getFileForName(fileName);
+							if (sourceFile != null && sourceFile.exists()) {
+								fileModel.setSourceFile(sourceFile);
+								fileModel.setLastModified(sourceFile.lastModified());
+								logger.info("fileModel.getSourceFile() : " + fileModel.getSourceFile().getAbsolutePath());
+							} else {
+								logger.info("sourceFile.exists()==false: " + filePath + "," + fileName);
+							}
+						} else {
+							logger.info("fileModel.getSourceFile() != null: " + displayName);
+						}
+					} else {
+						// if there's no source files, just put the assembly
+						// name
+						fileModel = model.getFileModel(assembly.getName() + ".dll");
+						logger.info("fileModel.getSourceFile() : "
+								+ (fileModel.getSourceFile() == null ? "null" : fileModel.getSourceFile().getAbsolutePath()));
+					}
+					logger.info("fileModel.getDisplayName() : " + fileModel.getDisplayName());
+					logger.info("reportParentFile : " + reportParentFile);
+					logger.info("fileName : " + fileName);
+					logger.info("filePath : " + filePath);
+					// Add the violation to the model
+					fileModel.addViolation(violation);
 				}
-				
-				// create the violation
-				Violation violation = new Violation();
-
-				// construct the error message
-				StringBuilder messageBuilder = new StringBuilder();
-				if(rule.getUrl() != null){
-					messageBuilder.append("<a href=\"").append(rule.getUrl().toString()).append("\">");
-					messageBuilder.append(rule.getName());
-					messageBuilder.append("</a>");
-				}
-				else {
-					messageBuilder.append(rule.getName());
-				}
-				
-				messageBuilder.append(" - ").append(problem).append("<br/>");
-				messageBuilder.append("Solution: ").append(solution).append("<br/>");
-				messageBuilder.append("Confidence: ").append(confidence);
-				
-				violation.setMessage(messageBuilder.toString());
-				violation.setPopupMessage(problem);	
-				
-				// construct the severity
-				if(severityString.equals("Low")){
-					violation.setSeverityLevel(Severity.LOW_VALUE);
-					violation.setSeverity(Severity.LOW);
-				}
-				else if(severityString.equals("Medium")){
-					violation.setSeverityLevel(Severity.MEDIUM_VALUE);
-					violation.setSeverity(Severity.MEDIUM);
-				}
-				else if(severityString.equals("High")){
-					violation.setSeverityLevel(Severity.HIGH_VALUE);
-					violation.setSeverity(Severity.HIGH);
-				}
-				else {
-					violation.setSeverityLevel(Severity.MEDIUM_VALUE);
-					violation.setSeverity(Severity.MEDIUM);
-				}
-				violation.setType(TYPE_NAME);
-				violation.setSource(rule.getName());
-
-				// try to get the file
-				// TODO : test it with Linux Master => Windows Slave node. Unix/Windows path could be a problem.
-				FullFileModel fileModel;
-		        if ((filePath.length() > 0) && (fileName.length() > 0) ) {
-		        	violation.setLine(line);
-		        	
-		        	// get the display name of the file
-		        	String displayName = ParseUtil.resolveAbsoluteName(this.projectPath, filePath + File.separatorChar + fileName);
-
-		        	// try to get the source file, add it if not already exists
-		            fileModel = model.getFileModel(displayName);
-		            if (fileModel.getSourceFile() == null) {
-		            	finder.addSourcePath(filePath);
-		                File sourceFile = finder.getFileForName(fileName);
-		                if (sourceFile != null && sourceFile.exists()) {
-		                    fileModel.setSourceFile(sourceFile);
-		                    fileModel.setLastModified(sourceFile.lastModified());
-		                    logger.info("fileModel.getSourceFile() : "+fileModel.getSourceFile().getAbsolutePath());
-		                }
-		                else {
-		                	logger.info("sourceFile.exists()==false: "+filePath+","+ fileName);
-		                }
-		            }
-		            else{
-		            	logger.info("fileModel.getSourceFile() != null: "+displayName);		            	
-		            }
-		        } else {
-		        	// if there's no source files, just put the assembly name
-		            fileModel = model.getFileModel(assembly.getName()+".dll");		            
-		            logger.info("fileModel.getSourceFile() : "+(fileModel.getSourceFile() == null? "null" : fileModel.getSourceFile().getAbsolutePath()));
-		        }
-		        logger.info("fileModel.getDisplayName() : "+fileModel.getDisplayName());
-		        logger.info("reportParentFile : "+reportParentFile);
-		        logger.info("fileName : "+fileName);
-		        logger.info("filePath : "+filePath);
-		        
-		        // Add the violation to the model
-	            fileModel.addViolation(violation);
 			}
 		}
 	}

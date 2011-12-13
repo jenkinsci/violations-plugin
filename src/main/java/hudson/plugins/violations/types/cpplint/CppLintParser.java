@@ -74,7 +74,7 @@ public class CppLintParser implements ViolationsParser {
             violation.setLine(cppLintViolation.getLineStr());
             violation.setMessage(cppLintViolation.getMessage());
             violation.setSource(cppLintViolation.getViolationId());
-            setServerityLevel(violation, cppLintViolation.getViolationId());
+            setServerityLevel(violation, cppLintViolation.getConfidence());
 
             FullFileModel fileModel = getFileModel(model, 
             		cppLintViolation.getFileName(), 

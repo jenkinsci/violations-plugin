@@ -97,7 +97,6 @@ public abstract class AbstractViolationsBuildAction
      * Get the build report.
      * @return the build report (null if not available).
      */
-    @Override
     public HealthReport getBuildHealth() {
         return getReport().getBuildHealth();
     }

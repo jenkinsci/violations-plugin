@@ -574,7 +574,7 @@ public class ViolationsReport
         public ViolationsReportIterator(AbstractBuild<?, ?> curr) {
             this.curr = curr;
         }
-        @Override
+        
         public Iterator<ViolationsReport> iterator() {
             return this;
         }

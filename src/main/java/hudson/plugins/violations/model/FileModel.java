@@ -88,4 +88,22 @@ public class FileModel extends AbstractFileModel {
             return suppressed;
         }
     }
+    
+    /**
+     * Get the display name of this file.
+     * @return the name to use whrn displaying the file violations.
+     */
+    @Override
+    public String getDisplayName() {
+        return super.getDisplayName();
+    }
+    
+    /**
+     * Get the map of types to violations.
+     * @return the type to violation map.
+     */
+    @Override
+    public TreeMap<String, TreeSet<Violation>> getTypeMap() {
+        return super.getTypeMap();
+    }
 }

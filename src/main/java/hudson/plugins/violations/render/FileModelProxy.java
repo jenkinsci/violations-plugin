@@ -1,7 +1,10 @@
 package hudson.plugins.violations.render;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
+
 import hudson.model.AbstractBuild;
 
 import java.util.logging.Level;
@@ -178,6 +181,78 @@ public class FileModelProxy  {
         addBlock(ret, b, startLine, previousLine);
         ret.append("</table>");
         return ret.toString();
+    }
+    
+    public String getViolationsSummary() {
+    	StringBuilder ret = new StringBuilder();
+    	String uriBase = "devenv:?file=" + this.fileModel.getDisplayName();
+    	
+    	for(Entry<String, TreeSet<Violation>> t : this.fileModel.getTypeMap().entrySet()) {
+    		ret.append("<table class=\"pane\">");
+    		ret.append("<tbody>");
+    		ret.append("<tr><td class=\"pane-header\" colspan=\"5\">");
+    		ret.append(this.typeLine(t.getKey()));
+    		ret.append("</td></tr>");
+    		for(Violation v : t.getValue()) {
+    			ret.append("<tr>");
+    			ret.append("<td class=\"pane\"><a href=\"");
+    			String uri = String.valueOf(uriBase + "&line=" + v.getLine());
+    			ret.append(uri);
+    			ret.append("\"><img src=\"/plugin/violations/images/16x16/vs2010-play.png\" alt=\"Visual Studio 2010\"></a></td>");
+    			ret.append("<td class=\"pane\">");
+    			if (this.getShowLines()) {
+    				ret.append("<a href=\"#line");
+    				ret.append(v.getLine());
+    				ret.append("\">");
+    				ret.append(v.getLine());
+    				ret.append("</a>");
+    			} else {
+    				ret.append(v.getLine());
+    			}
+    			
+    			ret.append("</td>");
+    			ret.append("<td class=\"pane\">");
+    			ret.append(this.severityColumn(v));
+    			ret.append("</td>");
+    			
+    			ret.append("<td class=\"pane\" width=\"99%\">");
+    			ret.append(v.getMessage());
+    			ret.append("</td>");
+    			
+    			ret.append("</tr>");    			
+    		}
+    		
+    		ret.append("</table>");
+    		ret.append("<p></p>");
+    	}
+    	
+//    	<j:forEach var="t" items="${model.typeMap.entrySet()}">
+//        <table class="pane">
+//          <tbody>
+//            <tr><td class="pane-header" colspan="5">${it.typeLine(t.key)}</td></tr>
+//            <j:forEach var="v" items="${t.value}">
+//              <tr>
+//              	<td class="pane"><a href="${v.devEnvLink}">VS</a></td>
+//                <td class="pane">
+//                  <j:if test="${href}">
+//                    <a href="#line${v.line}">${v.line}</a>
+//                  </j:if>
+//                  <j:if test="${!href}">
+//                    ${v.line}
+//                  </j:if>
+//                </td>
+//                <!--<td class="pane">${v.source}</td> -->
+//                <td class="pane">${it.severityColumn(v)}</td>
+//                <td class="pane" width="99%">${v.message}</td>
+//              </tr>
+//            </j:forEach>
+//          </tbody>
+//        </table>
+//        <p></p>
+//      </j:forEach>
+    	
+    	
+    	return ret.toString();
     }
 
     /**

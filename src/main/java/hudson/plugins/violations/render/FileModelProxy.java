@@ -112,7 +112,7 @@ public class FileModelProxy  {
         if (b.length() == 0) {
             return;
         }
-        ret.append("<tr><td colspan='3' class='source heading'>");
+        ret.append("<tr><td colspan='4' class='source heading'>");
         ret.append("File: " + new File(fileModel.getDisplayName()).getName());
         ret.append(" Lines ");
         ret.append(startLine + " to " + previousLine);
@@ -152,7 +152,20 @@ public class FileModelProxy  {
 
             // TR
             b.append("<tr " + (v != null ? "class='violation'" : "") + ">");
-
+            
+            // Visual Studio
+            if (v != null) {
+            	// Only first one needed for line            	
+            	for(Violation violation : v) {
+            		b.append("<td class='source icon'>");	
+            		b.append(this.getVisualStudioLink(violation));
+            		b.append("</td>");
+            		break;
+            	}            	
+            } else {
+                b.append("<td class='source icon'/>\n");
+            }
+            
             // Icon
             if (v != null) {
                 showIcon(b, v);
@@ -183,9 +196,20 @@ public class FileModelProxy  {
         return ret.toString();
     }
     
-    public String getViolationsSummary() {
+    public String getVisualStudioLink(Violation v) {
     	StringBuilder ret = new StringBuilder();
     	String uriBase = "devenv:?file=" + this.fileModel.getDisplayName();
+    	
+    	ret.append("<a href=\"");
+    	String uri = String.valueOf(uriBase + "&line=" + v.getLine());
+    	ret.append(uri);
+    	ret.append("\"><img src=\"/plugin/violations/images/16x16/vs2010-play.png\" alt=\"Visual Studio 2010\"></a>");
+    	return ret.toString();
+    }
+    
+    public String getViolationsSummary() {
+    	StringBuilder ret = new StringBuilder();
+    	
     	
     	for(Entry<String, TreeSet<Violation>> t : this.fileModel.getTypeMap().entrySet()) {
     		ret.append("<table class=\"pane\">");
@@ -195,10 +219,9 @@ public class FileModelProxy  {
     		ret.append("</td></tr>");
     		for(Violation v : t.getValue()) {
     			ret.append("<tr>");
-    			ret.append("<td class=\"pane\"><a href=\"");
-    			String uri = String.valueOf(uriBase + "&line=" + v.getLine());
-    			ret.append(uri);
-    			ret.append("\"><img src=\"/plugin/violations/images/16x16/vs2010-play.png\" alt=\"Visual Studio 2010\"></a></td>");
+    			ret.append("<td class=\"pane\">");
+    			ret.append(getVisualStudioLink(v));
+    			ret.append("</td>");
     			ret.append("<td class=\"pane\">");
     			if (this.getShowLines()) {
     				ret.append("<a href=\"#line");

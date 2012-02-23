@@ -162,6 +162,18 @@ public class BuildModel {
         FileModelProxy proxy = getFileNameProxy(name);
         getFileCounts(type).add(new FileCount(name, count, proxy));
     }
+    
+    /**
+     * Add a file count.
+     * @param type the type.
+     * @param name the filename.
+     * @param count the number of violations.
+     * @param securityCount the security count
+     */
+    public void addFileCount(String type, String name, int[] count, int securityCount) {
+        FileModelProxy proxy = getFileNameProxy(name);
+        getFileCounts(type).add(new FileCount(name, count, securityCount, proxy));
+    }
 
     /**
      * A class of file name to count mapping.
@@ -171,6 +183,7 @@ public class BuildModel {
         private final int    totalCount;
         private final int[]  counts;
         private final FileModelProxy proxy;
+        private int securityCount;
 
         /**
          * Create a FileCount object.
@@ -188,9 +201,24 @@ public class BuildModel {
             }
             this.totalCount = t;
             this.proxy = proxy;
+            this.securityCount = 0;
         }
 
+        public FileCount(String name, int[] count, int securityCount,
+				FileModelProxy proxy) {
+			this(name, count, proxy);
+			this.securityCount = securityCount;
+		}
+        
         /**
+         * Gets the security violation count in file
+         * @return the security count
+         */
+        public int getSecurityCount() {
+        	return this.securityCount;
+        }
+
+		/**
          * Get the name of the file.
          * @return the filename.
          */

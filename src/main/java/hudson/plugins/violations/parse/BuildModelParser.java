@@ -42,7 +42,7 @@ public class BuildModelParser extends AbstractParser {
         }
     }
 
-    private void parseTypeElement()
+	private void parseTypeElement()
         throws IOException, XmlPullParserException {
 
         String type = checkNotBlank("name");
@@ -51,14 +51,26 @@ public class BuildModelParser extends AbstractParser {
 
         while (skipToTag("file")) {
             String filename = checkNotBlank("name");
-            getParser().next();
+            getParser().next();   
+            String tag = ""; 
             int[] counts = new int[Severity.NUMBER_SEVERITIES];
-            while (skipToTag("severity")) {
-                counts[getInt("level")] = getInt("count");
-                skipTag();
+            int securityCount = 0;
+            while ((tag = getSibTag()) != null) {
+            	if (tag.equalsIgnoreCase("severity")) {
+            		counts[getInt("level")] = getInt("count");
+            	}
+            	if (tag.equalsIgnoreCase("source")) {
+            		String sourceName = getString("name");
+                    if (sourceName.toUpperCase().contains("Security".toUpperCase())) {
+                    	securityCount = getInt("count");
+                    }
+            	}
+            	
+                skipTag();                
             }
+
             buildModel.addFileCount(
-                type, filename, counts);
+                type, filename, counts, securityCount);
             endElement();
         }
         endElement();

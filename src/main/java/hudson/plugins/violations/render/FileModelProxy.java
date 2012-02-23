@@ -219,6 +219,13 @@ public class FileModelProxy  {
     		ret.append("</td></tr>");
     		for(Violation v : t.getValue()) {
     			ret.append("<tr>");
+    			if (v.getSource().toUpperCase().contains("Security".toUpperCase())) {
+    				ret.append("<td class=\"pane\">");
+    				ret.append("<img src=\"/plugin/violations/images/16x16/security.png\" alt=\"Security violation\">");
+    				ret.append("</td>");
+    			} else {
+    				ret.append("<td  class=\"pane\" />");
+    			}
     			ret.append("<td class=\"pane\">");
     			ret.append(getVisualStudioLink(v));
     			ret.append("</td>");

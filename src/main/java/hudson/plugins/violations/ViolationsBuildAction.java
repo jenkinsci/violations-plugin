@@ -28,7 +28,7 @@ public class ViolationsBuildAction
     private static final double LOG_VALUE_FOR_ZERO = 0.5;
     private boolean  useLog = false;
 
-    private static final int X_SIZE = 400;
+    private static final int X_SIZE = 500;
     private static final int Y_SIZE = 200;
     private static final double PADDING = 5.0;
 

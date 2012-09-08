@@ -2,6 +2,8 @@ package hudson.plugins.violations.render;
 
 import java.util.Map;
 import java.util.Set;
+
+import hudson.Functions;
 import hudson.model.AbstractBuild;
 
 import java.util.logging.Level;
@@ -249,14 +251,14 @@ public class FileModelProxy  {
         b.append("<tr>\n");
         b.append("<th>Class</th>\n");
         b.append("<td>");
-        b.append(v.getSource());
+        b.append(Functions.escape(v.getSource()));
         b.append("</td>\n");
         b.append("</tr>\n");
 
         b.append("<tr>\n");
         b.append("<th>Detail</th>\n");
         b.append("<td class='message'>");
-        b.append(v.getSourceDetail());
+        b.append(Functions.escape(v.getSourceDetail()));
         b.append("</td>\n");
         b.append("</tr>\n");
 

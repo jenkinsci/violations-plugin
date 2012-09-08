@@ -6,7 +6,7 @@ public class FooBar {
 
   public void doNothing() {
     if (true == FALSE) {
-      System.exit();
+      System.exit(0);
     }
   }
 

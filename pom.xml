@@ -13,7 +13,7 @@
   <packaging>hpi</packaging>
 
   <name>Jenkins Violations plugin</name>
-  <url>wiki.jenkins-ci.org/display/JENKINS/Violations</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Violations</url>
 
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/violations-plugin.git</connection>

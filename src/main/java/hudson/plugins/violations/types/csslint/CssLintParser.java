@@ -4,6 +4,7 @@ import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.HashMapWithDefault;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -11,7 +12,16 @@ import java.io.IOException;
 public class CssLintParser extends AbstractTypeParser {
 
     static final String TYPE_NAME = "csslint";
-    
+
+    private static final HashMapWithDefault<String, String> SEVERITIES
+        = new HashMapWithDefault<String, String>(Severity.HIGH);
+
+    static {
+        SEVERITIES.put("error", Severity.HIGH);
+        SEVERITIES.put("warning", Severity.MEDIUM);
+        SEVERITIES.put("info", Severity.LOW);
+    }
+
     /**
      * Parse the CSSLint xml file.
      * @throws java.io.IOException if there is a problem reading the file.
@@ -51,10 +61,16 @@ public class CssLintParser extends AbstractTypeParser {
         violation.setLine(getString("line"));
         violation.setMessage(getString("reason"));
         violation.setSource(getString("evidence"));
-        violation.setSeverity(getString("severity"));
+        setSeverity(violation, getString("severity"));
         
         getParser().next();
         endElement();
         return violation;
+    }
+
+    private void setSeverity(Violation v, String severity) {
+        v.setSeverity(SEVERITIES.get(severity));
+        v.setSeverityLevel(Severity.getSeverityLevel(
+                               v.getSeverity()));
     }
 }

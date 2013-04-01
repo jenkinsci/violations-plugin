@@ -190,4 +190,12 @@
     </select>
   </f:entry>
 
+  <f:entry title="Auto update stormy threshold" help="/plugin/violations/auto-update-stormy-help.html">
+    <f:checkbox name="config.autoUpdateMax" checked="${config.autoUpdateMax}" />
+  </f:entry>
+
+  <f:entry title="Auto update unstable threshold" help="/plugin/violations/auto-update-unstable-help.html">
+    <f:checkbox name="config.autoUpdateUnstable" checked="${config.autoUpdateUnstable}" />
+  </f:entry>
+
 </j:jelly>

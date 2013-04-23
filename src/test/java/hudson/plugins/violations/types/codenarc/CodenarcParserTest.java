@@ -7,6 +7,7 @@ import hudson.plugins.violations.model.FullBuildModel;
 
 import java.io.IOException;
 
+import hudson.plugins.violations.model.FullFileModel;
 import org.junit.Test;
 
 /**
@@ -24,9 +25,22 @@ public class CodenarcParserTest extends ViolationsParserTest {
     @Test
     public void testParseFullBuildModelFromFile() throws Exception {
         FullBuildModel model = getFullBuildModel("CodeNarcXmlReport.xml");
-        
+        FullFileModel fileModel = model.getFileModel("grails-app/controllers/LoginController.groovy");
+
         assertEquals("Number of violations is incorrect", 10, model.getCountNumber("codenarc"));
         assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
+        assertNotNull("LoginController model is null", fileModel.getSourceFile());
+    }
+
+    @Test
+    public void testParseFullBuildModelFromFileWithSourceDirectory() throws Exception {
+        FullBuildModel model = getFullBuildModel("CodeNarcXmlReportWithSourceDirectory.xml");
+        FullFileModel fileModel = model.getFileModel("webapps/testapp/grails-app/controllers/LoginController.groovy");
+
+        assertEquals("Number of violations is incorrect", 10, model.getCountNumber("codenarc"));
+        assertEquals("Number of files is incorrect", 7, model.getFileModelMap().size());
+        assertNotNull("LoginController model is null", fileModel.getSourceFile());
+
     }
 
     @Test

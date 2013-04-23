@@ -38,13 +38,21 @@ public class CodenarcParser extends AbstractTypeParser {
         // Ensure that the top level tag is "CodeNarc"
         expectNextTag("CodeNarc");
         getParser().next(); // consume the "CodeNarc" tag
+        String sourceDirectory = "";
+        while (skipToTag("Project")) {
+            getParser().next(); // consume the "Project" tag
+            expectNextTag("SourceDirectory");
+            sourceDirectory = getParser().nextText();
+            endElement();
+        }
+        endElement();
         // loop through the child elements, getting the "file" ones
         while (skipToTag("Package")) {
             String path = checkNotBlank("path");
             
             getParser().next();
             while (skipToTag("File")) {
-                parseFileElement(path);
+                parseFileElement(sourceDirectory, path);
             }
             endElement();
         }
@@ -77,11 +85,14 @@ public class CodenarcParser extends AbstractTypeParser {
     /**
      * Handle a Codenarc File element.
      */
-    private void parseFileElement(String path)
+    private void parseFileElement(String sourceDirectory, String path)
         throws IOException, XmlPullParserException {
         
-        //TODO: This doesn't always work if files are under e.g. workspace/trunk [workaround is to use the faux project path]
-        String absoluteFileName = fixAbsolutePath(getProjectPath().getAbsolutePath() + "/" + path + "/" + checkNotBlank("name"));
+        String sourcePath = getProjectPath().getAbsolutePath();
+        if (sourceDirectory != null && !sourceDirectory.isEmpty()) {
+            sourcePath += "/" + sourceDirectory;
+        }
+        String absoluteFileName = fixAbsolutePath(sourcePath + "/" + path + "/" + checkNotBlank("name"));
         getParser().next();  // consume "file" tag
         FullFileModel fileModel = getFileModel(absoluteFileName);
 

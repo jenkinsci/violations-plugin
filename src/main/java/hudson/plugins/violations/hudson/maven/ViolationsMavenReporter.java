@@ -23,6 +23,7 @@ import hudson.Launcher;
 import org.apache.maven.project.MavenProject;
 import hudson.model.Action;
 import hudson.FilePath;
+import hudson.maven.MavenModuleSetBuild;
 
 public class ViolationsMavenReporter extends MavenReporter {
     private static final String VIOLATIONS = "violations";
@@ -93,7 +94,12 @@ public class ViolationsMavenReporter extends MavenReporter {
         FilePath targetPath = new FilePath(
             new File(build.getRootDir(), VIOLATIONS));
 
-        ViolationsReport report = build.getWorkspace().act(
+        FilePath workspace = build.getWorkspace();
+        if (workspace == null) {
+            MavenModuleSetBuild parent = build.getModuleSetBuild();
+            throw new IOException("No workspace for " + build + "; parent workspace: " + (parent != null ? parent.getWorkspace() : "N/A") + "; builtOnStr=" + build.getBuiltOnStr() + "; builtOn=" + build.getBuiltOn());
+        }
+        ViolationsReport report = workspace.act(
             new ViolationsCollector(true, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);

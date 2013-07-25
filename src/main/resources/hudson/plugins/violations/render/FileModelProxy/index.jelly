@@ -22,8 +22,9 @@
         value="${rootURL}/plugin/violations/images/16x16"/>
 
       <j:set var="href" value="${it.showLines}"/>
-      <h3><img src="${image}"/> ${model.displayName}</h3>
+      <h3><img src="${image}"/> ${it.fileNameAlt}</h3>
       
+      <j:out value="${it.summaryTable}"/>
       
       <j:forEach var="t" items="${model.typeMap.entrySet()}">
         <table class="pane">

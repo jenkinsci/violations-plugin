@@ -327,4 +327,53 @@ public class FileModelProxy  {
         b.append("</div>\n");
     }
 
+    public String getFileNameAlt() {
+        return new File(fileModel.getDisplayName()).getName();
+    }
+
+    public String getSummaryTable() {
+
+        StringBuilder gst = new StringBuilder();
+        int count = 0;
+
+        gst.append(" <table class='violations' width='100%'>\n");
+        gst.append("   <tr>\n");
+        gst.append("     <td class='violations-header'> # </td>\n");
+        gst.append("     <td class='violations-header'> Type </td>\n");
+        gst.append("     <td class='violations-header'> Class</td>\n");
+        gst.append("     <td class='violations-header'> Message</td>\n");
+        gst.append("     <td class='violations-header'> Description</td>\n");
+        gst.append("   </tr>\n");
+
+        Set<Violation> violations = fileModel.getLineViolationMap().get(0);
+
+        for (Violation v: violations) {
+            ++count;
+            gst.append("   <tr>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(count);
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getType());
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getSource());
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getMessage());
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getPopupMessage());
+            gst.append("</td>\n");
+            gst.append("   </tr>\n");
+        }
+        //}
+        gst.append(" </table>\n");
+        gst.append("<p><br>\n");
+        gst.append("<h3>Total Number of violations:  \n");
+        gst.append(count);
+        gst.append("</h3><p>\n");
+        return gst.toString();
+    }
+
 }

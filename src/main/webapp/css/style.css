@@ -90,3 +90,38 @@ table.violationPopup th {
    border-spacing:  0;
    border-collapse: collapse;
 }
+
+.violations  {
+  margin-top: 4px;
+}
+.violations td {
+  padding: 4px 4px 3px 4px;
+}
+
+table.violations {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px #bbb solid;
+}
+table.violations > tbody > tr > td:last-child {
+  border-right: 1px #bbb solid;
+}
+
+td.violations {
+  border: 1px #bbb solid;
+  padding: 3px 4px 3px 4px;
+  vertical-align: middle;
+}
+
+td.violations-header {
+  border: 1px #bbb solid;
+  border-right: none;
+  border-left: none;
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+th.violations {
+  border: 1px #bbb solid;
+  font-weight: bold;
+}

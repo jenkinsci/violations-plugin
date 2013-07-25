@@ -2,6 +2,7 @@ package hudson.plugins.violations.render;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import hudson.Functions;
 import hudson.model.AbstractBuild;
@@ -121,6 +122,19 @@ public class FileModelProxy  {
         ret.append("</td></tr>\n");
     }
 
+    public Set<Map.Entry<String, TreeSet<Violation>>> getTypeMapEntries(){
+	return getFileModel().getTypeMap().entrySet();
+    }
+
+
+    public Set<Map.Entry<Integer, Set<Violation>>> getViolationEntries(){
+	return getFileModel().getLineViolationMap().entrySet();
+    }
+
+    public String getDisplayName(){
+	return getFileModel().getDisplayName();
+    }
+
     /**
      * This gets called from the index.jelly script to
      * render the marked up contents of the file.
@@ -133,6 +147,7 @@ public class FileModelProxy  {
         int previousLine = -1;
         int startLine = 0;
         int currentLine = -1;
+
         for (Map.Entry<Integer, String> e
                  : fileModel.getLines().entrySet()) {
             currentLine = e.getKey();
@@ -223,6 +238,15 @@ public class FileModelProxy  {
     }
 
     /**
+     * Get the URL for the icon, taking context into account
+     * @param v the violation
+     * @return URL
+     */
+    public String getSeverityIconUrl(Violation v){
+	return contextPath + getSeverityIcon(v.getSeverityLevel());
+    }
+
+    /**
      * Get the severity column for a violation.
      * @param v the violation.
      * @return a string to place in the severity column of the violation table.
@@ -232,9 +256,7 @@ public class FileModelProxy  {
         addVDiv(b);
         b.append("<a class='healthReport'>");
         b.append(
-            "<img src='"
-            + contextPath
-            + getSeverityIcon(v.getSeverityLevel())
+		 "<img src='" + getSeverityIconUrl(v)
             + "' alt='"
             + v.getSeverity()
             + "'/>");

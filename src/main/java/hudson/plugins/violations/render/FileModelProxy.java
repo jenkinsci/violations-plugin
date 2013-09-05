@@ -18,12 +18,15 @@ import hudson.plugins.violations.model.FileModel;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.generate.XMLUtil;
 
+import javax.persistence.Embeddable;
+
 
 /**
  * A proxy class for FileModel used to allow
  * lazy loading of FileModel. This class
  * is also used to render the FileModel.
  */
+@Embeddable
 public class FileModelProxy  {
    private static final Logger LOG
         = Logger.getLogger(FileModelProxy.class.getName());

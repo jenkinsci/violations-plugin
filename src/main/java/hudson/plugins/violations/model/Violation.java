@@ -1,19 +1,46 @@
 package hudson.plugins.violations.model;
 
 import hudson.plugins.violations.TypeDescriptor;
+import org.jenkinsci.plugins.database.jpa.PerItemTable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 
 import static hudson.Util.*;
 
 /**
  * A class contains information on a violation.
  */
+@PerItemTable
+@Entity(name="violation")
+@Inheritance(strategy= InheritanceType.JOINED)
 public class Violation implements Comparable<Violation> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+//    @Column
+//    private transient FileModel file;
+
+    @Column
     private int  line;
+    @Column
     private String  message;
+    @Column
     private String  popupMessage;
+    @Column
     private String  source;
+    @Column
     private int     severityLevel; // 0 is most serious
+    @Column
     private String  severity;      // the display name for the severity
+    @Column
     private String  type;
 
     /**

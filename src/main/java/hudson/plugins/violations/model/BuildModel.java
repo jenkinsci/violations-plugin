@@ -10,6 +10,14 @@ import java.util.Collection;
 
 import java.io.File;
 import hudson.plugins.violations.render.FileModelProxy;
+import org.jenkinsci.plugins.database.jpa.PerItemTable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 
 
 /**
@@ -166,10 +174,20 @@ public class BuildModel {
     /**
      * A class of file name to count mapping.
      */
+    @PerItemTable
+    @Entity(name="violations_fileCount")
     public static class FileCount implements Comparable<FileCount> {
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private long id; // is this even correct???
+
+        private transient String type;
+
         private final String name;
         private final int    totalCount;
         private final int[]  counts;
+
+        @Transient
         private final FileModelProxy proxy;
 
         /**

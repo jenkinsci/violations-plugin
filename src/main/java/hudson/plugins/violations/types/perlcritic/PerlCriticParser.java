@@ -6,7 +6,10 @@ import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
 import hudson.plugins.violations.util.AbsoluteFileFinder;
+import org.jenkinsci.plugins.database.jpa.PerItemTable;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -116,6 +119,9 @@ public class PerlCriticParser implements ViolationsParser {
         return new PerlCriticViolation(matcher);
     }
 
+    @PerItemTable
+    @Entity
+    @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
     class PerlCriticViolation extends Violation {
         private int column;
         private String fileName;

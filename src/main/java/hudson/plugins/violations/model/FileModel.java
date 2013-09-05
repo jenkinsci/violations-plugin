@@ -1,5 +1,9 @@
 package hudson.plugins.violations.model;
 
+import org.jenkinsci.plugins.database.jpa.PerItemTable;
+
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.util.TreeSet;
 import java.util.Set;
 import java.util.TreeMap;
@@ -10,7 +14,10 @@ import java.util.SortedMap;
  * A class contains the violations for a particular
  * file. The number of violations are limited.
  */
+@PerItemTable
+@Entity
 public class FileModel extends AbstractFileModel {
+    @Transient  // TODO: for now
     private SortedMap<String, LimitType> limitTypeMap
         = new TreeMap<String, LimitType>();
 

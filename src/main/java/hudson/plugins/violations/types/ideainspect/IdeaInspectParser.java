@@ -29,7 +29,12 @@ public class IdeaInspectParser extends AbstractTypeParser {
      * @throws org.xmlpull.v1.XmlPullParserException if there is a problem parsing the file.
      */
     protected void execute() throws IOException, XmlPullParserException {
-        expectNextTag("problems");
+        try {
+            expectNextTag("problems");
+        } catch (IOException exc) {
+            return;
+        }
+
         getParser().next();
 
         while (skipToTag("problem")) {
@@ -151,6 +156,7 @@ public class IdeaInspectParser extends AbstractTypeParser {
         violation.setLine(lineNumber);
         violation.setSeverity(problemClass.get("severity"));
         violation.setMessage(problemClass.get("description"));
+        violation.setSource("problem");
         violation.setPopupMessage(description);
 
         return violation;

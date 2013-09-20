@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<problems>
+  <problem>
+    <file>file://$PROJECT_DIR$/backend/admin/src/less/main.less</file>
+    <line>26</line>
+    <module>example</module>
+    <entry_point TYPE="file" FQNAME="file://$PROJECT_DIR$/backend/admin/src/less/main.less" />
+    <problem_class severity="WARNING" attribute_key="WARNING_ATTRIBUTES">Unresolved import</problem_class>
+    <description>Here be dragons</description>
+  </problem>
+  <problem>
+    <file>file://$PROJECT_DIR$/backend/admin/file.py</file>
+    <line>29</line>
+    <module>example</module>
+    <entry_point TYPE="file" FQNAME="file://$PROJECT_DIR$/backend/admin/file.py" />
+    <problem_class severity="WARNING" attribute_key="WARNING_ATTRIBUTES">Unresolved import</problem_class>
+    <description>Unresolved import</description>
+  </problem>
+  <problem>
+    <file>file://$PROJECT_DIR$/backend/admin/src/less/main.less</file>
+    <line>131</line>
+    <module>example</module>
+    <entry_point TYPE="file" FQNAME="file://$PROJECT_DIR$/backend/admin/src/less/main.less" />
+    <problem_class severity="ERROR" attribute_key="ERROR_ATTRIBUTES">Unresolved import</problem_class>
+    <description>Description</description>
+  </problem>
+</problems>

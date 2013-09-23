@@ -76,9 +76,10 @@ public class IdeaInspectParser extends AbstractTypeParser {
     private String getFileName() throws IOException, XmlPullParserException {
         skipToTag("file");
 
-        String rawFileName = getText();
-        rawFileName = rawFileName.replace("file://$PROJECT_DIR$/", "");
-        rawFileName = resolveName(rawFileName);
+        String sourcePath = getProjectPath().getAbsolutePath();
+        String rawFileName = getText().replace("file://$PROJECT_DIR$/", "");
+
+        rawFileName = fixAbsolutePath(sourcePath + "/" + rawFileName);
 
         endElement();
         return rawFileName;

@@ -19,6 +19,7 @@ import hudson.plugins.violations.types.jslint.JsLintDescriptor;
 import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
 import hudson.plugins.violations.types.pep8.Pep8Descriptor;
 import hudson.plugins.violations.types.perlcritic.PerlCriticDescriptor;
+import hudson.plugins.violations.types.ideainspect.IdeaInspectDescriptor;
 
 /**
  * A descriptor for a violation type.
@@ -99,6 +100,7 @@ public abstract class TypeDescriptor {
         addDescriptor(CodenarcDescriptor.DESCRIPTOR);
         addDescriptor(Pep8Descriptor.DESCRIPTOR);
         addDescriptor(PerlCriticDescriptor.DESCRIPTOR);
+        addDescriptor(IdeaInspectDescriptor.DESCRIPTOR);
     }
 }
 

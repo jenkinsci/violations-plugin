@@ -23,16 +23,25 @@ import org.xmlpull.v1.XmlPullParserException;
 public class IdeaInspectParser extends AbstractTypeParser {
 
     static final public String TYPE_NAME = "ideainspect";
-    static final public Map<String, Integer> severityMapper;
+    static final public Map<String, Integer> severityLevels;
+    static final public Map<String, String> severityNames;
 
     static {
-        severityMapper = new HashMapWithDefault<String, Integer>(Severity.HIGH_VALUE);
-        severityMapper.put("SERVER PROBLEM", Severity.HIGH_VALUE);
-        severityMapper.put("ERROR", Severity.MEDIUM_HIGH_VALUE);
-        severityMapper.put("WARNING", Severity.MEDIUM_VALUE);
-        severityMapper.put("WEAK WARNING", Severity.MEDIUM_LOW_VALUE);
-        severityMapper.put("INFO", Severity.LOW_VALUE);
-        severityMapper.put("TYPO", Severity.LOW_VALUE);
+        severityLevels = new HashMapWithDefault<String, Integer>(Severity.HIGH_VALUE);
+        severityLevels.put("SERVER PROBLEM", Severity.HIGH_VALUE);
+        severityLevels.put("ERROR", Severity.MEDIUM_HIGH_VALUE);
+        severityLevels.put("WARNING", Severity.MEDIUM_VALUE);
+        severityLevels.put("WEAK WARNING", Severity.MEDIUM_LOW_VALUE);
+        severityLevels.put("INFO", Severity.LOW_VALUE);
+        severityLevels.put("TYPO", Severity.LOW_VALUE);
+
+        severityNames = new HashMapWithDefault<String, String>(Severity.HIGH);
+        severityNames.put("SERVER PROBLEM", Severity.HIGH);
+        severityNames.put("ERROR", Severity.MEDIUM_HIGH);
+        severityNames.put("WARNING", Severity.MEDIUM);
+        severityNames.put("WEAK WARNING", Severity.MEDIUM_LOW);
+        severityNames.put("INFO", Severity.LOW);
+        severityNames.put("TYPO", Severity.LOW);
     }
 
     /**
@@ -165,10 +174,13 @@ public class IdeaInspectParser extends AbstractTypeParser {
     private Violation constructViolation(int lineNumber,
         Map<String, String> problemClass, String description)
         throws IOException, XmlPullParserException {
+        final String severity = problemClass.get("severity");
         Violation violation = new Violation();
+
         violation.setType(TYPE_NAME);
         violation.setLine(lineNumber);
-        violation.setSeverityLevel(severityMapper.get(problemClass.get("severity")));
+        violation.setSeverity(severityNames.get(severity));
+        violation.setSeverityLevel(severityLevels.get(severity));
         violation.setMessage(problemClass.get("description"));
         violation.setSource("problem");
         violation.setPopupMessage(description);

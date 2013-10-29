@@ -7,7 +7,9 @@ import java.io.IOException;
 
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Violation;
+import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.parse.AbstractTypeParser;
+import hudson.plugins.violations.util.HashMapWithDefault;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -21,6 +23,17 @@ import org.xmlpull.v1.XmlPullParserException;
 public class IdeaInspectParser extends AbstractTypeParser {
 
     static final public String TYPE_NAME = "ideainspect";
+    static final public Map<String, Integer> severityMapper;
+
+    static {
+        severityMapper = new HashMapWithDefault<String, Integer>(Severity.HIGH_VALUE);
+        severityMapper.put("SERVER PROBLEM", Severity.HIGH_VALUE);
+        severityMapper.put("ERROR", Severity.MEDIUM_HIGH_VALUE);
+        severityMapper.put("WARNING", Severity.MEDIUM_VALUE);
+        severityMapper.put("WEAK WARNING", Severity.MEDIUM_LOW_VALUE);
+        severityMapper.put("INFO", Severity.LOW_VALUE);
+        severityMapper.put("TYPO", Severity.LOW_VALUE);
+    }
 
     /**
      * Parse the IDEA report.
@@ -155,7 +168,7 @@ public class IdeaInspectParser extends AbstractTypeParser {
         Violation violation = new Violation();
         violation.setType(TYPE_NAME);
         violation.setLine(lineNumber);
-        violation.setSeverity(problemClass.get("severity"));
+        violation.setSeverityLevel(severityMapper.get(problemClass.get("severity")));
         violation.setMessage(problemClass.get("description"));
         violation.setSource("problem");
         violation.setPopupMessage(description);

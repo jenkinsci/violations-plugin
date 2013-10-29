@@ -33,13 +33,11 @@ public class IdeaInspectParserTest extends ViolationsParserTest {
 
         Iterator<Violation> lessViolationsIterator = lessViolations.iterator();
         Violation v = lessViolationsIterator.next();
-        assertEquals("WARNING", v.getSeverity());
         assertEquals(26, v.getLine());
         assertEquals("Unresolved import", v.getMessage());
         assertEquals("Here be dragons", v.getPopupMessage());
 
         v = lessViolationsIterator.next();
-        assertEquals("ERROR", v.getSeverity());
         assertEquals(131, v.getLine());
         assertEquals("Unresolved import", v.getMessage());
         assertEquals("Description", v.getPopupMessage());
@@ -51,7 +49,6 @@ public class IdeaInspectParserTest extends ViolationsParserTest {
 
         Iterator<Violation> pyViolationsIterator = pyViolations.iterator();
         v = pyViolationsIterator.next();
-        assertEquals("WARNING", v.getSeverity());
         assertEquals(29, v.getLine());
         assertEquals("Unresolved import", v.getMessage());
         assertEquals("Unresolved import", v.getPopupMessage());

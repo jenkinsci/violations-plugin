@@ -29,6 +29,10 @@ public class PerlCriticParser implements ViolationsParser {
     /** Regex pattern for the Perl::Critic errors, matching the output form:
      * [filename]: [violation] at line [line number], column [column number] [PBP reference] (Severity: [severity level 1-5])
      * 
+     * To ensure that this format is used, use the verbosity flag with a value of 5
+     * (e.g.: `perlcritic --verbose 5 .`)
+     * this overwrites any use of Perl::Critic resource files (e.g.: .perlcriticrc)
+     * 
      * Validated with Eclipse EPIC plug-in RegExp tool against the output from 
      * `perlcritic --brutal /usr/local/share/perl/5.10.1/Perl/Critic/`
      */

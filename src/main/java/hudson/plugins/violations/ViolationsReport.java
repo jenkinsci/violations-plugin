@@ -214,7 +214,7 @@ public class ViolationsReport
         FileModelProxy proxy = getFileModelProxy(name);
         if (proxy != null) {
             return new RecurDynamic(
-                "", name, proxy.build(build).contextPath(req.getContextPath()));
+                "", name, proxy.build(build).contextPath(""));
         } else {
             return new RecurDynamic(
                 "", name, new NoViolationsFile(name, build));

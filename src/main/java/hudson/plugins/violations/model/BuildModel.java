@@ -149,6 +149,7 @@ public class BuildModel {
         File xmlFile = new File(
             xmlRoot, "file/" + name + ".xml");
         fileModelMap.put(name, new FileModelProxy(xmlFile));
+        proxy = fileModelMap.get(name);
         return proxy;
     }
 
@@ -159,6 +160,8 @@ public class BuildModel {
      * @param count the number of violations.
      */
     public void addFileCount(String type, String name, int[] count) {
+        // Windows needs this replacement
+        name = name.replace("\\", "/");
         FileModelProxy proxy = getFileNameProxy(name);
         getFileCounts(type).add(new FileCount(name, count, proxy));
     }

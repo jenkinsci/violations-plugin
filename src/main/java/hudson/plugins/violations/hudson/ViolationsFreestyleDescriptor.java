@@ -95,7 +95,7 @@ public final class ViolationsFreestyleDescriptor
     }
 
     /**
-     * Magic code to disable this publisher/descriptor appearing the the
+     * Magic code to disable this publisher/descriptor appearing the
      * m2 project page.
      */
     @Override

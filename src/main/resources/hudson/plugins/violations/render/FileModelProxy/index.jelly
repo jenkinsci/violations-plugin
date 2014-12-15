@@ -22,13 +22,19 @@
         value="${rootURL}/plugin/violations/images/16x16"/>
 
       <j:set var="href" value="${it.showLines}"/>
-      <h3><img src="${image}"/> ${model.displayName}</h3>
+      <h3><img src="${image}"/>${it.displayName}</h3>
       
       
-      <j:forEach var="t" items="${model.typeMap.entrySet()}">
+      <j:forEach var="t" items="${it.typeMapEntries}">
         <table class="pane">
-          <tbody>
-            <tr><td class="pane-header" colspan="5"><j:out value="${it.typeLine(t.key)}"/></td></tr>
+	  <thead>
+	    <tr>
+	      <td class="pane-header" colspan="5">
+		<j:out value="${it.typeLine(t.key)}"/>
+	      </td>
+	    </tr>
+	  </thead>
+          <tbody>            
             <j:forEach var="v" items="${t.value}">
               <tr>
                 <td class="pane">
@@ -41,7 +47,7 @@
                 </td>
                 <!--<td class="pane">${v.source}</td> -->
                 <td class="pane"><j:out value="${it.severityColumn(v)}"/></td>
-                <td class="pane" width="99%">${v.message}</td>
+                <td class="pane" width="99%" style="white-space:normal;"><j:out value="${v.message}"/></td>
               </tr>
             </j:forEach>
           </tbody>
@@ -49,7 +55,14 @@
         <p></p>
       </j:forEach>
 
-      <j:out value="${it.fileContent}"/>
+      <j:choose>
+	<j:when test="${it.showLines}">
+	  <j:out value="${it.fileContent}"/>
+	</j:when>
+	<j:otherwise>
+	  <p>FxCop could not determine source code location. See <a href="https://blogs.msdn.com/b/codeanalysis/archive/2007/05/12/faq-why-is-file-and-line-information-available-for-some-warnings-in-fxcop-but-not-for-others.aspx">FAQ: Why is file and line information available for some warnings in FxCop but not for others?</a> for explanations.</p>
+	</j:otherwise>
+      </j:choose>
 
       <!--
       <j:set var="line" value="${model.nextLine}"/>

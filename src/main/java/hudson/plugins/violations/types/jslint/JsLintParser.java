@@ -10,10 +10,21 @@ import hudson.plugins.violations.model.Violation;
 
 import hudson.plugins.violations.parse.AbstractTypeParser;
 
+import hudson.plugins.violations.util.HashMapWithDefault;
+
 public class JsLintParser extends AbstractTypeParser {
 
     static final String TYPE_NAME = "jslint";
-    
+
+    private static final HashMapWithDefault<String, String> SEVERITIES
+        = new HashMapWithDefault<String, String>(Severity.MEDIUM);
+        
+    static {
+        SEVERITIES.put("E", Severity.HIGH);
+        SEVERITIES.put("W", Severity.MEDIUM);
+        SEVERITIES.put("I", Severity.LOW);
+    }
+
     /**
      * Parse the JSLint xml file.
      * @throws IOException if there is a problem reading the file.
@@ -53,10 +64,16 @@ public class JsLintParser extends AbstractTypeParser {
         violation.setLine(getString("line"));
         violation.setMessage(getString("reason"));
         violation.setSource(getString("evidence"));
-        violation.setSeverity(Severity.MEDIUM);
+        setSeverity(violation, getString("severity"));
         
         getParser().next();
         endElement();
         return violation;
+    }
+
+    private void setSeverity(Violation v, String severity) {
+        v.setSeverity(SEVERITIES.get(severity));
+        v.setSeverityLevel(Severity.getSeverityLevel(
+                               v.getSeverity()));
     }
 }

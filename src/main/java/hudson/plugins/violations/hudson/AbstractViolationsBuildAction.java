@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.awt.Color;
 import java.awt.BasicStroke;
 
+import hudson.model.*;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
@@ -23,12 +24,6 @@ import org.jfree.ui.RectangleInsets;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerProxy;
-
-import hudson.model.Action;
-import hudson.model.Actionable;
-import hudson.model.HealthReportingAction;
-import hudson.model.HealthReport;
-import hudson.model.AbstractBuild;
 
 import hudson.util.ChartUtil;
 import hudson.util.DataSetBuilder;
@@ -192,7 +187,7 @@ public abstract class AbstractViolationsBuildAction
 
         for (ViolationsReport r: ViolationsReport.iteration(getBuild())) {
             ChartUtil.NumberOnlyBuildLabel label
-                = new ChartUtil.NumberOnlyBuildLabel(r.getBuild());
+                = new ChartUtil.NumberOnlyBuildLabel((Run)r.getBuild());
             for (String ty: r.getViolations().keySet()) {
                 dsb.add(roundUp(r.getViolations().get(ty)), ty, label);
             }

@@ -1,5 +1,6 @@
 package hudson.plugins.violations.graph;
 
+import hudson.model.Run;
 import org.jfree.data.category.CategoryDataset;
 
 import hudson.util.DataSetBuilder;
@@ -81,15 +82,15 @@ public class SeverityTypeDataSet  {
                 nums[Severity.MEDIUM_VALUE] + nums[Severity.MEDIUM_HIGH_VALUE]
                 + nums[Severity.MEDIUM_LOW_VALUE],
                 MEDIUM_ROW,
-                new NumberOnlyBuildLabel(r.getBuild()));
+                new NumberOnlyBuildLabel((Run)r.getBuild()));
             builder.add(
                 nums[Severity.HIGH_VALUE],
                 HIGH_ROW,
-                new NumberOnlyBuildLabel(r.getBuild()));
+                new NumberOnlyBuildLabel((Run)r.getBuild()));
             builder.add(
                 nums[Severity.LOW_VALUE],
                 LOW_ROW,
-                new NumberOnlyBuildLabel(r.getBuild()));
+                new NumberOnlyBuildLabel((Run)r.getBuild()));
         }
         return builder.build();
     }

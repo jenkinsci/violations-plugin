@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 import java.io.IOException;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -532,17 +533,48 @@ public class ViolationsReport
     /**
      * Set the unstable/failed status of a build based
      * on this violations report.
+     *
+     * Because of JENKINS-25406 we need to access this field via reflection.
      */
     public void setBuildResult() {
-        if (isFailed()) {
-            build.setResult(Result.FAILURE);
-            return;
-        }
-        if (isUnstable()) {
-            build.setResult(Result.UNSTABLE);
+        final Field resultField;
+        final Result result = build.getResult();
+        try {
+            Class<? extends AbstractBuild> klass = build.getClass();
+            resultField = getField(klass, "result");
+            resultField.setAccessible(true);
+            if (isFailed()) {
+                if (result == null || result.isBetterThan(Result.FAILURE)) {
+                    resultField.set(build, Result.FAILURE);
+                }
+                return;
+            }
+            if (isUnstable()) {
+                if (result == null || result.isBetterThan(Result.UNSTABLE)) {
+                    resultField.set(build, Result.UNSTABLE);
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException("Could not get resultField from build.", e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Could not set value for resultField.", e);
         }
     }
-    
+
+    // http://stackoverflow.com/a/735311/49132
+    private static Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Class superClass = clazz.getSuperclass();
+            if (superClass == null) {
+                throw e;
+            } else {
+                return getField(superClass, fieldName);
+            }
+        }
+    }
+
     private static final long serialVersionUID = 1L;
 
     public static ViolationsReport findViolationsReport(

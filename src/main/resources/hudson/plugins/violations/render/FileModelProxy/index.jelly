@@ -22,6 +22,7 @@
         value="${rootURL}/plugin/violations/images/16x16"/>
 
       <j:set var="href" value="${it.showLines}"/>
+<<<<<<< HEAD
       <h3><img src="${image}"/>${it.displayName}</h3>
       
       
@@ -63,6 +64,13 @@
 	  <p>FxCop could not determine source code location. See <a href="https://blogs.msdn.com/b/codeanalysis/archive/2007/05/12/faq-why-is-file-and-line-information-available-for-some-warnings-in-fxcop-but-not-for-others.aspx">FAQ: Why is file and line information available for some warnings in FxCop but not for others?</a> for explanations.</p>
 	</j:otherwise>
       </j:choose>
+=======
+      <h3><img src="${image}"/> ${model.displayName}</h3>          
+
+      ${it.violationsSummary}
+		
+      ${it.fileContent}
+>>>>>>> 4a11dc8da1ee42a5920b06507bd2af840c6f915f
 
       <!--
       <j:set var="line" value="${model.nextLine}"/>

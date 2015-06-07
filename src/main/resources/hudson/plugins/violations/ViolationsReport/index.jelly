@@ -59,6 +59,7 @@
               <td class="pane-header">l</td>
               <td class="pane-header">m</td>
               <td class="pane-header">h</td>
+              <td class="pane-header">s</td>
               <td class="pane-header" initialSortDir="up" >number</td>
             </tr>
             <j:forEach var="f" items="${t.value}">
@@ -74,6 +75,11 @@
                 </td>
                 <td class="pane">
                   ${f.high}
+                </td>
+                <td class="pane">
+	                <j:if test="${f.securityCount != 0}">
+	                  ${f.securityCount}
+	                </j:if>
                 </td>
                 <td class="pane">
                   <v:numberdiff curr="${f.count}"

@@ -49,6 +49,8 @@ public abstract class AbstractViolationsBuildAction
     <T extends AbstractViolationsBuildAction>
     extends Actionable
     implements Action, HealthReportingAction, StaplerProxy {
+    public static final String VIOLATIONS_PLUGIN_CHART_AUTORANGE_PROPERTY = "violations-plugin.chart.y-axis.auto-range";
+
     protected final AbstractBuild<?, ?>   owner;
 
     private static final double LOG_VALUE_FOR_ZERO = 0.5;
@@ -255,7 +257,13 @@ public abstract class AbstractViolationsBuildAction
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         //rangeAxis.setUpperBound(100);
-        rangeAxis.setLowerBound(0);
+        if (Boolean.getBoolean(VIOLATIONS_PLUGIN_CHART_AUTORANGE_PROPERTY)) {
+            rangeAxis.setAutoRange(true);
+            rangeAxis.setAutoRangeIncludesZero(false);
+            rangeAxis.setAutoRangeMinimumSize(50);
+        } else {
+            rangeAxis.setLowerBound(0);
+        }
 
         final LineAndShapeRenderer renderer
             = (LineAndShapeRenderer) plot.getRenderer();

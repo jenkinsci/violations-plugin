@@ -43,6 +43,8 @@ public class CodenarcParser extends AbstractTypeParser {
             getParser().next(); // consume the "Project" tag
             expectNextTag("SourceDirectory");
             sourceDirectory = getParser().nextText();
+            //running on windows, this contains a windows path; as a result, OutputFileModel will not find the file and skip printing source
+            sourceDirectory = sourceDirectory.replace("\\", "/");
             endElement();
         }
         endElement();

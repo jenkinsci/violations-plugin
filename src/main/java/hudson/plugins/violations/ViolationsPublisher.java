@@ -1,27 +1,26 @@
 package hudson.plugins.violations;
 
 import hudson.Extension;
-import hudson.tasks.BuildStepMonitor;
-import java.io.File;
-import java.io.IOException;
-
 import hudson.FilePath;
 import hudson.Launcher;
-
-import hudson.model.AbstractBuild;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
 
-import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
-import hudson.tasks.BuildStepDescriptor;
+import java.io.File;
+import java.io.IOException;
 
+import com.google.common.annotations.VisibleForTesting;
 
 /**
- * Generats HTML and XML reports from checkstyle, pmd and findbugs
- * report xml files.
+ * Generats HTML and XML reports from checkstyle, pmd and findbugs report xml
+ * files.
  *
  * @author Peter Reilly
  */
@@ -29,11 +28,11 @@ public class ViolationsPublisher extends Recorder {
 
     private static final String VIOLATIONS = "violations";
 
-    private final ViolationsConfig config =
-        new  ViolationsConfig();
+    private final ViolationsConfig config = new ViolationsConfig();
 
     /**
      * Get the configuration object for this violations publisher.
+     *
      * @return the config.
      */
     public ViolationsConfig getConfig() {
@@ -41,9 +40,9 @@ public class ViolationsPublisher extends Recorder {
     }
 
     /**
-     * Get a copy of the configuration.
-     * This is used to configure a new publisher in the config.jelly
-     * script.
+     * Get a copy of the configuration. This is used to configure a new
+     * publisher in the config.jelly script.
+     *
      * @return a copy o the config.
      */
     public ViolationsConfig getOldConfig() {
@@ -52,9 +51,13 @@ public class ViolationsPublisher extends Recorder {
 
     /**
      * Called by hudson at the end of a build.
-     * @param build the build
-     * @param launcher the launcher
-     * @param listener for reporting errors
+     *
+     * @param build
+     *            the build
+     * @param launcher
+     *            the launcher
+     * @param listener
+     *            for reporting errors
      * @return true always.
      * @throws InterruptedException
      *             if user cancels the operation
@@ -62,28 +65,39 @@ public class ViolationsPublisher extends Recorder {
      *             if problem parsing the xml files
      */
     @Override
-    public boolean perform(
-        AbstractBuild<?, ?> build, Launcher launcher,
-        BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
+            BuildListener listener) throws InterruptedException, IOException {
 
-        FilePath htmlPath   = new FilePath(
-            new File(build.getProject().getRootDir(), VIOLATIONS));
-        FilePath targetPath = new FilePath(
-            new File(build.getRootDir(), VIOLATIONS));
+        FilePath htmlPath = new FilePath(new File(build.getProject()
+                .getRootDir(), VIOLATIONS));
+        FilePath targetPath = new FilePath(new File(build.getRootDir(),
+                VIOLATIONS));
 
-        ViolationsReport report = build.getWorkspace().act(
-            new ViolationsCollector(false, targetPath, htmlPath, config));
+        FilePath workspace = build.getWorkspace();
+
+        build.getActions().add(
+                createBuildAction(workspace, targetPath, htmlPath, config,
+                        build));
+        return true;
+    }
+
+    @VisibleForTesting
+    static ViolationsBuildAction createBuildAction(FilePath workspace,
+            FilePath targetPath, FilePath htmlPath, ViolationsConfig config,
+            AbstractBuild<?, ?> build) throws IOException, InterruptedException {
+        ViolationsReport report = workspace.act(new ViolationsCollector(false,
+                targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);
         report.setBuildResult();
-        build.getActions().add(
-            new ViolationsBuildAction(build, report));
-        return true;
+        return new ViolationsBuildAction(build, report);
     }
 
     /**
      * Create a project action for a project.
-     * @param project the project to create the action for.
+     *
+     * @param project
+     *            the project to create the action for.
      * @return the created violations project action.
      */
     @Override
@@ -91,12 +105,14 @@ public class ViolationsPublisher extends Recorder {
         return new ViolationsProjectAction(project);
     }
 
+    @Override
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.BUILD;
     }
 
     /**
      * Get the descriptor.
+     *
      * @return the violations publisher descriptor.
      */
     @Override
@@ -106,7 +122,6 @@ public class ViolationsPublisher extends Recorder {
 
     /** The descriptor for this publisher - used in project config page. */
     @Extension
-    public static final BuildStepDescriptor<Publisher> DESCRIPTOR
-        = new ViolationsFreestyleDescriptor();
+    public static final BuildStepDescriptor<Publisher> DESCRIPTOR = new ViolationsFreestyleDescriptor();
 
 }

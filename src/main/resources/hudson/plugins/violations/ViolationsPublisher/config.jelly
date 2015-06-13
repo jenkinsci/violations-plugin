@@ -146,7 +146,7 @@
                           <input name="${inst.name}.pattern"
                                  class="setting-input"
                                  type="text"
-                                 value="${inst.name.pattern}">
+                                 value="${inst.pattern}">
                           </input>
                         </td>
                       </tr>

@@ -1,17 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <maven2-moduleset>
-  <actions class="java.util.concurrent.CopyOnWriteArrayList"/>
+  <actions/>
   <description>Maven 2 project generating reports from the site lifecycle.</description>
   <keepDependencies>false</keepDependencies>
   <properties/>
   <scm class="hudson.scm.NullSCM"/>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers class="vector"/>
+  <concurrentBuild>false</concurrentBuild>
   <goals>clean site</goals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
-  <usePrivateRepository>false</usePrivateRepository>
+  <incrementalBuild>false</incrementalBuild>
   <ignoreUpstremChanges>false</ignoreUpstremChanges>
+  <archivingDisabled>false</archivingDisabled>
+  <resolveDependencies>false</resolveDependencies>
+  <processPlugins>false</processPlugins>
+  <mavenValidationLevel>0</mavenValidationLevel>
+  <runHeadless>false</runHeadless>
   <reporters/>
   <publishers/>
   <buildWrappers/>

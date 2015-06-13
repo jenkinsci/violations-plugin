@@ -149,6 +149,7 @@ public class BuildModel {
         File xmlFile = new File(
             xmlRoot, "file/" + name + ".xml");
         fileModelMap.put(name, new FileModelProxy(xmlFile));
+        proxy = fileModelMap.get(name);
         return proxy;
     }
 
@@ -159,8 +160,22 @@ public class BuildModel {
      * @param count the number of violations.
      */
     public void addFileCount(String type, String name, int[] count) {
+        // Windows needs this replacement
+        name = name.replace("\\", "/");
         FileModelProxy proxy = getFileNameProxy(name);
         getFileCounts(type).add(new FileCount(name, count, proxy));
+    }
+    
+    /**
+     * Add a file count.
+     * @param type the type.
+     * @param name the filename.
+     * @param count the number of violations.
+     * @param securityCount the security count
+     */
+    public void addFileCount(String type, String name, int[] count, int securityCount) {
+        FileModelProxy proxy = getFileNameProxy(name);
+        getFileCounts(type).add(new FileCount(name, count, securityCount, proxy));
     }
 
     /**
@@ -171,6 +186,7 @@ public class BuildModel {
         private final int    totalCount;
         private final int[]  counts;
         private final FileModelProxy proxy;
+        private int securityCount;
 
         /**
          * Create a FileCount object.
@@ -188,9 +204,24 @@ public class BuildModel {
             }
             this.totalCount = t;
             this.proxy = proxy;
+            this.securityCount = 0;
         }
 
+        public FileCount(String name, int[] count, int securityCount,
+				FileModelProxy proxy) {
+			this(name, count, proxy);
+			this.securityCount = securityCount;
+		}
+        
         /**
+         * Gets the security violation count in file
+         * @return the security count
+         */
+        public int getSecurityCount() {
+        	return this.securityCount;
+        }
+
+		/**
          * Get the name of the file.
          * @return the filename.
          */

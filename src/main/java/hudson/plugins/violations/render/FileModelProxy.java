@@ -1,6 +1,7 @@
 package hudson.plugins.violations.render;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -112,7 +113,7 @@ public class FileModelProxy  {
         if (b.length() == 0) {
             return;
         }
-        ret.append("<tr><td colspan='3' class='source heading'>");
+        ret.append("<tr><td colspan='4' class='source heading'>");
         ret.append("File: " + new File(fileModel.getDisplayName()).getName());
         ret.append(" Lines ");
         ret.append(startLine + " to " + previousLine);
@@ -166,7 +167,20 @@ public class FileModelProxy  {
 
             // TR
             b.append("<tr " + (v != null ? "class='violation'" : "") + ">");
-
+            
+            // Visual Studio
+            if (v != null) {
+            	// Only first one needed for line            	
+            	for(Violation violation : v) {
+            		b.append("<td class='source icon'>");	
+            		b.append(this.getVisualStudioLink(violation));
+            		b.append("</td>");
+            		break;
+            	}            	
+            } else {
+                b.append("<td class='source icon'/>\n");
+            }
+            
             // Icon
             if (v != null) {
                 showIcon(b, v);
@@ -195,6 +209,95 @@ public class FileModelProxy  {
         addBlock(ret, b, startLine, previousLine);
         ret.append("</table>");
         return ret.toString();
+    }
+    
+    public String getVisualStudioLink(Violation v) {
+    	StringBuilder ret = new StringBuilder();
+    	String uriBase = "devenv:?file=" + this.fileModel.getDisplayName();
+    	
+    	ret.append("<a href=\"");
+    	String uri = String.valueOf(uriBase + "&line=" + v.getLine());
+    	ret.append(uri);
+    	ret.append("\"><img src=\"/plugin/violations/images/16x16/vs2010-play.png\" alt=\"Visual Studio 2010\"></a>");
+    	return ret.toString();
+    }
+    
+    public String getViolationsSummary() {
+    	StringBuilder ret = new StringBuilder();
+    	
+    	
+    	for(Entry<String, TreeSet<Violation>> t : this.fileModel.getTypeMap().entrySet()) {
+    		ret.append("<table class=\"pane\">");
+    		ret.append("<tbody>");
+    		ret.append("<tr><td class=\"pane-header\" colspan=\"5\">");
+    		ret.append(this.typeLine(t.getKey()));
+    		ret.append("</td></tr>");
+    		for(Violation v : t.getValue()) {
+    			ret.append("<tr>");
+    			if (v.getSource().toUpperCase().contains("Security".toUpperCase())) {
+    				ret.append("<td class=\"pane\">");
+    				ret.append("<img src=\"/plugin/violations/images/16x16/security.png\" alt=\"Security violation\">");
+    				ret.append("</td>");
+    			} else {
+    				ret.append("<td  class=\"pane\" />");
+    			}
+    			ret.append("<td class=\"pane\">");
+    			ret.append(getVisualStudioLink(v));
+    			ret.append("</td>");
+    			ret.append("<td class=\"pane\">");
+    			if (this.getShowLines()) {
+    				ret.append("<a href=\"#line");
+    				ret.append(v.getLine());
+    				ret.append("\">");
+    				ret.append(v.getLine());
+    				ret.append("</a>");
+    			} else {
+    				ret.append(v.getLine());
+    			}
+    			
+    			ret.append("</td>");
+    			ret.append("<td class=\"pane\">");
+    			ret.append(this.severityColumn(v));
+    			ret.append("</td>");
+    			
+    			ret.append("<td class=\"pane\" width=\"99%\">");
+    			ret.append(v.getMessage());
+    			ret.append("</td>");
+    			
+    			ret.append("</tr>");    			
+    		}
+    		
+    		ret.append("</table>");
+    		ret.append("<p></p>");
+    	}
+    	
+//    	<j:forEach var="t" items="${model.typeMap.entrySet()}">
+//        <table class="pane">
+//          <tbody>
+//            <tr><td class="pane-header" colspan="5">${it.typeLine(t.key)}</td></tr>
+//            <j:forEach var="v" items="${t.value}">
+//              <tr>
+//              	<td class="pane"><a href="${v.devEnvLink}">VS</a></td>
+//                <td class="pane">
+//                  <j:if test="${href}">
+//                    <a href="#line${v.line}">${v.line}</a>
+//                  </j:if>
+//                  <j:if test="${!href}">
+//                    ${v.line}
+//                  </j:if>
+//                </td>
+//                <!--<td class="pane">${v.source}</td> -->
+//                <td class="pane">${it.severityColumn(v)}</td>
+//                <td class="pane" width="99%">${v.message}</td>
+//              </tr>
+//            </j:forEach>
+//          </tbody>
+//        </table>
+//        <p></p>
+//      </j:forEach>
+    	
+    	
+    	return ret.toString();
     }
 
     /**
@@ -347,6 +450,55 @@ public class FileModelProxy  {
         b.append("  </tbody>\n");
         b.append(" </table>\n");
         b.append("</div>\n");
+    }
+
+    public String getFileNameAlt() {
+        return new File(fileModel.getDisplayName()).getName();
+    }
+
+    public String getSummaryTable() {
+
+        StringBuilder gst = new StringBuilder();
+        int count = 0;
+
+        gst.append(" <table class='violations' width='100%'>\n");
+        gst.append("   <tr>\n");
+        gst.append("     <td class='violations-header'> # </td>\n");
+        gst.append("     <td class='violations-header'> Type </td>\n");
+        gst.append("     <td class='violations-header'> Class</td>\n");
+        gst.append("     <td class='violations-header'> Message</td>\n");
+        gst.append("     <td class='violations-header'> Description</td>\n");
+        gst.append("   </tr>\n");
+
+        Set<Violation> violations = fileModel.getLineViolationMap().get(0);
+
+        for (Violation v: violations) {
+            ++count;
+            gst.append("   <tr>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(count);
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getType());
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getSource());
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getMessage());
+            gst.append("</td>\n");
+            gst.append("     <td class='violations'>");
+            gst.append(v.getPopupMessage());
+            gst.append("</td>\n");
+            gst.append("   </tr>\n");
+        }
+        //}
+        gst.append(" </table>\n");
+        gst.append("<p><br>\n");
+        gst.append("<h3>Total Number of violations:  \n");
+        gst.append(count);
+        gst.append("</h3><p>\n");
+        return gst.toString();
     }
 
 }

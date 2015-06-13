@@ -58,24 +58,6 @@ public class FileModel extends AbstractFileModel {
     }
 
     /**
-     * Get the display name of this file.
-     * @return the name to use whrn displaying the file violations.
-     */
-    @Override
-    public String getDisplayName() {
-        return super.getDisplayName();
-    }
-
-    /**
-     * Get the map of types to violations.
-     * @return the type to violation map.
-     */
-    @Override
-    public TreeMap<String, TreeSet<Violation>> getTypeMap() {
-        return super.getTypeMap();
-    }
-
-    /**
      * A overview class for each type.
      */
     public static class LimitType {
@@ -105,5 +87,23 @@ public class FileModel extends AbstractFileModel {
         public int getSuppressed() {
             return suppressed;
         }
+    }
+    
+    /**
+     * Get the display name of this file.
+     * @return the name to use whrn displaying the file violations.
+     */
+    @Override
+    public String getDisplayName() {
+        return super.getDisplayName();
+    }
+    
+    /**
+     * Get the map of types to violations.
+     * @return the type to violation map.
+     */
+    @Override
+    public TreeMap<String, TreeSet<Violation>> getTypeMap() {
+        return super.getTypeMap();
     }
 }

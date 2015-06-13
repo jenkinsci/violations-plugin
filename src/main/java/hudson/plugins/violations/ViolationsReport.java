@@ -214,7 +214,7 @@ public class ViolationsReport
         FileModelProxy proxy = getFileModelProxy(name);
         if (proxy != null) {
             return new RecurDynamic(
-                "", name, proxy.build(build).contextPath(req.getContextPath()));
+                "", name, proxy.build(build).contextPath(""));
         } else {
             return new RecurDynamic(
                 "", name, new NoViolationsFile(name, build));
@@ -366,11 +366,11 @@ public class ViolationsReport
 
     /**
      * Get the icon for a type.
-     * @param t the type
+     * @param t the type 
      * @return the icon name.
      */
     public String getIcon(String t) {
-        Integer v = violations.get(t);
+        Integer v = violations.get(t); 
         HealthReport h = getHealthReportFor(t);
         if (h == null) {
             return null;
@@ -574,7 +574,7 @@ public class ViolationsReport
         public ViolationsReportIterator(AbstractBuild<?, ?> curr) {
             this.curr = curr;
         }
-        @Override
+
         public Iterator<ViolationsReport> iterator() {
             return this;
         }

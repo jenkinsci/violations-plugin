@@ -8,6 +8,7 @@ import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.plugins.violations.ViolationsReport;
 import hudson.plugins.violations.TypeSummary;
 
+import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
 import hudson.plugins.violations.model.Severity;
 import hudson.util.ShiftedCategoryAxis;
 import hudson.util.StackedAreaRenderer2;
@@ -135,6 +136,11 @@ public class SeverityTypeDataSet  {
 
         final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        if (Boolean.getBoolean(AbstractViolationsBuildAction.VIOLATIONS_PLUGIN_CHART_AUTORANGE_PROPERTY)) {
+            rangeAxis.setAutoRange(true);
+            rangeAxis.setAutoRangeIncludesZero(false);
+            rangeAxis.setAutoRangeMinimumSize(50);
+        }
 
         StackedAreaRenderer renderer = new StackedAreaRenderer2();
         plot.setRenderer(renderer);

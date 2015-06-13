@@ -1,24 +1,25 @@
 package hudson.plugins.violations;
 
-import java.util.List;
-import java.util.TreeMap;
-
 import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
+import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
+import hudson.plugins.violations.types.cpd.CPDDescriptor;
+import hudson.plugins.violations.types.cpplint.CppLintDescriptor;
 import hudson.plugins.violations.types.csslint.CssLintDescriptor;
-import hudson.plugins.violations.types.pmd.PMDDescriptor;
 import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
 import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
 import hudson.plugins.violations.types.gendarme.GendarmeDescriptor;
-import hudson.plugins.violations.types.cpd.CPDDescriptor;
-import hudson.plugins.violations.types.cpplint.CppLintDescriptor;
-import hudson.plugins.violations.types.pylint.PyLintDescriptor;
-import hudson.plugins.violations.types.simian.SimianDescriptor;
-import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
 import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
 import hudson.plugins.violations.types.jslint.JsLintDescriptor;
-import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
 import hudson.plugins.violations.types.pep8.Pep8Descriptor;
 import hudson.plugins.violations.types.perlcritic.PerlCriticDescriptor;
+import hudson.plugins.violations.types.pmd.PMDDescriptor;
+import hudson.plugins.violations.types.pylint.PyLintDescriptor;
+import hudson.plugins.violations.types.resharper.ReSharperDescriptor;
+import hudson.plugins.violations.types.simian.SimianDescriptor;
+import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
+
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * A descriptor for a violation type.
@@ -33,7 +34,7 @@ public abstract class TypeDescriptor {
      * Create a type descriptor for a type.
      * @param name the name of the type.
      */
-    protected TypeDescriptor(String name) {
+    protected TypeDescriptor(final String name) {
         this.name = name;
     }
 
@@ -59,7 +60,7 @@ public abstract class TypeDescriptor {
      * Add a violations type descriptor.
      * @param t the violations type descriptor to add.
      */
-    public static void addDescriptor(TypeDescriptor t) {
+    public static void addDescriptor(final TypeDescriptor t) {
         TYPES.put(t.getName(), t);
     }
 
@@ -68,7 +69,7 @@ public abstract class TypeDescriptor {
      * @param source the code name for the violation.
      * @return a detailed description, if available, null otherwise.
      */
-    public String getDetailForSource(String source) {
+    public String getDetailForSource(final String source) {
         return null;
     }
 
@@ -99,6 +100,7 @@ public abstract class TypeDescriptor {
         addDescriptor(CodenarcDescriptor.DESCRIPTOR);
         addDescriptor(Pep8Descriptor.DESCRIPTOR);
         addDescriptor(PerlCriticDescriptor.DESCRIPTOR);
+		addDescriptor(ReSharperDescriptor.DESCRIPTOR);
     }
 }
 

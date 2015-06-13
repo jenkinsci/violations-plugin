@@ -1,20 +1,18 @@
 package hudson.plugins.violations.types.pmd;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.parse.AbstractTypeParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The descriptor class for PMD violations type.
  */
-public final class PMDDescriptor
-    extends TypeDescriptor {
+public final class PMDDescriptor extends TypeDescriptor {
 
     /** The descriptor for the PMD violations type. */
-    public static final PMDDescriptor DESCRIPTOR
-        = new PMDDescriptor();
+    public static final PMDDescriptor DESCRIPTOR = addDescriptor(new PMDDescriptor());
 
     /** Private constructor */
     private PMDDescriptor() {
@@ -23,6 +21,7 @@ public final class PMDDescriptor
 
     /**
      * Create a parser for the PMD type.
+     *
      * @return a new PMD parser.
      */
     @Override
@@ -31,10 +30,9 @@ public final class PMDDescriptor
     }
 
     /**
-     * Get a list of target xml files to look for
-     * for this particular type.
-     * @return a list filenames to look for in the target
-     *         target directory.
+     * Get a list of target xml files to look for for this particular type.
+     *
+     * @return a list filenames to look for in the target target directory.
      */
     @Override
     public List<String> getMavenTargets() {
@@ -43,4 +41,3 @@ public final class PMDDescriptor
         return ret;
     }
 }
-

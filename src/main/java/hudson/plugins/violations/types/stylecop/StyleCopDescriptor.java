@@ -1,9 +1,9 @@
 package hudson.plugins.violations.types.stylecop;
 
+import hudson.plugins.violations.TypeDescriptor;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import hudson.plugins.violations.TypeDescriptor;
 
 /**
  * The descriptor class for StyleCop (MS Source Analysis) violations type.
@@ -12,7 +12,7 @@ import hudson.plugins.violations.TypeDescriptor;
 public final class StyleCopDescriptor extends TypeDescriptor {
 
     /** The descriptor for the MS Source Analysis violations type. */
-    public static final StyleCopDescriptor DESCRIPTOR = new StyleCopDescriptor();
+    public static final StyleCopDescriptor DESCRIPTOR = addDescriptor(new StyleCopDescriptor());
 
     private StyleCopDescriptor() {
         super(StyleCopParser.TYPE_NAME);

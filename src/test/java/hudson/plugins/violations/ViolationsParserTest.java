@@ -8,21 +8,23 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public abstract class ViolationsParserTest {
-	
-	protected abstract FullBuildModel getFullBuildModel(String filename) throws IOException;
-	
-	protected FullBuildModel getFullBuildModel(ViolationsParser parser, String filename) throws IOException {
-		URL url = getClass().getResource(filename);
+
+    protected abstract FullBuildModel getFullBuildModel(String filename)
+            throws IOException;
+
+    protected FullBuildModel getFullBuildModel(ViolationsParser parser,
+            String filename) throws IOException {
+        URL url = getClass().getResource(filename);
         File xmlFile;
         try {
             xmlFile = new File(url.toURI());
-        } catch(URISyntaxException e) {
+        } catch (URISyntaxException e) {
             xmlFile = new File(url.getPath());
         }
-        
+
         FullBuildModel model = new FullBuildModel();
         parser.parse(model, xmlFile.getParentFile(), xmlFile.getName(), null);
         model.cleanup();
         return model;
-	}
+    }
 }

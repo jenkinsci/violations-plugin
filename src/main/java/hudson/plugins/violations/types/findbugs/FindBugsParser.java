@@ -18,19 +18,21 @@ import org.xmlpull.v1.XmlPullParserException;
  * Parses a find bugs xml report file.
  */
 public class FindBugsParser extends AbstractTypeParser {
-    private static final Logger LOG = Logger.getLogger(
-        FindBugsParser.class.getName());
+    private static final Logger LOG = Logger.getLogger(FindBugsParser.class
+            .getName());
 
-    private boolean debug = false;
     private AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder();
 
     /**
      * Parse the findbugs xml file.
-     * @throws IOException if there is a problem reading the file.
-     * @throws XmlPullParserException if there is a problem parsing the file.
+     *
+     * @throws IOException
+     *             if there is a problem reading the file.
+     * @throws XmlPullParserException
+     *             if there is a problem parsing the file.
      */
-    protected void execute()
-        throws IOException, XmlPullParserException {
+    @Override
+    protected void execute() throws IOException, XmlPullParserException {
         // Ensure that the top level tag is "BugCollection"
         expectNextTag("BugCollection");
         getParser().next(); // consume the "BugCollection" tag
@@ -38,10 +40,10 @@ public class FindBugsParser extends AbstractTypeParser {
         absoluteFileFinder.addSourcePaths(getSourcePaths());
 
         // Top level tags:
-        //   file: from the maven findbugs plugin
-        //   Project: from the ant findbugs tag
-        //   BugInstance: from the ant findbugs tag
-        //   others - ignore
+        // file: from the maven findbugs plugin
+        // Project: from the ant findbugs tag
+        // BugInstance: from the ant findbugs tag
+        // others - ignore
         while (true) {
             String tag = getSibTag();
             if (tag == null) {
@@ -70,7 +72,7 @@ public class FindBugsParser extends AbstractTypeParser {
         }
         return filename + ".java";
     }
-    
+
     private String getRelativeName(String name, File file) {
         if (file != null && file.exists()) {
             String absolute = file.getAbsolutePath();
@@ -82,10 +84,10 @@ public class FindBugsParser extends AbstractTypeParser {
         return name;
     }
 
-    private void getMavenFileInstance()
-        throws IOException, XmlPullParserException {
+    private void getMavenFileInstance() throws IOException,
+            XmlPullParserException {
         // FIXME: I have no definition - just an example file
-        //        with no source files
+        // with no source files
         String classname = checkNotBlank("classname");
         String name = resolveClassName(classname);
         File file = absoluteFileFinder.getFileForName(name);
@@ -101,10 +103,8 @@ public class FindBugsParser extends AbstractTypeParser {
                 v.setType("findbugs");
                 v.setLine(getInt("lineNumber"));
                 v.setSource(checkNotBlank("type"));
-                v.setSeverity(normalizeSeverity(
-                                  checkNotBlank("priority")));
-                v.setSeverityLevel(
-                    getSeverityLevel(v.getSeverity()));
+                v.setSeverity(normalizeSeverity(checkNotBlank("priority")));
+                v.setSeverityLevel(getSeverityLevel(v.getSeverity()));
                 v.setMessage(checkNotBlank("message"));
                 getFileModel(name, file).addViolation(v);
             }
@@ -113,8 +113,7 @@ public class FindBugsParser extends AbstractTypeParser {
         endElement();
     }
 
-    private void getSourceDirs()
-        throws IOException, XmlPullParserException {
+    private void getSourceDirs() throws IOException, XmlPullParserException {
         expectStartTag("Project");
         getParser().next();
         while (skipToTag("SrcDir")) {
@@ -123,18 +122,10 @@ public class FindBugsParser extends AbstractTypeParser {
         endElement();
     }
 
-    private void getSourceDir()
-        throws IOException, XmlPullParserException {
+    private void getSourceDir() throws IOException, XmlPullParserException {
         checkNextEvent(XmlPullParser.TEXT, "Expecting text");
         absoluteFileFinder.addSourcePath(getParser().getText());
         endElement();
-    }
-
-    private void getBugInstances()
-        throws IOException, XmlPullParserException {
-        while (skipToTag("BugInstance")) {
-            getBugInstance();
-        }
     }
 
     private String convertType(String x) {
@@ -142,32 +133,16 @@ public class FindBugsParser extends AbstractTypeParser {
         return (y == null) ? x : y;
     }
 
-    /**
-     * Parse the BugInstance element.
-     * -- 1.2.1 --
-     * This is something like:
-     *  BugInstance {
-     *     Class [classname] { SourceLine? (of the class) } ?,
-     *     Method { SourceLine?  (of the method) } ?,
-     *     Field ?,
-     *     Type*,
-     *     LocalVariable*
-     *     SourceLine* (of the line in error)
-     *  }
-     * This code will look classname and the SourceLine element.
-     * The last source line element will be used for the line number.
-     */
     private String classname;
     private String path;
     private String lineNumber;
 
-    private void getSourceLine()
-        throws IOException, XmlPullParserException {
+    private void getSourceLine() throws IOException, XmlPullParserException {
         if (StringUtil.isBlank(path)) {
-            path      =  getParser().getAttributeValue("", "sourcepath");
+            path = getParser().getAttributeValue("", "sourcepath");
         }
         if (StringUtil.isBlank(classname)) {
-            classname =  getParser().getAttributeValue("", "classname");
+            classname = getParser().getAttributeValue("", "classname");
         }
         String l = getParser().getAttributeValue("", "start");
         if (!StringUtil.isBlank(l)) {
@@ -175,8 +150,7 @@ public class FindBugsParser extends AbstractTypeParser {
         }
     }
 
-    private void getSourceLines()
-        throws IOException, XmlPullParserException {
+    private void getSourceLines() throws IOException, XmlPullParserException {
         while (true) {
             String tag = getSibTag();
             if (tag == null) {
@@ -200,11 +174,9 @@ public class FindBugsParser extends AbstractTypeParser {
         return thisClassname.equals(currentClassname);
     }
 
-    private void getBugInstance()
-        throws IOException, XmlPullParserException {
+    private void getBugInstance() throws IOException, XmlPullParserException {
         String type = getParser().getAttributeValue("", "type");
         String priority = getParser().getAttributeValue("", "priority");
-        String category = getParser().getAttributeValue("", "category");
         getParser().next();
 
         classname = null;
@@ -216,9 +188,8 @@ public class FindBugsParser extends AbstractTypeParser {
             if (tag == null) {
                 break;
             }
-            if (("Class".equals(tag) || "Method".equals(tag)
-                || "Field".equals(tag))
-                && sameClassname(classname)) {
+            if (("Class".equals(tag) || "Method".equals(tag) || "Field"
+                    .equals(tag)) && sameClassname(classname)) {
                 if (StringUtil.isBlank(classname)) {
                     classname = getParser().getAttributeValue("", "classname");
                 }
@@ -247,16 +218,15 @@ public class FindBugsParser extends AbstractTypeParser {
         v.setLine(lineNumber);
         v.setSource(type);
         v.setSeverity(normalizeSeverity(priority));
-        v.setSeverityLevel(
-            getSeverityLevel(v.getSeverity()));
+        v.setSeverityLevel(getSeverityLevel(v.getSeverity()));
         v.setMessage(convertType(type));
         getFileModel(name, file).addViolation(v);
 
         endElement();
     }
 
-    private static final HashMapWithDefault<String, String> SEVERITIES
-        = new HashMapWithDefault<String, String>("High");
+    private static final HashMapWithDefault<String, String> SEVERITIES = new HashMapWithDefault<String, String>(
+            "High");
 
     static {
         // From findbugs
@@ -278,7 +248,6 @@ public class FindBugsParser extends AbstractTypeParser {
 
     /** Convert a normalized severity to a severity level */
     private int getSeverityLevel(String severity) {
-        return Severity.getSeverityLevel(
-            severity);
+        return Severity.getSeverityLevel(severity);
     }
 }

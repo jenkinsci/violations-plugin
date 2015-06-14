@@ -20,13 +20,19 @@ import java.util.regex.Pattern;
  * The parser only supports PyLint report that has the output format
  * 'parseable'.
  *
+ * Report created like this:
+ *
+ * <pre>
+ * pylint file.py --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.log
+ * </pre>
+ *
  * @author Erik Ramfelt
  */
 public class PyLintParser implements ViolationsParser {
 
     /** Regex pattern for the PyLint errors. */
     private final transient Pattern pattern;
-    private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder(); 
+    private transient AbsoluteFileFinder absoluteFileFinder = new AbsoluteFileFinder();
 
     /**
      * Constructor - create the pattern.
@@ -36,17 +42,17 @@ public class PyLintParser implements ViolationsParser {
     }
 
     /** {@inheritDoc} */
-    public void parse( FullBuildModel model, File projectPath, String fileName,
-        String[] sourcePaths) throws IOException {
-        
-    	BufferedReader reader = null;
-        
-    	absoluteFileFinder.addSourcePath(projectPath.getAbsolutePath());
-    	absoluteFileFinder.addSourcePaths(sourcePaths);
-        
+    public void parse(FullBuildModel model, File projectPath, String fileName,
+            String[] sourcePaths) throws IOException {
+
+        BufferedReader reader = null;
+
+        absoluteFileFinder.addSourcePath(projectPath.getAbsolutePath());
+        absoluteFileFinder.addSourcePaths(sourcePaths);
+
         try {
-            reader = new BufferedReader(
-                new FileReader(new File(projectPath, fileName)));
+            reader = new BufferedReader(new FileReader(new File(projectPath,
+                    fileName)));
             String line = reader.readLine();
             while (line != null) {
                 parseLine(model, line, projectPath);
@@ -61,9 +67,13 @@ public class PyLintParser implements ViolationsParser {
 
     /**
      * Parses a PyLint line and adding a violation if regex
-     * @param model build model to add violations to
-     * @param line the line in the file.
-     * @param projectPath the path to use to resolve the file.
+     *
+     * @param model
+     *            build model to add violations to
+     * @param line
+     *            the line in the file.
+     * @param projectPath
+     *            the path to use to resolve the file.
      */
     public void parseLine(FullBuildModel model, String line, File projectPath) {
         PyLintViolation pyLintViolation = getPyLintViolation(line);
@@ -77,33 +87,35 @@ public class PyLintParser implements ViolationsParser {
             violation.setSource(pyLintViolation.getViolationId());
             setServerityLevel(violation, pyLintViolation.getViolationId());
 
-            FullFileModel fileModel = getFileModel(model, 
-            		pyLintViolation.getFileName(), 
-            		absoluteFileFinder.getFileForName(pyLintViolation.getFileName()));
+            FullFileModel fileModel = getFileModel(model,
+                    pyLintViolation.getFileName(),
+                    absoluteFileFinder.getFileForName(pyLintViolation
+                            .getFileName()));
             fileModel.addViolation(violation);
         }
     }
-    
-    private FullFileModel getFileModel(FullBuildModel model, String name, File sourceFile) {
+
+    private FullFileModel getFileModel(FullBuildModel model, String name,
+            File sourceFile) {
         FullFileModel fileModel = model.getFileModel(name);
         File other = fileModel.getSourceFile();
 
         if (sourceFile == null
-            || ((other != null) && (
-                    other.equals(sourceFile)
-                    || other.exists()))) {
+                || ((other != null) && (other.equals(sourceFile) || other
+                        .exists()))) {
             return fileModel;
         }
-        
+
         fileModel.setSourceFile(sourceFile);
         fileModel.setLastModified(sourceFile.lastModified());
         return fileModel;
     }
-    
 
     /**
      * Returns a pylint violation (if it is one)
-     * @param line a line from the PyLint parseable report
+     *
+     * @param line
+     *            a line from the PyLint parseable report
      * @return a PyLintViolation if the line contains one; null otherwise
      */
     PyLintViolation getPyLintViolation(String line) {
@@ -117,6 +129,7 @@ public class PyLintParser implements ViolationsParser {
     /**
      * Returns the Severity level as an int from the PyLint message type.
      *
+     * <pre>
      * The different message types are:
      * (C) convention, for programming standard violation
      * (R) refactor, for bad code smell
@@ -124,34 +137,36 @@ public class PyLintParser implements ViolationsParser {
      * (E) error, for much probably bugs in the code
      * (F) fatal, if an error occured which prevented pylint from doing
      *     further processing.
+     * </pre>
      *
-     * @param messageType the type of PyLint message
+     * @param messageType
+     *            the type of PyLint message
      * @return an int is matched to the message type.
      */
     private void setServerityLevel(Violation violation, String messageType) {
 
         switch (messageType.charAt(0)) {
-            case 'C':
-                violation.setSeverity(Severity.LOW);
-                violation.setSeverityLevel(Severity.LOW_VALUE);
-                break;
-            case 'R':
-                violation.setSeverity(Severity.MEDIUM_LOW);
-                violation.setSeverityLevel(Severity.MEDIUM_LOW_VALUE);
-                break;
-            case 'W':
-            default:
-                violation.setSeverity(Severity.MEDIUM);
-                violation.setSeverityLevel(Severity.MEDIUM_VALUE);
-                break;
-            case 'E':
-            case 'F':
-                violation.setSeverity(Severity.HIGH);
-                violation.setSeverityLevel(Severity.HIGH_VALUE);
-                break;
+        case 'C':
+            violation.setSeverity(Severity.LOW);
+            violation.setSeverityLevel(Severity.LOW_VALUE);
+            break;
+        case 'R':
+            violation.setSeverity(Severity.MEDIUM_LOW);
+            violation.setSeverityLevel(Severity.MEDIUM_LOW_VALUE);
+            break;
+        case 'W':
+        default:
+            violation.setSeverity(Severity.MEDIUM);
+            violation.setSeverityLevel(Severity.MEDIUM_VALUE);
+            break;
+        case 'E':
+        case 'F':
+            violation.setSeverity(Severity.HIGH);
+            violation.setSeverityLevel(Severity.HIGH_VALUE);
+            break;
         }
     }
-    
+
     class PyLintViolation {
         private final transient String lineStr;
         private final transient String message;
@@ -161,7 +176,7 @@ public class PyLintParser implements ViolationsParser {
         public PyLintViolation(Matcher matcher) {
             if (matcher.groupCount() < 4) {
                 throw new IllegalArgumentException(
-                    "The Regex matcher could not find enough information");
+                        "The Regex matcher could not find enough information");
             }
             lineStr = matcher.group(2);
             message = matcher.group(4);

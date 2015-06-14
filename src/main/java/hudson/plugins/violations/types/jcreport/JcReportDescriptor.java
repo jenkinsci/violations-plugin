@@ -1,22 +1,21 @@
 package hudson.plugins.violations.types.jcreport;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.parse.AbstractTypeParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The descriptor class for jcreport violations type.
- * http://www.jcoderz.org/fawkez/wiki/JcReport 
+ * http://www.jcoderz.org/fawkez/wiki/JcReport
+ * 
  * @author Andreas.Mandel@gmail.com
  */
-public final class JcReportDescriptor
-    extends TypeDescriptor {
+public final class JcReportDescriptor extends TypeDescriptor {
 
     /** The descriptor for the jcreport violations type. */
-    public static final JcReportDescriptor DESCRIPTOR
-        = new JcReportDescriptor();
+    public static final JcReportDescriptor DESCRIPTOR = addDescriptor(new JcReportDescriptor());
 
     private JcReportDescriptor() {
         super("jcreport");
@@ -24,6 +23,7 @@ public final class JcReportDescriptor
 
     /**
      * Create a parser for the jcreport type.
+     * 
      * @return a new jcreport parser.
      */
     @Override
@@ -32,10 +32,9 @@ public final class JcReportDescriptor
     }
 
     /**
-     * Get a list of target xml files to look for
-     * for this particular type.
-     * @return a list filenames to look for in the target
-     *         target directory.
+     * Get a list of target xml files to look for for this particular type.
+     * 
+     * @return a list filenames to look for in the target target directory.
      */
     @Override
     public List<String> getMavenTargets() {
@@ -44,4 +43,3 @@ public final class JcReportDescriptor
         return ret;
     }
 }
-

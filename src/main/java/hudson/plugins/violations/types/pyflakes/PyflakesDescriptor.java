@@ -6,10 +6,10 @@ import hudson.plugins.violations.ViolationsParser;
 /**
  * The descriptor class for Pyflakes violations type.
  */
-public final class PyflakesDescriptor  extends TypeDescriptor {
+public final class PyflakesDescriptor extends TypeDescriptor {
 
     /** The descriptor for the Pyflakes violations type. */
-    public static final PyflakesDescriptor DESCRIPTOR = new PyflakesDescriptor();
+    public static final PyflakesDescriptor DESCRIPTOR = addDescriptor(new PyflakesDescriptor());
 
     private PyflakesDescriptor() {
         super("pyflakes");
@@ -17,6 +17,7 @@ public final class PyflakesDescriptor  extends TypeDescriptor {
 
     /**
      * Create a parser for the Pyflakes type.
+     * 
      * @return a new Pyflakes parser.
      */
     @Override
@@ -25,4 +26,3 @@ public final class PyflakesDescriptor  extends TypeDescriptor {
     }
 
 }
-

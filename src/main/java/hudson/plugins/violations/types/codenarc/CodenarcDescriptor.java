@@ -1,21 +1,20 @@
 package hudson.plugins.violations.types.codenarc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.parse.AbstractTypeParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The descriptor class for Codenarc violations type.
+ * 
  * @author Robin Bramley
  */
-public final class CodenarcDescriptor
-    extends TypeDescriptor {
+public final class CodenarcDescriptor extends TypeDescriptor {
 
     /** The descriptor for the codenarc violations type. */
-    public static final CodenarcDescriptor DESCRIPTOR
-        = new CodenarcDescriptor();
+    public static final CodenarcDescriptor DESCRIPTOR = addDescriptor(new CodenarcDescriptor());
 
     private CodenarcDescriptor() {
         super("codenarc");
@@ -23,6 +22,7 @@ public final class CodenarcDescriptor
 
     /**
      * Create a parser for the codenarc type.
+     * 
      * @return a new codenarc parser.
      */
     @Override
@@ -31,10 +31,9 @@ public final class CodenarcDescriptor
     }
 
     /**
-     * Get a list of target xml files to look for
-     * for this particular type.
-     * @return a list filenames to look for in the target
-     *         target directory.
+     * Get a list of target xml files to look for for this particular type.
+     * 
+     * @return a list filenames to look for in the target target directory.
      */
     @Override
     public List<String> getMavenTargets() {
@@ -43,4 +42,3 @@ public final class CodenarcDescriptor
         return ret;
     }
 }
-

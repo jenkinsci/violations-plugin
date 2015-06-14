@@ -1,19 +1,17 @@
 package hudson.plugins.violations.types.cpd;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hudson.plugins.violations.TypeDescriptor;
 import hudson.plugins.violations.ViolationsParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The descriptor class for CPD violations type.
  */
-public final class CPDDescriptor
-    extends TypeDescriptor {
+public final class CPDDescriptor extends TypeDescriptor {
     /** The descriptor for the CPD violations type. */
-    public static final CPDDescriptor DESCRIPTOR
-        = new CPDDescriptor();
+    public static final CPDDescriptor DESCRIPTOR = addDescriptor(new CPDDescriptor());
 
     private CPDDescriptor() {
         super("cpd");
@@ -21,6 +19,7 @@ public final class CPDDescriptor
 
     /**
      * Create a parser for the CPD type.
+     * 
      * @return a new CPD parser.
      */
     @Override
@@ -29,10 +28,9 @@ public final class CPDDescriptor
     }
 
     /**
-     * Get a list of target xml files to look for
-     * for this particular type.
-     * @return a list filenames to look for in the target
-     *         target directory.
+     * Get a list of target xml files to look for for this particular type.
+     * 
+     * @return a list filenames to look for in the target target directory.
      */
     @Override
     public List<String> getMavenTargets() {
@@ -42,4 +40,3 @@ public final class CPDDescriptor
     }
 
 }
-

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<maven2-moduleset>
+<maven2-moduleset plugin="maven-plugin@2.9">
   <actions/>
   <description>Maven 2 project generating reports from the build lifecycle.</description>
   <keepDependencies>false</keepDependencies>
@@ -9,18 +9,48 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers class="vector"/>
+  <triggers/>
   <concurrentBuild>false</concurrentBuild>
+  <rootModule>
+    <groupId>root</groupId>
+    <artifactId>project</artifactId>
+  </rootModule>
   <goals>clean verify</goals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
   <incrementalBuild>false</incrementalBuild>
   <ignoreUpstremChanges>false</ignoreUpstremChanges>
   <archivingDisabled>false</archivingDisabled>
+  <siteArchivingDisabled>false</siteArchivingDisabled>
+  <fingerprintingDisabled>false</fingerprintingDisabled>
   <resolveDependencies>false</resolveDependencies>
   <processPlugins>false</processPlugins>
   <mavenValidationLevel>0</mavenValidationLevel>
   <runHeadless>false</runHeadless>
-  <reporters/>
+  <disableTriggerDownstreamProjects>false</disableTriggerDownstreamProjects>
+  <reporters>
+    <hudson.plugins.violations.hudson.maven.ViolationsMavenReporter plugin="violations@0.8.0-alpha-1-SNAPSHOT">
+      <config>
+        <suppressions class="sorted-set"/>
+        <typeConfigs>
+          <entry>
+            <string>checkstyle</string>
+            <hudson.plugins.violations.TypeConfig>
+              <type>checkstyle</type>
+              <min>1</min>
+              <max>2</max>
+              <unstable>2</unstable>
+              <usePattern>false</usePattern>
+              <pattern></pattern>
+            </hudson.plugins.violations.TypeConfig>
+          </entry>
+        </typeConfigs>
+        <limit>100</limit>
+        <encoding>default</encoding>
+      </config>
+    </hudson.plugins.violations.hudson.maven.ViolationsMavenReporter>
+  </reporters>
   <publishers/>
   <buildWrappers/>
+  <prebuilders/>
+  <postbuilders/>
 </maven2-moduleset>

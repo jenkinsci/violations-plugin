@@ -1,5 +1,26 @@
 package hudson.plugins.violations;
 
+import hudson.plugins.violations.types.checkstyle.CheckstyleDescriptor;
+import hudson.plugins.violations.types.codenarc.CodenarcDescriptor;
+import hudson.plugins.violations.types.cpd.CPDDescriptor;
+import hudson.plugins.violations.types.cpplint.CppLintDescriptor;
+import hudson.plugins.violations.types.csslint.CssLintDescriptor;
+import hudson.plugins.violations.types.findbugs.FindBugsDescriptor;
+import hudson.plugins.violations.types.fxcop.FxCopDescriptor;
+import hudson.plugins.violations.types.gendarme.GendarmeDescriptor;
+import hudson.plugins.violations.types.jcreport.JcReportDescriptor;
+import hudson.plugins.violations.types.jslint.JsLintDescriptor;
+import hudson.plugins.violations.types.pep8.Pep8Descriptor;
+import hudson.plugins.violations.types.perlcritic.PerlCriticDescriptor;
+import hudson.plugins.violations.types.pmd.PMDDescriptor;
+import hudson.plugins.violations.types.pyflakes.PyflakesDescriptor;
+import hudson.plugins.violations.types.pylint.PyLintDescriptor;
+import hudson.plugins.violations.types.resharper.ReSharperDescriptor;
+import hudson.plugins.violations.types.simian.SimianDescriptor;
+import hudson.plugins.violations.types.stylecop.StyleCopDescriptor;
+import hudson.plugins.violations.types.xmllint.XmllintDescriptor;
+import hudson.plugins.violations.types.zptlint.ZptlintDescriptor;
+
 import java.util.List;
 import java.util.TreeMap;
 
@@ -38,7 +59,7 @@ public abstract class TypeDescriptor {
     public abstract ViolationsParser createParser();
 
     /** The map of types to type descriptors. */
-    public static TreeMap<String, TypeDescriptor> TYPES;
+    public static TreeMap<String, TypeDescriptor> TYPES = new TreeMap<String, TypeDescriptor>();
 
     /**
      * Add a violations type descriptor.
@@ -46,14 +67,8 @@ public abstract class TypeDescriptor {
      * @param t
      *            the violations type descriptor to add.
      */
-    @SuppressWarnings("unchecked")
-    public static synchronized <T> T addDescriptor(final TypeDescriptor t) {
-        if (TYPES == null)
-            TYPES = new TreeMap<String, TypeDescriptor>();
-        if (TYPES.containsKey(t.getName()))
-            return (T) t;
+    private static void addDescriptor(final TypeDescriptor t) {
         TYPES.put(t.getName(), t);
-        return (T) t;
     }
 
     /**
@@ -74,5 +89,28 @@ public abstract class TypeDescriptor {
      */
     public List<String> getMavenTargets() {
         return null;
+    }
+
+    static {
+        addDescriptor(new FindBugsDescriptor());
+        addDescriptor(new PMDDescriptor());
+        addDescriptor(new CPDDescriptor());
+        addDescriptor(new CheckstyleDescriptor());
+        addDescriptor(new PyLintDescriptor());
+        addDescriptor(new CppLintDescriptor());
+        addDescriptor(new FxCopDescriptor());
+        addDescriptor(new SimianDescriptor());
+        addDescriptor(new StyleCopDescriptor());
+        addDescriptor(new GendarmeDescriptor());
+        addDescriptor(new JcReportDescriptor());
+        addDescriptor(new JsLintDescriptor());
+        addDescriptor(new CssLintDescriptor());
+        addDescriptor(new CodenarcDescriptor());
+        addDescriptor(new Pep8Descriptor());
+        addDescriptor(new PerlCriticDescriptor());
+        addDescriptor(new ReSharperDescriptor());
+        addDescriptor(new PyflakesDescriptor());
+        addDescriptor(new XmllintDescriptor());
+        addDescriptor(new ZptlintDescriptor());
     }
 }

@@ -9,16 +9,15 @@ import hudson.plugins.violations.ViolationsParser;
  * @author Erik Ramfelt
  */
 public final class FxCopDescriptor extends TypeDescriptor {
-    /** The descriptor for the FxCop violations type. */
-    public static final FxCopDescriptor DESCRIPTOR = addDescriptor(new FxCopDescriptor());
+    public static final String FXCOP = "fxcop";
 
-    private FxCopDescriptor() {
-        super("fxcop");
+    public FxCopDescriptor() {
+        super(FXCOP);
     }
 
     /**
      * Create a parser for the FxCop type.
-     * 
+     *
      * @return a new FxCop parser.
      */
     @Override

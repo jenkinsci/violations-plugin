@@ -8,16 +8,15 @@ import hudson.plugins.violations.ViolationsParser;
  */
 public final class PyLintDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the PyLint violations type. */
-    public static final PyLintDescriptor DESCRIPTOR = addDescriptor(new PyLintDescriptor());
+    public static final String PYLINT = "pylint";
 
-    private PyLintDescriptor() {
-        super("pylint");
+    public PyLintDescriptor() {
+        super(PYLINT);
     }
 
     /**
      * Create a parser for the PyLint type.
-     * 
+     *
      * @return a new PyLint parser.
      */
     @Override

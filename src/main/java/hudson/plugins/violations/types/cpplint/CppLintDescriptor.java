@@ -8,16 +8,15 @@ import hudson.plugins.violations.ViolationsParser;
  */
 public final class CppLintDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the CppLint violations type. */
-    public static final CppLintDescriptor DESCRIPTOR = addDescriptor(new CppLintDescriptor());
+    public static final String CPPLINT = "cpplint";
 
-    private CppLintDescriptor() {
-        super("cpplint");
+    public CppLintDescriptor() {
+        super(CPPLINT);
     }
 
     /**
      * Create a parser for the CppLint type.
-     * 
+     *
      * @return a new CppLint parser.
      */
     @Override

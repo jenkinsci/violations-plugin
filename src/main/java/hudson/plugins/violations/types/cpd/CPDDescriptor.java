@@ -10,16 +10,15 @@ import java.util.List;
  * The descriptor class for CPD violations type.
  */
 public final class CPDDescriptor extends TypeDescriptor {
-    /** The descriptor for the CPD violations type. */
-    public static final CPDDescriptor DESCRIPTOR = addDescriptor(new CPDDescriptor());
+    public static final String CPD = "cpd";
 
-    private CPDDescriptor() {
-        super("cpd");
+    public CPDDescriptor() {
+        super(CPD);
     }
 
     /**
      * Create a parser for the CPD type.
-     * 
+     *
      * @return a new CPD parser.
      */
     @Override
@@ -29,7 +28,7 @@ public final class CPDDescriptor extends TypeDescriptor {
 
     /**
      * Get a list of target xml files to look for for this particular type.
-     * 
+     *
      * @return a list filenames to look for in the target target directory.
      */
     @Override

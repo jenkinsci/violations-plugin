@@ -8,21 +8,20 @@ import java.util.List;
 
 /**
  * The descriptor class for Codenarc violations type.
- * 
+ *
  * @author Robin Bramley
  */
 public final class CodenarcDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the codenarc violations type. */
-    public static final CodenarcDescriptor DESCRIPTOR = addDescriptor(new CodenarcDescriptor());
+    public static final String CODENARC = "codenarc";
 
-    private CodenarcDescriptor() {
-        super("codenarc");
+    public CodenarcDescriptor() {
+        super(CODENARC);
     }
 
     /**
      * Create a parser for the codenarc type.
-     * 
+     *
      * @return a new codenarc parser.
      */
     @Override
@@ -32,7 +31,7 @@ public final class CodenarcDescriptor extends TypeDescriptor {
 
     /**
      * Get a list of target xml files to look for for this particular type.
-     * 
+     *
      * @return a list filenames to look for in the target target directory.
      */
     @Override

@@ -8,10 +8,10 @@ import java.util.List;
 
 public class ReSharperDescriptor extends TypeDescriptor {
 
-    public static final ReSharperDescriptor DESCRIPTOR = addDescriptor(new ReSharperDescriptor());
+    public static final String RESHARPER = "resharper";
 
-    private ReSharperDescriptor() {
-        super("resharper");
+    public ReSharperDescriptor() {
+        super(RESHARPER);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class ReSharperDescriptor extends TypeDescriptor {
 
     /**
      * Get a list of target xml files to look for for this particular type.
-     * 
+     *
      * @return a list filenames to look for in the target target directory.
      */
     @Override

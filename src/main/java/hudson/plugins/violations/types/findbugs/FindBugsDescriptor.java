@@ -19,6 +19,8 @@ import org.xmlpull.v1.XmlPullParser;
  */
 public final class FindBugsDescriptor extends TypeDescriptor {
 
+    public static final String FINDBUGS = "findbugs";
+
     /**
      * Message resources
      *
@@ -27,13 +29,11 @@ public final class FindBugsDescriptor extends TypeDescriptor {
      * https://code.google.com/p/findbugs/source/browse/findbugs/etc/messages.xml
      * </pre>
      */
-    private static final String[] MESSAGES = new String[] {
-            "findbugs-3.0.1.messages.xml", "fb-contrib-6.2.1.messages.xml", };
-    /** The descriptor for the findbugs violations type. */
-    public static final FindBugsDescriptor DESCRIPTOR = addDescriptor(new FindBugsDescriptor());
+    private static final String[] MESSAGES = new String[] { "findbugs-3.0.1.messages.xml",
+            "fb-contrib-6.2.1.messages.xml", };
 
-    private FindBugsDescriptor() {
-        super("findbugs");
+    public FindBugsDescriptor() {
+        super(FINDBUGS);
     }
 
     /**

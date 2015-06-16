@@ -10,15 +10,14 @@ public final class PerlCriticDescriptor extends TypeDescriptor {
 
     /** The descriptor for the Perl::Critic violations type. */
     public static final String TYPE_NAME = "perlcritic";
-    public static final PerlCriticDescriptor DESCRIPTOR = addDescriptor(new PerlCriticDescriptor());
 
-    private PerlCriticDescriptor() {
+    public PerlCriticDescriptor() {
         super(PerlCriticDescriptor.TYPE_NAME);
     }
 
     /**
      * Create a parser for the Perl::Critic type.
-     * 
+     *
      * @return a new PerlCritic parser.
      */
     @Override

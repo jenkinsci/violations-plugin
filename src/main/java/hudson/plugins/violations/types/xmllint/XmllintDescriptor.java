@@ -8,16 +8,15 @@ import hudson.plugins.violations.ViolationsParser;
  */
 public final class XmllintDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the Xmllint violations type. */
-    public static final XmllintDescriptor DESCRIPTOR = addDescriptor(new XmllintDescriptor());
+    public static final String XMLLINT = "xmllint";
 
-    private XmllintDescriptor() {
-        super("xmllint");
+    public XmllintDescriptor() {
+        super(XMLLINT);
     }
 
     /**
      * Create a parser for the Xmllint type.
-     * 
+     *
      * @return a new Xmllint parser.
      */
     @Override

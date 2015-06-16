@@ -15,15 +15,14 @@ import java.io.File;
 public class ViolationsReportBuilder {
 
     private String sourcePathPattern;
-    private TypeDescriptor typeDescriptor;
+    private final TypeDescriptor typeDescriptor;
 
     private ViolationsReportBuilder(TypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
     }
 
-    public static ViolationsReportBuilder violationsReport(
-            TypeDescriptor typeDescriptor) {
-        return new ViolationsReportBuilder(typeDescriptor);
+    public static ViolationsReportBuilder violationsReport(String typeDescriptor) {
+        return new ViolationsReportBuilder(TypeDescriptor.TYPES.get(typeDescriptor));
     }
 
     public ViolationsReportBuilder reportedIn(String sourcePathPattern) {
@@ -39,18 +38,16 @@ public class ViolationsReportBuilder {
         config.getTypeConfigs().put(typeDescriptor.getName(), typeConfig);
 
         FilePath workspace = new FilePath(projectRootDir());
-        FilePath targetPath = new FilePath(new File(projectRootDir().getPath()
-                + "/" + VIOLATIONS));
+        FilePath targetPath = new FilePath(new File(projectRootDir().getPath() + "/" + VIOLATIONS));
         FilePath htmlPath = new FilePath(projectRootDir());
         AbstractBuild<?, ?> build = mock(Build.class);
         when(build.getRootDir()).thenReturn(projectRootDir());
-        ViolationsReport violationsReport = createBuildAction(workspace,
-                targetPath, htmlPath, config, build).getReport();
+        ViolationsReport violationsReport = createBuildAction(workspace, targetPath, htmlPath, config, build)
+                .getReport();
         return assertThat(violationsReport, typeDescriptor);
     }
 
     private File projectRootDir() {
-        return new File(currentThread().getContextClassLoader()
-                .getResource("rootDir.txt").getPath()).getParentFile();
+        return new File(currentThread().getContextClassLoader().getResource("rootDir.txt").getPath()).getParentFile();
     }
 }

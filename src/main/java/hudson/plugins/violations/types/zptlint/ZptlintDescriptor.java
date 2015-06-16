@@ -8,16 +8,15 @@ import hudson.plugins.violations.ViolationsParser;
  */
 public final class ZptlintDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the Zptlint violations type. */
-    public static final ZptlintDescriptor DESCRIPTOR = addDescriptor(new ZptlintDescriptor());
+    public static final String ZPTLINT = "zptlint";
 
-    private ZptlintDescriptor() {
-        super("zptlint");
+    public ZptlintDescriptor() {
+        super(ZPTLINT);
     }
 
     /**
      * Create a parser for the Zptlint type.
-     * 
+     *
      * @return a new Zptlint parser.
      */
     @Override

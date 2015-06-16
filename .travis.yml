@@ -4,8 +4,6 @@ jdk:
   - openjdk7
   - oraclejdk7
 script:
-  - mkdir -p ~/.m2
-  - cp sandbox/settings.xml ~/.m2/settings.xml
-  - mvn package
+  - ./build.sh
 notifications:
   email: false

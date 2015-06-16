@@ -8,16 +8,15 @@ import hudson.plugins.violations.ViolationsParser;
  */
 public final class Pep8Descriptor extends TypeDescriptor {
 
-    /** The descriptor for the PEP 8 violations type. */
-    public static final Pep8Descriptor DESCRIPTOR = addDescriptor(new Pep8Descriptor());
+    public static final String PEP8 = "pep8";
 
-    private Pep8Descriptor() {
-        super("pep8");
+    public Pep8Descriptor() {
+        super(PEP8);
     }
 
     /**
      * Create a parser for the PEP 8 type.
-     * 
+     *
      * @return a new PEP 8 parser.
      */
     @Override

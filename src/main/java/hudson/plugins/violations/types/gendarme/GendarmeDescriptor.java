@@ -6,15 +6,12 @@ import hudson.plugins.violations.ViolationsParser;
 /**
  * The descriptor class for Gendarme (Mono Source Analysis) violations type.
  * http://www.mono-project.com/Gendarme
- * 
+ *
  * @author mathias.kluba@gmail.com
  */
 public class GendarmeDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the Mono Source Analysis violations type. */
-    public static final GendarmeDescriptor DESCRIPTOR = addDescriptor(new GendarmeDescriptor());
-
-    protected GendarmeDescriptor() {
+    public GendarmeDescriptor() {
         super(GendarmeParser.TYPE_NAME);
     }
 

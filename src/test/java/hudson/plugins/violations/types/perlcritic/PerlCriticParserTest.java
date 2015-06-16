@@ -1,7 +1,7 @@
 package hudson.plugins.violations.types.perlcritic;
 
 import static hudson.plugins.violations.ViolationsReportBuilder.violationsReport;
-import static hudson.plugins.violations.types.perlcritic.PerlCriticDescriptor.DESCRIPTOR;
+import static hudson.plugins.violations.types.perlcritic.PerlCriticDescriptor.TYPE_NAME;
 import hudson.plugins.violations.model.Severity;
 
 import org.junit.Assert;
@@ -27,11 +27,9 @@ public class PerlCriticParserTest extends HudsonTestCase {
         int severity = 2;
         int severityLevel = Severity.MEDIUM_LOW_VALUE;
         String severityName = Severity.NAMES[severityLevel];
-        String output = String.format(
-                "%s: %s at line %d, column %d.  %s.  (Severity: %d)", fileName,
-                message, line, column, source, severity);
-        PerlCriticParser.PerlCriticViolation violation = parser
-                .getPerlCriticViolation(output);
+        String output = String.format("%s: %s at line %d, column %d.  %s.  (Severity: %d)", fileName, message, line,
+                column, source, severity);
+        PerlCriticParser.PerlCriticViolation violation = parser.getPerlCriticViolation(output);
         Assert.assertEquals(fileName, violation.getFileName());
         Assert.assertEquals(message, violation.getMessage());
         Assert.assertEquals(line, violation.getLine());
@@ -53,11 +51,9 @@ public class PerlCriticParserTest extends HudsonTestCase {
         int severity = 5;
         int severityLevel = Severity.HIGH_VALUE;
         String severityName = Severity.NAMES[severityLevel];
-        String output = String.format(
-                "%s: %s at line %d, column %d.  %s.  (Severity: %d)", fileName,
-                message, line, column, source, severity);
-        PerlCriticParser.PerlCriticViolation violation = parser
-                .getPerlCriticViolation(output);
+        String output = String.format("%s: %s at line %d, column %d.  %s.  (Severity: %d)", fileName, message, line,
+                column, source, severity);
+        PerlCriticParser.PerlCriticViolation violation = parser.getPerlCriticViolation(output);
         Assert.assertEquals(fileName, violation.getFileName());
         Assert.assertEquals(message, violation.getMessage());
         Assert.assertEquals(line, violation.getLine());
@@ -79,11 +75,9 @@ public class PerlCriticParserTest extends HudsonTestCase {
         int severity = 1;
         int severityLevel = Severity.LOW_VALUE;
         String severityName = Severity.NAMES[severityLevel];
-        String output = String.format(
-                "%s: %s at line %d, column %d.  %s.  (Severity: %d)", fileName,
-                message, line, column, source, severity);
-        PerlCriticParser.PerlCriticViolation violation = parser
-                .getPerlCriticViolation(output);
+        String output = String.format("%s: %s at line %d, column %d.  %s.  (Severity: %d)", fileName, message, line,
+                column, source, severity);
+        PerlCriticParser.PerlCriticViolation violation = parser.getPerlCriticViolation(output);
         Assert.assertEquals(fileName, violation.getFileName());
         Assert.assertEquals(message, violation.getMessage());
         Assert.assertEquals(line, violation.getLine());
@@ -96,14 +90,9 @@ public class PerlCriticParserTest extends HudsonTestCase {
 
     @Test
     public void testThatPerlCriticFileCanBeParsed() throws Exception {
-        violationsReport(DESCRIPTOR)
-                .reportedIn("**/perlcritic-report.log")
-                .perform()
-                .assertThat("example.pl")
+        violationsReport(TYPE_NAME).reportedIn("**/perlcritic-report.log").perform().assertThat("example.pl")
                 .wasReported()
-                .reportedViolation(2, "Use a bareword instead",
-                        "\"require\" statement with library name as string")
-                .reportedViolation(5, "See page 429 of PBP",
-                        "Code before strictures are enabled");
+                .reportedViolation(2, "Use a bareword instead", "\"require\" statement with library name as string")
+                .reportedViolation(5, "See page 429 of PBP", "Code before strictures are enabled");
     }
 }

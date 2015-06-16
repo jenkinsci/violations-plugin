@@ -11,10 +11,7 @@ import java.util.List;
  */
 public final class StyleCopDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the MS Source Analysis violations type. */
-    public static final StyleCopDescriptor DESCRIPTOR = addDescriptor(new StyleCopDescriptor());
-
-    private StyleCopDescriptor() {
+    public StyleCopDescriptor() {
         super(StyleCopParser.TYPE_NAME);
     }
 

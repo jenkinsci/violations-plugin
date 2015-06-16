@@ -11,11 +11,10 @@ import java.util.List;
  */
 public final class CheckstyleDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the checkstyle violations type. */
-    public static final CheckstyleDescriptor DESCRIPTOR = addDescriptor(new CheckstyleDescriptor());
+    public static final String CHECKSTYLE = "checkstyle";
 
-    private CheckstyleDescriptor() {
-        super("checkstyle");
+    public CheckstyleDescriptor() {
+        super(CHECKSTYLE);
     }
 
     /**

@@ -11,12 +11,11 @@ import java.util.List;
  */
 public final class PMDDescriptor extends TypeDescriptor {
 
-    /** The descriptor for the PMD violations type. */
-    public static final PMDDescriptor DESCRIPTOR = addDescriptor(new PMDDescriptor());
+    public static final String PMD = "pmd";
 
     /** Private constructor */
-    private PMDDescriptor() {
-        super("pmd");
+    public PMDDescriptor() {
+        super(PMD);
     }
 
     /**

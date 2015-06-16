@@ -17,6 +17,24 @@
       <usePrivateRepository>false</usePrivateRepository>
     </hudson.tasks.Maven>
   </builders>
-  <publishers/>
+  <publishers>
+    <hudson.plugins.violations.ViolationsPublisher plugin="violations@0.8.0-alpha-1-SNAPSHOT">
+      <config>
+        <typeConfigs>
+          <entry>
+            <string>checkstyle</string>
+            <hudson.plugins.violations.TypeConfig>
+              <type>checkstyle</type>
+              <min>1</min>
+              <max>2</max>
+              <unstable>2</unstable>
+              <usePattern>false</usePattern>
+              <pattern>**/checkstyle-result.xml</pattern>
+            </hudson.plugins.violations.TypeConfig>
+          </entry>
+        </typeConfigs>
+      </config>
+    </hudson.plugins.violations.ViolationsPublisher>
+  </publishers>
   <buildWrappers/>
 </project>

@@ -9,12 +9,6 @@
       <artifactId>project</artifactId>
       <version>1.0</version>
    </parent>
-   <dependencies>
-      <dependency>
-         <groupId>root.project.projects</groupId>
-         <artifactId>logging</artifactId>
-      </dependency>                  
-   </dependencies>
    <build>
       <plugins>
          <plugin>

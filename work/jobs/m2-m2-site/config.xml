@@ -20,7 +20,28 @@
   <processPlugins>false</processPlugins>
   <mavenValidationLevel>0</mavenValidationLevel>
   <runHeadless>false</runHeadless>
-  <reporters/>
+  <reporters>
+    <hudson.plugins.violations.hudson.maven.ViolationsMavenReporter plugin="violations@0.8.0-alpha-1-SNAPSHOT">
+      <config>
+        <suppressions class="sorted-set"/>
+        <typeConfigs>
+          <entry>
+            <string>checkstyle</string>
+            <hudson.plugins.violations.TypeConfig>
+              <type>checkstyle</type>
+              <min>1</min>
+              <max>2</max>
+              <unstable>2</unstable>
+              <usePattern>false</usePattern>
+              <pattern></pattern>
+            </hudson.plugins.violations.TypeConfig>
+          </entry>
+        </typeConfigs>
+        <limit>100</limit>
+        <encoding>default</encoding>
+      </config>
+    </hudson.plugins.violations.hudson.maven.ViolationsMavenReporter>
+  </reporters>
   <publishers/>
   <buildWrappers/>
 </maven2-moduleset>

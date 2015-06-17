@@ -7,6 +7,11 @@ function build_clean {
  done
 }
 
+function on_exit {
+ build_clean
+}
+trap on_exit EXIT
+
 ##
 ## Setup
 ##
@@ -18,8 +23,7 @@ cp sandbox/settings.xml ~/.m2/settings.xml
 ##
 ## Build plugin
 ##
-echo Building plugin
-mvn -q package || exit 1
+mvn -q clean package || exit 1
 
 ##
 ## Start Jenkins on localhost
@@ -31,8 +35,8 @@ JENKINS_PREFIX=/jenkins
 mvn -q hpi:run -Djetty.port=$JENKINS_PORT -Dhpi.prefix=$JENKINS_PREFIX || exit 1 &
 JENKINS_URL=http://localhost:$JENKINS_PORT$JENKINS_PREFIX
 until $(curl --output /dev/null --silent --head --fail $JENKINS_URL); do
-    printf '.'
-    sleep 5
+ printf '.'
+ sleep 5
 done
 echo Jenkins started at $JENKINS_URL
 
@@ -40,10 +44,5 @@ echo Jenkins started at $JENKINS_URL
 ## Test plugin
 ##
 cd  plugin-test
-mvn -q test -Djenkins=$JENKINS_URL -Dheadless=true || exit 1
+mvn -q test -Djenkins=$JENKINS_URL $1 || exit 1
 cd ..
-
-##
-## Exit
-##
-build_clean

@@ -16,6 +16,11 @@
      <plugins>
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-site-plugin</artifactId>
+         <version>3.4</version>
+       </plugin>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-checkstyle-plugin</artifactId>
          <executions>
            <execution>
@@ -36,32 +41,6 @@
        </plugin>
      </plugins>
    </reporting>
-   <dependencyManagement>
-      <dependencies>
-         <dependency>
-            <groupId>root.project.projects</groupId>
-            <artifactId>logging</artifactId>
-            <version>1.0</version>
-         </dependency>
-         <dependency>
-            <groupId>root.project</groupId>
-            <artifactId>primary-source</artifactId>
-            <version>1.0</version>
-         </dependency>
-         <dependency>
-            <groupId>root.project.servlets</groupId>
-            <artifactId>servlet</artifactId>
-            <version>1.0</version>
-            <type>war</type>
-         </dependency>
-         <dependency>
-            <groupId>root.project</groupId>
-            <artifactId>ejbs</artifactId>
-            <version>1.0</version>
-            <type>ejb</type>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
    <distributionManagement>
       <site>
          <id>site</id>

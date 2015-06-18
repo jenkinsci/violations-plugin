@@ -9,13 +9,6 @@
       <artifactId>servlets</artifactId>
       <version>1.0</version>
    </parent>
-   <dependencies>
-      <dependency>
-         <groupId>root.project</groupId>
-         <artifactId>primary-source</artifactId>
-         <scope>provided</scope>
-      </dependency>
-   </dependencies>
    <reporting>
      <plugins>
        <plugin>

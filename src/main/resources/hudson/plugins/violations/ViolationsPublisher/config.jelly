@@ -37,7 +37,7 @@
   <j:if test="${config == null}">
     <j:set var="config" value="${descriptor.config}"/>
   </j:if>
-  <j:set var="icons" value="${rootURL}/images/16x16/"/>
+  <j:set var="customIcons" value="${rootURL}/images/16x16/"/>
   <j:set var="configs" value="${config.typeConfigs.values()}"/>
 
   <j:set
@@ -54,13 +54,13 @@
     <table width="100%" border='0' cellspacing='0' padding="0">
       <tr>
         <td width="8%" align="center" style="${td}">
-          <img src="${icons}/health-80plus.gif" title="sunny" alt="sunny"/>
+          <img src="${customIcons}/health-80plus.gif" title="sunny" alt="sunny"/>
         </td>
         <td width="8%" align="center" style="${td}">
-          <img src="${icons}/health-00to19.gif" title="stormy" alt="stormy"/>
+          <img src="${customIcons}/health-00to19.gif" title="stormy" alt="stormy"/>
         </td>
         <td width="8%" align="center" style="${td}">
-          <img src="${icons}/yellow.gif" title="unstable" alt="unstable"/>
+          <img src="${customIcons}/yellow.gif" title="unstable" alt="unstable"/>
         </td>
         <td width="76%" style="${td}">
           <st:nbsp/>

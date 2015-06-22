@@ -189,6 +189,14 @@ public abstract class AbstractParser {
         return ret;
     }
 
+    protected String checkNotNull(String name) throws IOException, XmlPullParserException {
+        String ret = parser.getAttributeValue("", name);
+        if (ret == null) {
+            throw new XmlPullParserException("Expecting attribute " + name + " in element " + parser.getName());
+        }
+        return ret;
+    }
+
     /**
      * Skip to a specific tag within a element.
      *

@@ -53,7 +53,7 @@ public class CodenarcParser extends AbstractTypeParser {
         endElement();
         // loop through the child elements, getting the "file" ones
         while (skipToTag("Package")) {
-            String path = checkNotBlank("path");
+            String path = checkNotNull("path");
 
             getParser().next();
             while (skipToTag("File")) {

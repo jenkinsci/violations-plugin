@@ -5,8 +5,9 @@ import static hudson.plugins.violations.types.perlcritic.PerlCriticDescriptor.TY
 import hudson.plugins.violations.model.Severity;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
 /**
  * Test PerlCriticParser against some output from running Perl::Critic on
@@ -14,7 +15,9 @@ import org.jvnet.hudson.test.HudsonTestCase;
  *
  * @author David McGuire
  */
-public class PerlCriticParserTest extends HudsonTestCase {
+public class PerlCriticParserTest extends JenkinsRule {
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     @Test
     public void testParseLineInformational() {

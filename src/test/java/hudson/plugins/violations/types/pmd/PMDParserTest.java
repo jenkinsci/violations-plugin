@@ -3,10 +3,14 @@ package hudson.plugins.violations.types.pmd;
 import static hudson.plugins.violations.ViolationsReportBuilder.violationsReport;
 import static hudson.plugins.violations.types.pmd.PMDDescriptor.PMD;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
-public class PMDParserTest extends HudsonTestCase {
+public class PMDParserTest extends JenkinsRule {
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
+
     @Test
     public void testThatPMDFileCanBeParsed() throws Exception {
         violationsReport(PMD).reportedIn("**/pmd-report.xml").perform()

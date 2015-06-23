@@ -3,10 +3,14 @@ package hudson.plugins.violations.types.resharper;
 import static hudson.plugins.violations.ViolationsReportBuilder.violationsReport;
 import static hudson.plugins.violations.types.resharper.ReSharperDescriptor.RESHARPER;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
-public class ReSharperParserTest extends HudsonTestCase {
+public class ReSharperParserTest extends JenkinsRule {
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
+
     @Test
     public void testThatResharperFileCanBeParsed() throws Exception {
         violationsReport(RESHARPER)

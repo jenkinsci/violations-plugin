@@ -4,10 +4,13 @@ import static hudson.plugins.violations.ViolationsReportBuilder.violationsReport
 import static hudson.plugins.violations.types.cpplint.CppLintDescriptor.CPPLINT;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
-public class CppLintParserTest extends HudsonTestCase {
+public class CppLintParserTest extends JenkinsRule {
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     @Test
     public void testParseLineSimple() {

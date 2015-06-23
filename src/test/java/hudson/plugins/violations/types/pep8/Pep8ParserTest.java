@@ -4,10 +4,13 @@ import static hudson.plugins.violations.ViolationsReportBuilder.violationsReport
 import static hudson.plugins.violations.types.pep8.Pep8Descriptor.PEP8;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
-public class Pep8ParserTest extends HudsonTestCase {
+public class Pep8ParserTest extends JenkinsRule {
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     @Test
     public void testParseLineSimple() {

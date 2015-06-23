@@ -3,10 +3,13 @@ package hudson.plugins.violations.types.cpd;
 import static hudson.plugins.violations.ViolationsReportBuilder.violationsReport;
 import static hudson.plugins.violations.types.cpd.CPDDescriptor.CPD;
 
+import org.junit.Rule;
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 
-public class CPDParserTest extends HudsonTestCase {
+public class CPDParserTest extends JenkinsRule {
+    @Rule
+    public JenkinsRule j = new JenkinsRule();
 
     @Test
     public void testThatCpdFileCanBeParsed() throws Exception {

@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>violations</artifactId>
-  <version>0.8.0-alpha-1</version>
+  <version>0.8.0-alpha-2-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Jenkins Violations plugin</name>
   <description>This plug-in generates reports static code violation detectors such as checkstyle, pmd, cpd, findbugs, codenarc, fxcop, stylecop and simian.</description>
@@ -20,7 +20,7 @@
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>violations-0.8.0-alpha-1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>

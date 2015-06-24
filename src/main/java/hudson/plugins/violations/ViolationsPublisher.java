@@ -1,5 +1,8 @@
 package hudson.plugins.violations;
 
+import static hudson.model.Result.SUCCESS;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -17,6 +20,7 @@ import hudson.tasks.Recorder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -87,7 +91,7 @@ public class ViolationsPublisher extends Recorder {
         report.setConfig(config);
         report.setBuild(build);
         report.setBuildResult();
-        handleRatcheting(report, listener, config);
+        handleRatcheting(report.getBuild().getResult(), report.getTypeReports().values(), listener, config);
         return new ViolationsBuildAction(build, report);
     }
 
@@ -95,19 +99,14 @@ public class ViolationsPublisher extends Recorder {
      * Perform ratcheting if enabled, i.e. lower the thresholds if the build is
      * stable and the current value is lower than the current threshold.
      */
-    private static void handleRatcheting(ViolationsReport report, BuildListener listener, ViolationsConfig config) {
-        // don't do anything if ratcheting is completely disabled
-        if (!config.isAutoUpdateMax() && !config.isAutoUpdateUnstable()) {
-            return;
-        }
-
-        // don't change the values if the build is not stable
-        if (report.getBuild().getResult() != Result.SUCCESS) {
+    static void handleRatcheting(Result result, Collection<TypeReport> typeReports, BuildListener listener,
+            ViolationsConfig config) {
+        if (!shouldDoRatcheting(config, result)) {
             return;
         }
 
         // adjust the single configs (if needed)
-        for (TypeReport typeReport : report.getTypeReports().values()) {
+        for (TypeReport typeReport : typeReports) {
             TypeConfig typeConfig = config.getTypeConfigs().get(typeReport.getType());
             int thresholdCount = typeReport.getNumber() + 1;
 
@@ -128,6 +127,18 @@ public class ViolationsPublisher extends Recorder {
                 }
             }
         }
+    }
+
+    static boolean shouldDoRatcheting(ViolationsConfig config, Result result) {
+        if (!config.isAutoUpdateMax() && !config.isAutoUpdateUnstable()) {
+            return FALSE;
+        }
+
+        if (result != SUCCESS) {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     /**

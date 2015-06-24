@@ -371,7 +371,7 @@ public class ViolationsReport implements Serializable {
     /**
      * Report class for a particular type.
      */
-    public class TypeReport {
+    public static class TypeReport {
         private final String type;
         private final String icon;
         private final int number;

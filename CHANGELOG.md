@@ -4,6 +4,10 @@ Changelog of Violations Plugin
 
 #0.8
 
+## alpha 2
+* Ratcheting support. Limits for setting build to unstable can be automatically updated as violations count is reduced.
+
+## alpha 1
 This is the first release since 12 oct 2012.
 
 * Maintenance

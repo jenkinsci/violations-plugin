@@ -5,8 +5,10 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.plugins.violations.ViolationsReport.TypeReport;
 import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -65,32 +67,67 @@ public class ViolationsPublisher extends Recorder {
      *             if problem parsing the xml files
      */
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
-            BuildListener listener) throws InterruptedException, IOException {
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
+            throws InterruptedException, IOException {
 
-        FilePath htmlPath = new FilePath(new File(build.getProject()
-                .getRootDir(), VIOLATIONS));
-        FilePath targetPath = new FilePath(new File(build.getRootDir(),
-                VIOLATIONS));
+        FilePath htmlPath = new FilePath(new File(build.getProject().getRootDir(), VIOLATIONS));
+        FilePath targetPath = new FilePath(new File(build.getRootDir(), VIOLATIONS));
 
         FilePath workspace = build.getWorkspace();
 
-        build.getActions().add(
-                createBuildAction(workspace, targetPath, htmlPath, config,
-                        build));
+        build.getActions().add(createBuildAction(workspace, targetPath, htmlPath, config, build, listener));
         return true;
     }
 
     @VisibleForTesting
-    static ViolationsBuildAction createBuildAction(FilePath workspace,
-            FilePath targetPath, FilePath htmlPath, ViolationsConfig config,
-            AbstractBuild<?, ?> build) throws IOException, InterruptedException {
-        ViolationsReport report = workspace.act(new ViolationsCollector(false,
-                targetPath, htmlPath, config));
+    static ViolationsBuildAction createBuildAction(FilePath workspace, FilePath targetPath, FilePath htmlPath,
+            ViolationsConfig config, AbstractBuild<?, ?> build, BuildListener listener) throws IOException,
+            InterruptedException {
+        ViolationsReport report = workspace.act(new ViolationsCollector(false, targetPath, htmlPath, config));
         report.setConfig(config);
         report.setBuild(build);
         report.setBuildResult();
+        handleRatcheting(report, listener, config);
         return new ViolationsBuildAction(build, report);
+    }
+
+    /**
+     * Perform ratcheting if enabled, i.e. lower the thresholds if the build is
+     * stable and the current value is lower than the current threshold.
+     */
+    private static void handleRatcheting(ViolationsReport report, BuildListener listener, ViolationsConfig config) {
+        // don't do anything if ratcheting is completely disabled
+        if (!config.isAutoUpdateMax() && !config.isAutoUpdateUnstable()) {
+            return;
+        }
+
+        // don't change the values if the build is not stable
+        if (report.getBuild().getResult() != Result.SUCCESS) {
+            return;
+        }
+
+        // adjust the single configs (if needed)
+        for (TypeReport typeReport : report.getTypeReports().values()) {
+            TypeConfig typeConfig = config.getTypeConfigs().get(typeReport.getType());
+            int thresholdCount = typeReport.getNumber() + 1;
+
+            if (config.isAutoUpdateUnstable() && thresholdCount < typeConfig.getUnstable()) {
+                listener.getLogger().println(
+                        "Setting unstable value for " + typeConfig.getType() + " to " + thresholdCount);
+                typeConfig.setUnstable(thresholdCount);
+            }
+
+            if (config.isAutoUpdateMax() && thresholdCount < typeConfig.getMax()) {
+                listener.getLogger().println(
+                        "Setting max/stormy value for " + typeConfig.getType() + " to " + thresholdCount);
+                typeConfig.setMax(thresholdCount);
+                // fix the min value but don't use fix() because it changes max
+                // (and not min)
+                if (typeConfig.getMin() >= typeConfig.getMax()) {
+                    typeConfig.setMin(typeConfig.getMax() - 1);
+                }
+            }
+        }
     }
 
     /**
@@ -105,6 +142,7 @@ public class ViolationsPublisher extends Recorder {
         return new ViolationsProjectAction(project);
     }
 
+    @Override
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.BUILD;
     }

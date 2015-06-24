@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hudson.FilePath;
 import hudson.model.Build;
+import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 
 import java.io.File;
@@ -42,7 +43,8 @@ public class ViolationsReportBuilder {
         FilePath htmlPath = new FilePath(projectRootDir());
         AbstractBuild<?, ?> build = mock(Build.class);
         when(build.getRootDir()).thenReturn(projectRootDir());
-        ViolationsReport violationsReport = createBuildAction(workspace, targetPath, htmlPath, config, build)
+        BuildListener listener = mock(BuildListener.class);
+        ViolationsReport violationsReport = createBuildAction(workspace, targetPath, htmlPath, config, build, listener)
                 .getReport();
         return assertThat(violationsReport, typeDescriptor);
     }

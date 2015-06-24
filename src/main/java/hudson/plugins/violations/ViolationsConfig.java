@@ -32,6 +32,10 @@ public class ViolationsConfig implements Cloneable, Serializable {
     /** The encoding to use for reading source files */
     private String encoding = "default";
 
+    /** Activation flags for different kinds of ratcheting */
+    private boolean autoUpdateMax;
+    private boolean autoUpdateUnstable;
+    
     /**
      * The constructor fot eh violations config.
      * This creates a config with default values.
@@ -89,6 +93,8 @@ public class ViolationsConfig implements Cloneable, Serializable {
         ret.sourcePathPattern = sourcePathPattern;
         ret.fauxProjectPath   = fauxProjectPath;
         ret.encoding          = encoding;
+        ret.autoUpdateMax     = autoUpdateMax;
+        ret.autoUpdateUnstable = autoUpdateUnstable;
         return ret;
     }
 
@@ -143,6 +149,38 @@ public class ViolationsConfig implements Cloneable, Serializable {
      */
     public void setFauxProjectPath(String fauxProjectPath) {
         this.fauxProjectPath = fauxProjectPath;
+    }
+
+    /**
+     * Set the autoUpdateMax value.
+     * @param autoUpdateMax the value to use.
+     */
+    public void setAutoUpdateMax(boolean autoUpdateMax) {
+    	this.autoUpdateMax = autoUpdateMax;
+    }
+
+    /**
+     * Get the autoUpdateMax value.
+     * @return the autoUpdateMax value.
+     */
+    public boolean isAutoUpdateMax() {
+    	return autoUpdateMax;
+    }
+
+    /**
+     * Set the autoUpdateUnstable value.
+     * @param autoUpdateUnstable the value to use.
+     */
+    public void setAutoUpdateUnstable(boolean autoUpdateUnstable) {
+    	this.autoUpdateUnstable = autoUpdateUnstable;
+    }
+
+    /**
+     * Get the autoUpdateUnstable value.
+     * @return the autoUpdateUnstable value.
+     */
+    public boolean isAutoUpdateUnstable() {
+    	return autoUpdateUnstable;
     }
 
     /** FIXME: use a java api to get supported encodings */

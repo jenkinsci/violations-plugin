@@ -65,27 +65,8 @@
 	</j:otherwise>
       </j:choose>
       <h3><img src="${image}"/> ${model.displayName}</h3>          
-
-      ${it.violationsSummary}
-		
-      ${it.fileContent}
-
-      <!--
-      <j:set var="line" value="${model.nextLine}"/>
-      <table class="source"  width='100%' cellspacing='0'>
-        <tbody>
-          <j:while test="${line != null}">
-            <tr>
-              ${line}
-            </tr>
-            <j:set var="line" value="${model.nextLine}"/>
-          </j:while>
-        </tbody>
-      </table>
-           -->
-      <!-- ${model.closeSourceFile()} -->
-      <!-- ${model.sourceFileStr} -->
-      <!-- <script src="js"></script> -->
+       <j:out value="${it.violationsSummary}"/>
+       <j:out value="${it.fileContent}"/>
     </l:main-panel> 
   </l:layout>
 </j:jelly>

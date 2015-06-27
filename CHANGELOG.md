@@ -5,7 +5,10 @@ Changelog of Violations Plugin
 #0.8
 
 ## alpha 2
-* Ratcheting support. Limits for setting build to unstable can be automatically updated as violations count is reduced.
+* Features:
+ * Ratcheting support. Limits for setting build to unstable can be automatically updated as violations count is reduced. JENKINS-15248 #56
+* Bugs
+ * Rendering violation report correctly. #70
 
 ## alpha 1
 This is the first release since 12 oct 2012.

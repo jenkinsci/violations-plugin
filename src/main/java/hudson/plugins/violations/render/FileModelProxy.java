@@ -1,5 +1,6 @@
 package hudson.plugins.violations.render;
 
+import static com.google.common.collect.Lists.newArrayList;
 import hudson.Functions;
 import hudson.model.AbstractBuild;
 import hudson.plugins.violations.generate.XMLUtil;
@@ -10,6 +11,7 @@ import hudson.plugins.violations.parse.FileModelParser;
 import hudson.plugins.violations.parse.ParseXML;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -31,7 +33,7 @@ public class FileModelProxy {
 
     /**
      * Construct this proxy.
-     * 
+     *
      * @param xmlFile
      *            the xmlfile to create the FileModel from.
      */
@@ -41,7 +43,7 @@ public class FileModelProxy {
 
     /**
      * Fluid setting of the build attribute.
-     * 
+     *
      * @param build
      *            the owner build.
      * @return this object.
@@ -53,7 +55,7 @@ public class FileModelProxy {
 
     /**
      * Fluid setting of context path. This is used for getting icons.
-     * 
+     *
      * @param contextPath
      *            the current WEB context path.
      * @return this object.
@@ -65,7 +67,7 @@ public class FileModelProxy {
 
     /**
      * get the current build.
-     * 
+     *
      * @return the current build.
      */
     public AbstractBuild<?, ?> getBuild() {
@@ -74,7 +76,7 @@ public class FileModelProxy {
 
     /**
      * Get the type line.
-     * 
+     *
      * @param type
      *            the violation type.
      * @return a rendered line containing the number of violations and the
@@ -103,25 +105,11 @@ public class FileModelProxy {
 
     /**
      * Wheter to show lines.
-     * 
+     *
      * @return true if the file model contains lines.
      */
     public boolean getShowLines() {
         return getFileModel().getLines().size() != 0;
-    }
-
-    private void addBlock(StringBuilder ret, StringBuilder b, int startLine, int previousLine) {
-        if (b.length() == 0) {
-            return;
-        }
-        ret.append("<tr><td colspan='4' class='source heading'>");
-        ret.append("File: " + new File(fileModel.getDisplayName()).getName());
-        ret.append(" Lines ");
-        ret.append(startLine + " to " + previousLine);
-        ret.append("</td></tr>\n");
-        ret.append(b.toString());
-        ret.append("<tr><td class='source empty' colspan='3'>&nbsp;");
-        ret.append("</td></tr>\n");
     }
 
     public Set<Map.Entry<String, TreeSet<Violation>>> getTypeMapEntries() {
@@ -139,13 +127,12 @@ public class FileModelProxy {
     /**
      * This gets called from the index.jelly script to render the marked up
      * contents of the file.
-     * 
+     *
      * @return a table of lines and associated violations in html.
      */
-    public String getFileContent() {
-        StringBuilder ret = new StringBuilder();
+    public List<BlockData> getFileContent() {
+        List<BlockData> blockDataList = newArrayList();
         StringBuilder b = new StringBuilder();
-        ret.append("<table class='source'>\n");
         int previousLine = -1;
         int startLine = 0;
         int currentLine = -1;
@@ -157,7 +144,10 @@ public class FileModelProxy {
             if (currentLine != (previousLine + 1)) {
                 // Start of block
                 // Check if need to write previous block
-                addBlock(ret, b, startLine, previousLine);
+                if (b.length() > 0) {
+                    blockDataList.add(new BlockData(startLine, previousLine, b.toString(), new File(fileModel
+                            .getDisplayName()).getName()));
+                }
                 b = new StringBuilder();
                 startLine = currentLine;
             }
@@ -204,9 +194,11 @@ public class FileModelProxy {
             b.append("</td>\n");
             b.append("</tr>\n");
         }
-        addBlock(ret, b, startLine, previousLine);
-        ret.append("</table>");
-        return ret.toString();
+        if (b.length() > 0) {
+            blockDataList.add(new BlockData(startLine, previousLine, b.toString(), new File(fileModel.getDisplayName())
+                    .getName()));
+        }
+        return blockDataList;
     }
 
     public String getVisualStudioLink(Violation v) {
@@ -268,39 +260,13 @@ public class FileModelProxy {
             ret.append("<p></p>");
         }
 
-        // <j:forEach var="t" items="${model.typeMap.entrySet()}">
-        // <table class="pane">
-        // <tbody>
-        // <tr><td class="pane-header"
-        // colspan="5">${it.typeLine(t.key)}</td></tr>
-        // <j:forEach var="v" items="${t.value}">
-        // <tr>
-        // <td class="pane"><a href="${v.devEnvLink}">VS</a></td>
-        // <td class="pane">
-        // <j:if test="${href}">
-        // <a href="#line${v.line}">${v.line}</a>
-        // </j:if>
-        // <j:if test="${!href}">
-        // ${v.line}
-        // </j:if>
-        // </td>
-        // <!--<td class="pane">${v.source}</td> -->
-        // <td class="pane">${it.severityColumn(v)}</td>
-        // <td class="pane" width="99%">${v.message}</td>
-        // </tr>
-        // </j:forEach>
-        // </tbody>
-        // </table>
-        // <p></p>
-        // </j:forEach>
-
         return ret.toString();
     }
 
     /**
      * Get the file model. If the file model is present, return it, otherwise
      * parse the xml file.
-     * 
+     *
      * @return the file model or null if unable to parse.
      */
     public FileModel getFileModel() {
@@ -339,7 +305,7 @@ public class FileModelProxy {
 
     /**
      * Get the URL for the icon, taking context into account
-     * 
+     *
      * @param v
      *            the violation
      * @return URL
@@ -350,7 +316,7 @@ public class FileModelProxy {
 
     /**
      * Get the severity column for a violation.
-     * 
+     *
      * @param v
      *            the violation.
      * @return a string to place in the severity column of the violation table.
@@ -483,7 +449,6 @@ public class FileModelProxy {
             gst.append("</td>\n");
             gst.append("   </tr>\n");
         }
-        // }
         gst.append(" </table>\n");
         gst.append("<p><br>\n");
         gst.append("<h3>Total Number of violations:  \n");

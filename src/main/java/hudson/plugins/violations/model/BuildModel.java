@@ -1,37 +1,37 @@
 package hudson.plugins.violations.model;
 
-import java.util.TreeSet;
-import java.util.Map;
+import static com.google.common.base.Charsets.UTF_8;
+import static java.net.URLEncoder.encode;
+import hudson.plugins.violations.render.FileModelProxy;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.Collection;
-
-import java.io.File;
-import hudson.plugins.violations.render.FileModelProxy;
-
+import java.util.TreeSet;
 
 /**
  * A model of the violations of the build used during rendering time.
  */
 public class BuildModel {
 
-    private File  xmlRoot;
-    private Map<String, FileModelProxy> fileModelMap
-        = new HashMap<String, FileModelProxy>();
+    private final File xmlRoot;
+    private final Map<String, FileModelProxy> fileModelMap = new HashMap<String, FileModelProxy>();
 
-    private SortedMap<String, SortedSet<FileCount>> typeMap
-        = new TreeMap<String, SortedSet<FileCount>>();
+    private final SortedMap<String, SortedSet<FileCount>> typeMap = new TreeMap<String, SortedSet<FileCount>>();
 
     private SortedMap<String, TypeCount> typeCountMap;
 
-
     /**
      * Create a model of the violations.
-     * @param xmlFile the file used to create this (used to
-     *                get the directory for parsing the per file
-     *                xml files on demand).
+     *
+     * @param xmlFile
+     *            the file used to create this (used to get the directory for
+     *            parsing the per file xml files on demand).
      */
     public BuildModel(File xmlFile) {
         this.xmlRoot = xmlFile.getParentFile();
@@ -39,14 +39,16 @@ public class BuildModel {
 
     /**
      * Get the map of type to file counts.
+     *
      * @return the map of type to file counts.
      */
-    public  SortedMap<String, SortedSet<FileCount>> getTypeMap() {
+    public SortedMap<String, SortedSet<FileCount>> getTypeMap() {
         return typeMap;
     }
 
     /**
      * Get the file model map.
+     *
      * @return a map of name to file model proxy.
      */
     public Map<String, FileModelProxy> getFileModelMap() {
@@ -55,18 +57,18 @@ public class BuildModel {
 
     /**
      * Get the collection of type counts.
+     *
      * @return the collection of type counts.
      */
-    public  Collection<TypeCount> getTypeCounts() {
+    public Collection<TypeCount> getTypeCounts() {
         if (typeCountMap == null) {
             typeCountMap = new TreeMap<String, TypeCount>();
-            for (String t: typeMap.keySet()) {
+            for (String t : typeMap.keySet()) {
                 int count = 0;
-                for (FileCount fc: typeMap.get(t)) {
+                for (FileCount fc : typeMap.get(t)) {
                     count += fc.getCount();
                 }
-                typeCountMap.put(
-                    t, new TypeCount(t, typeMap.get(t).size(), count));
+                typeCountMap.put(t, new TypeCount(t, typeMap.get(t).size(), count));
             }
         }
         return typeCountMap.values();
@@ -74,6 +76,7 @@ public class BuildModel {
 
     /**
      * Get the type count map.
+     *
      * @return the type count map.
      */
     public Map<String, TypeCount> getTypeCountMap() {
@@ -82,19 +85,22 @@ public class BuildModel {
     }
 
     /**
-     * A class used in displaying number of violations and files
-     * in violation.
+     * A class used in displaying number of violations and files in violation.
      */
     public static class TypeCount {
         private final String name;
-        private final int    count;
-        private final int    numberFiles;
+        private final int count;
+        private final int numberFiles;
 
         /**
          * Constructor for TypeCount.
-         * @param name the type name.
-         * @param numberFiles the number of files in violation.
-         * @param count the number of violations.
+         *
+         * @param name
+         *            the type name.
+         * @param numberFiles
+         *            the number of files in violation.
+         * @param count
+         *            the number of violations.
          */
         public TypeCount(String name, int numberFiles, int count) {
             this.name = name;
@@ -104,14 +110,20 @@ public class BuildModel {
 
         /**
          * Get the type name.
+         *
          * @return the type name.
          */
         public String getName() {
             return name;
         }
 
+        public String getUrlEncodedName() throws UnsupportedEncodingException {
+            return encode(name, UTF_8.name());
+        }
+
         /**
          * Get the number of violations of this type.
+         *
          * @return the number.
          */
         public int getCount() {
@@ -120,6 +132,7 @@ public class BuildModel {
 
         /**
          * Get the number of file that contain violations of this type.
+         *
          * @return the number.
          */
         public int getNumberFiles() {
@@ -129,7 +142,9 @@ public class BuildModel {
 
     /**
      * get a set of file counts for a type.
-     * @param type the type to ge for.
+     *
+     * @param type
+     *            the type to ge for.
      * @return a set of file counts.
      */
     public SortedSet<FileCount> getFileCounts(String type) {
@@ -141,13 +156,12 @@ public class BuildModel {
         return ret;
     }
 
-    private FileModelProxy  getFileNameProxy(String name) {
+    private FileModelProxy getFileNameProxy(String name) {
         FileModelProxy proxy = fileModelMap.get(name);
         if (proxy != null) {
             return proxy;
         }
-        File xmlFile = new File(
-            xmlRoot, "file/" + name + ".xml");
+        File xmlFile = new File(xmlRoot, "file/" + name + ".xml");
         fileModelMap.put(name, new FileModelProxy(xmlFile));
         proxy = fileModelMap.get(name);
         return proxy;
@@ -155,9 +169,13 @@ public class BuildModel {
 
     /**
      * Add a file count.
-     * @param type the type.
-     * @param name the filename.
-     * @param count the number of violations.
+     *
+     * @param type
+     *            the type.
+     * @param name
+     *            the filename.
+     * @param count
+     *            the number of violations.
      */
     public void addFileCount(String type, String name, int[] count) {
         // Windows needs this replacement
@@ -165,13 +183,18 @@ public class BuildModel {
         FileModelProxy proxy = getFileNameProxy(name);
         getFileCounts(type).add(new FileCount(name, count, proxy));
     }
-    
+
     /**
      * Add a file count.
-     * @param type the type.
-     * @param name the filename.
-     * @param count the number of violations.
-     * @param securityCount the security count
+     *
+     * @param type
+     *            the type.
+     * @param name
+     *            the filename.
+     * @param count
+     *            the number of violations.
+     * @param securityCount
+     *            the security count
      */
     public void addFileCount(String type, String name, int[] count, int securityCount) {
         FileModelProxy proxy = getFileNameProxy(name);
@@ -183,46 +206,51 @@ public class BuildModel {
      */
     public static class FileCount implements Comparable<FileCount> {
         private final String name;
-        private final int    totalCount;
-        private final int[]  counts;
+        private final int totalCount;
+        private final int[] counts;
         private final FileModelProxy proxy;
         private int securityCount;
 
         /**
          * Create a FileCount object.
-         * @param name the name of the file.
-         * @param counts the numbers of violations (of a particular type) in the
-         *              file.
-         * @param proxy the associated file proxy (used during rendering).
+         *
+         * @param name
+         *            the name of the file.
+         * @param counts
+         *            the numbers of violations (of a particular type) in the
+         *            file.
+         * @param proxy
+         *            the associated file proxy (used during rendering).
          */
         public FileCount(String name, int[] counts, FileModelProxy proxy) {
             this.name = name;
             this.counts = counts;
             int t = 0;
-            for (int i = 0; i < counts.length; ++i) {
-                t += counts[i];
+            for (int count : counts) {
+                t += count;
             }
             this.totalCount = t;
             this.proxy = proxy;
             this.securityCount = 0;
         }
 
-        public FileCount(String name, int[] count, int securityCount,
-				FileModelProxy proxy) {
-			this(name, count, proxy);
-			this.securityCount = securityCount;
-		}
-        
+        public FileCount(String name, int[] count, int securityCount, FileModelProxy proxy) {
+            this(name, count, proxy);
+            this.securityCount = securityCount;
+        }
+
         /**
          * Gets the security violation count in file
+         *
          * @return the security count
          */
         public int getSecurityCount() {
-        	return this.securityCount;
+            return this.securityCount;
         }
 
-		/**
+        /**
          * Get the name of the file.
+         *
          * @return the filename.
          */
         public String getName() {
@@ -231,6 +259,7 @@ public class BuildModel {
 
         /**
          * Get the number of violations.
+         *
          * @return the number.
          */
         public int getCount() {
@@ -239,6 +268,7 @@ public class BuildModel {
 
         /**
          * Get the number of high severity violations.
+         *
          * @return the number.
          */
         public int getHigh() {
@@ -247,16 +277,17 @@ public class BuildModel {
 
         /**
          * Get the number of medium severity violations.
+         *
          * @return the number.
          */
         public int getMedium() {
-            return counts[Severity.MEDIUM_HIGH_VALUE]
-                + counts[Severity.MEDIUM_VALUE]
-                + counts[Severity.MEDIUM_LOW_VALUE];
+            return counts[Severity.MEDIUM_HIGH_VALUE] + counts[Severity.MEDIUM_VALUE]
+                    + counts[Severity.MEDIUM_LOW_VALUE];
         }
 
         /**
          * Get the number of low severity violations.
+         *
          * @return the number.
          */
         public int getLow() {
@@ -265,6 +296,7 @@ public class BuildModel {
 
         /**
          * Get the associated file model proxy.
+         *
          * @return the file model proxy.
          */
         public FileModel getFileModel() {
@@ -273,11 +305,13 @@ public class BuildModel {
 
         /**
          * Compare to another FileCount object.
-         * @param other the other file count object.
-         * @return 0 if they are the same, -1 if count is greater
-         *        1 if count is less, if counts are the same
-         *        use the name for comparison.
+         *
+         * @param other
+         *            the other file count object.
+         * @return 0 if they are the same, -1 if count is greater 1 if count is
+         *         less, if counts are the same use the name for comparison.
          */
+        @Override
         public int compareTo(FileCount other) {
             if (this == other) {
                 return 0;

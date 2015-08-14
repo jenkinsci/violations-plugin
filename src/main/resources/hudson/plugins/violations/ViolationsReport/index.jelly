@@ -30,7 +30,7 @@
           </tr>
           <j:forEach var="t" items="${model.typeCounts}">
             <tr>
-              <td class="pane"><a href="#${t.name}">${t.name}</a></td>
+              <td class="pane"><a href="#${t.urlEncodedName}">${t.name}</a></td>
               <td class="pane">
                 <v:numberdiff curr="${it.typeCount(t.name)}"
                               prev="${prev.typeCount(t.name)}"/>

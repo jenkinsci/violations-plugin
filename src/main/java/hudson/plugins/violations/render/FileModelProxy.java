@@ -1,6 +1,8 @@
 package hudson.plugins.violations.render;
 
+import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.logging.Level.WARNING;
 import hudson.Functions;
 import hudson.model.AbstractBuild;
 import hudson.plugins.violations.generate.XMLUtil;
@@ -16,8 +18,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.google.common.base.Supplier;
 
 /**
  * A proxy class for FileModel used to allow lazy loading of FileModel. This
@@ -27,7 +30,24 @@ public class FileModelProxy {
     private static final Logger LOG = Logger.getLogger(FileModelProxy.class.getName());
 
     private final File xmlFile;
-    private FileModel fileModel;
+    private final Supplier<FileModel> fileModel = memoize(new Supplier<FileModel>() {
+        @Override
+        public FileModel get() {
+            if (!xmlFile.exists()) {
+                LOG.log(WARNING, "The file " + xmlFile + " does not exist");
+                return null;
+            }
+            try {
+                FileModel t = new FileModel();
+                ParseXML.parse(xmlFile, new FileModelParser().fileModel(t));
+                return t;
+            } catch (Exception ex) {
+                LOG.log(WARNING, "Unable to parse " + xmlFile, ex);
+                return null;
+            }
+
+        }
+    });
     private String contextPath;
     private AbstractBuild<?, ?> build;
 
@@ -83,7 +103,7 @@ public class FileModelProxy {
      *         number of suppressed violations.
      */
     public String typeLine(String type) {
-        FileModel.LimitType l = fileModel.getLimitTypeMap().get(type);
+        FileModel.LimitType l = fileModel.get().getLimitTypeMap().get(type);
         StringBuilder b = new StringBuilder();
         if (l == null) {
             return type + " ?number?";
@@ -137,7 +157,7 @@ public class FileModelProxy {
         int startLine = 0;
         int currentLine = -1;
 
-        for (Map.Entry<Integer, String> e : fileModel.getLines().entrySet()) {
+        for (Map.Entry<Integer, String> e : fileModel.get().getLines().entrySet()) {
             currentLine = e.getKey();
             String line = e.getValue();
             // Check if at start of block
@@ -145,7 +165,7 @@ public class FileModelProxy {
                 // Start of block
                 // Check if need to write previous block
                 if (b.length() > 0) {
-                    blockDataList.add(new BlockData(startLine, previousLine, b.toString(), new File(fileModel
+                    blockDataList.add(new BlockData(startLine, previousLine, b.toString(), new File(fileModel.get()
                             .getDisplayName()).getName()));
                 }
                 b = new StringBuilder();
@@ -153,7 +173,7 @@ public class FileModelProxy {
             }
             previousLine = currentLine;
 
-            Set<Violation> v = fileModel.getLineViolationMap().get(currentLine);
+            Set<Violation> v = fileModel.get().getLineViolationMap().get(currentLine);
 
             // TR
             b.append("<tr " + (v != null ? "class='violation'" : "") + ">");
@@ -195,15 +215,15 @@ public class FileModelProxy {
             b.append("</tr>\n");
         }
         if (b.length() > 0) {
-            blockDataList.add(new BlockData(startLine, previousLine, b.toString(), new File(fileModel.getDisplayName())
-                    .getName()));
+            blockDataList.add(new BlockData(startLine, previousLine, b.toString(), new File(fileModel.get()
+                    .getDisplayName()).getName()));
         }
         return blockDataList;
     }
 
     public String getVisualStudioLink(Violation v) {
         StringBuilder ret = new StringBuilder();
-        String uriBase = "devenv:?file=" + this.fileModel.getDisplayName();
+        String uriBase = "devenv:?file=" + this.fileModel.get().getDisplayName();
 
         ret.append("<a href=\"");
         String uri = String.valueOf(uriBase + "&line=" + v.getLine());
@@ -215,7 +235,7 @@ public class FileModelProxy {
     public String getViolationsSummary() {
         StringBuilder ret = new StringBuilder();
 
-        for (Entry<String, TreeSet<Violation>> t : this.fileModel.getTypeMap().entrySet()) {
+        for (Entry<String, TreeSet<Violation>> t : this.fileModel.get().getTypeMap().entrySet()) {
             ret.append("<table class=\"pane\">");
             ret.append("<tbody>");
             ret.append("<tr><td class=\"pane-header\" colspan=\"5\">");
@@ -270,22 +290,7 @@ public class FileModelProxy {
      * @return the file model or null if unable to parse.
      */
     public FileModel getFileModel() {
-        if (fileModel != null) {
-            return fileModel;
-        }
-        if (!xmlFile.exists()) {
-            LOG.log(Level.WARNING, "The file " + xmlFile + " does not exist");
-            return null;
-        }
-        try {
-            FileModel t = new FileModel();
-            ParseXML.parse(xmlFile, new FileModelParser().fileModel(t));
-            fileModel = t;
-            return fileModel;
-        } catch (Exception ex) {
-            LOG.log(Level.WARNING, "Unable to parse " + xmlFile, ex);
-            return null;
-        }
+        return this.fileModel.get();
     }
 
     private String getSeverityIcon(int level) {
@@ -410,7 +415,7 @@ public class FileModelProxy {
     }
 
     public String getFileNameAlt() {
-        return new File(fileModel.getDisplayName()).getName();
+        return new File(fileModel.get().getDisplayName()).getName();
     }
 
     public String getSummaryTable() {
@@ -427,7 +432,7 @@ public class FileModelProxy {
         gst.append("     <td class='violations-header'> Description</td>\n");
         gst.append("   </tr>\n");
 
-        Set<Violation> violations = fileModel.getLineViolationMap().get(0);
+        Set<Violation> violations = fileModel.get().getLineViolationMap().get(0);
 
         for (Violation v : violations) {
             ++count;

@@ -432,27 +432,31 @@ public class FileModelProxy {
         gst.append("     <td class='violations-header'> Description</td>\n");
         gst.append("   </tr>\n");
 
-        Set<Violation> violations = fileModel.get().getLineViolationMap().get(0);
+        Map<Integer, Set<Violation>> violationsMap = fileModel.getLineViolationMap();
 
-        for (Violation v : violations) {
-            ++count;
-            gst.append("   <tr>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(count);
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getType());
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getSource());
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getMessage());
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getPopupMessage());
-            gst.append("</td>\n");
-            gst.append("   </tr>\n");
+        Iterator<Integer> itForMap = violationsMap.keySet().iterator();
+        while(itForMap.hasNext()) {
+            Set<Violation> violations = violationsMap.get(itForMap.next());
+            for (Violation v : violations) {
+                ++count;
+                gst.append("   <tr>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(count);
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getType());
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getSource());
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getMessage());
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getPopupMessage());
+                gst.append("</td>\n");
+                gst.append("   </tr>\n");
+            }
         }
         gst.append(" </table>\n");
         gst.append("<p><br>\n");

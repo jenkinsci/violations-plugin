@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
+import java.util.Iterator;
 
 import com.google.common.base.Supplier;
 
@@ -432,7 +433,7 @@ public class FileModelProxy {
         gst.append("     <td class='violations-header'> Description</td>\n");
         gst.append("   </tr>\n");
 
-        Map<Integer, Set<Violation>> violationsMap = fileModel.getLineViolationMap();
+        Map<Integer, Set<Violation>> violationsMap = fileModel.get().getLineViolationMap();
 
         Iterator<Integer> itForMap = violationsMap.keySet().iterator();
         while(itForMap.hasNext()) {

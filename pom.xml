@@ -40,12 +40,6 @@
       <id>peterkittreilly</id>
       <name>Peter Reilly</name>
     </developer>
-    <developer>
-      <id>tomasbjerre</id>
-      <name>Tomas Bjerre</name>
-      <email>tomas.bjerre85@gmail.com</email>
-      <url>http://bjurr.se</url>
-    </developer>
   </developers>
 
   <contributors>
@@ -63,6 +57,11 @@
       <name>Mirko Friedenhagen</name>
       <email>mfriedenhagen@gmail.com</email>
       <timezone>+1</timezone>
+    </contributor>
+    <contributor>
+      <name>Tomas Bjerre</name>
+      <email>tomas.bjerre85@gmail.com</email>
+      <url>http://bjurr.se</url>
     </contributor>
   </contributors>
   

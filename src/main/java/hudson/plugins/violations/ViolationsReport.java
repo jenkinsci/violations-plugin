@@ -211,7 +211,7 @@ public class ViolationsReport implements Serializable {
         if (name.startsWith("/")) {
             name = name.substring(1);
         }
-        FileModelProxy proxy = getFileModelProxy(name);
+        FileModelProxy proxy = getFileModelProxy(name.replace("/", File.separator));
         if (proxy != null) {
             return new RecurDynamic("", name, proxy.build(build).contextPath(""));
         } else {

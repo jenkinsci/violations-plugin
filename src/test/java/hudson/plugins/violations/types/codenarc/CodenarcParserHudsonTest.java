@@ -13,7 +13,7 @@ public class CodenarcParserHudsonTest extends JenkinsRule {
 
     @Test
     public void testThatCodenarcWithEmptyPathCanBeParsed() throws Exception {
-        violationsReport(CODENARC).reportedIn("**/CodeNarcReportEmptyPath.xml").perform().assertThat("/Test.groovy")
+        violationsReport(CODENARC).reportedIn("**/CodeNarcReportEmptyPath.xml").perform().assertThat("Test.groovy")
                 .wasReported().reportedViolation(192, "EmptyCatchBlock", "EmptyCatchBlock");
     }
 }

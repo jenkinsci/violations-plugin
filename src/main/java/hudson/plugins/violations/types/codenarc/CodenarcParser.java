@@ -95,7 +95,10 @@ public class CodenarcParser extends AbstractTypeParser {
         if (sourceDirectory != null && !sourceDirectory.isEmpty()) {
             sourcePath += "/" + sourceDirectory;
         }
-        String absoluteFileName = fixAbsolutePath(sourcePath + "/" + path + "/" + checkNotBlank("name"));
+        if (!path.isEmpty()) {
+            sourcePath += "/" + path;
+        }
+        String absoluteFileName = fixAbsolutePath(sourcePath + "/" + checkNotBlank("name"));
         getParser().next(); // consume "file" tag
         FullFileModel fileModel = getFileModel(absoluteFileName);
 

@@ -32,7 +32,6 @@ public class BuildModelTest {
 		assertEquals(model.getTypeCounts().size(), 1);
 
 
-		//this test fail, because the map of type, is built at the first call of getTypeCount, but never updated after
 	}
 
 	@Test

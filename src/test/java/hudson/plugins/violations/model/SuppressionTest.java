@@ -34,18 +34,17 @@ public class SuppressionTest {
 
 		s1 = new Suppression("type", "source", "filename", "otherReason", "message");
 
-		assertFalse(s.equals(s1));
-		assertFalse(s1.equals(s));
+		assertTrue(s.equals(s1));
+		assertTrue(s1.equals(s));
 
 		s1 = new Suppression("type", "source", "filename", "reason", "otherMessage");
 
-		assertFalse(s.equals(s1));
-		assertFalse(s1.equals(s));
+		assertTrue(s.equals(s1));
+		assertTrue(s1.equals(s));
 		
 		s1 = new Suppression("type", "source", "filename", "reason", "message");
 		assertTrue(s1.equals(s));
 		assertTrue(s.equals(s1));
-		//The equals seem not working
 
 
 	}

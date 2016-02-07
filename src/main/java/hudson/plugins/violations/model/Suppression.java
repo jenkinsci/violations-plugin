@@ -46,8 +46,8 @@ public class Suppression {
             return false;
         }
         Suppression other = (Suppression) o;
-        return Equals.equals(
-            type, other.type, source, other.source, fileName, other.fileName);
+        return 
+            type.equals(other.type) && source.equals(other.source) && fileName.equals(other.fileName);
     }
 
     @Override

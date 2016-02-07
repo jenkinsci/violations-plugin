@@ -61,7 +61,7 @@ public class BuildModel {
      * @return the collection of type counts.
      */
     public Collection<TypeCount> getTypeCounts() {
-        if (typeCountMap == null) {
+       // if (typeCountMap == null) {
             typeCountMap = new TreeMap<String, TypeCount>();
             for (String t : typeMap.keySet()) {
                 int count = 0;
@@ -70,7 +70,7 @@ public class BuildModel {
                 }
                 typeCountMap.put(t, new TypeCount(t, typeMap.get(t).size(), count));
             }
-        }
+      //  }
         return typeCountMap.values();
     }
 

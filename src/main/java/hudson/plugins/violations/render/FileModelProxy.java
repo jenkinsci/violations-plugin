@@ -432,27 +432,28 @@ public class FileModelProxy {
         gst.append("     <td class='violations-header'> Description</td>\n");
         gst.append("   </tr>\n");
 
-        Set<Violation> violations = fileModel.get().getLineViolationMap().get(0);
-
-        for (Violation v : violations) {
-            ++count;
-            gst.append("   <tr>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(count);
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getType());
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getSource());
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getMessage());
-            gst.append("</td>\n");
-            gst.append("     <td class='violations'>");
-            gst.append(v.getPopupMessage());
-            gst.append("</td>\n");
-            gst.append("   </tr>\n");
+        for (Entry<Integer, Set<Violation>> violations : fileModel.get()
+                .getLineViolationMap().entrySet()) {
+            for (Violation v : violations.getValue()) {
+                ++count;
+                gst.append("   <tr>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(count);
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getType());
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getSource());
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getMessage());
+                gst.append("</td>\n");
+                gst.append("     <td class='violations'>");
+                gst.append(v.getPopupMessage());
+                gst.append("</td>\n");
+                gst.append("   </tr>\n");
+            }
         }
         gst.append(" </table>\n");
         gst.append("<p><br>\n");

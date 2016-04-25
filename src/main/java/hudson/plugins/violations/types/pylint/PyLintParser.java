@@ -131,6 +131,7 @@ public class PyLintParser implements ViolationsParser {
      *
      * <pre>
      * The different message types are:
+     * (I) information, e.g. if some violations have been locally disabled
      * (C) convention, for programming standard violation
      * (R) refactor, for bad code smell
      * (W) warning, for python specific problems
@@ -146,6 +147,7 @@ public class PyLintParser implements ViolationsParser {
     private void setServerityLevel(Violation violation, String messageType) {
 
         switch (messageType.charAt(0)) {
+        case 'I':
         case 'C':
             violation.setSeverity(Severity.LOW);
             violation.setSeverityLevel(Severity.LOW_VALUE);

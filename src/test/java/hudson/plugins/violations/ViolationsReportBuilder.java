@@ -10,6 +10,7 @@ import hudson.FilePath;
 import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 import java.io.File;
 
@@ -41,7 +42,7 @@ public class ViolationsReportBuilder {
         FilePath workspace = new FilePath(projectRootDir());
         FilePath targetPath = new FilePath(new File(projectRootDir().getPath() + "/" + VIOLATIONS));
         FilePath htmlPath = new FilePath(projectRootDir());
-        AbstractBuild<?, ?> build = mock(Build.class);
+        Run<?, ?> build = mock(Build.class);
         when(build.getRootDir()).thenReturn(projectRootDir());
         BuildListener listener = mock(BuildListener.class);
         ViolationsReport violationsReport = createBuildAction(workspace, targetPath, htmlPath, config, build, listener)

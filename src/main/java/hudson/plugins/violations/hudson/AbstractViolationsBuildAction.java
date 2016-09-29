@@ -3,10 +3,11 @@ package hudson.plugins.violations.hudson;
 import hudson.model.Action;
 import hudson.model.HealthReport;
 import hudson.model.HealthReportingAction;
-import hudson.model.AbstractBuild;
 import hudson.model.Actionable;
 import hudson.model.Run;
 import hudson.plugins.violations.MagicNames;
+import hudson.plugins.violations.ViolationsBuildAction;
+import hudson.plugins.violations.ViolationsProjectAction;
 import hudson.plugins.violations.ViolationsReport;
 import hudson.plugins.violations.graph.SeverityTypeDataSet;
 import hudson.plugins.violations.util.StringUtil;
@@ -18,6 +19,10 @@ import hudson.util.ShiftedCategoryAxis;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import jenkins.tasks.SimpleBuildStep;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -40,10 +45,11 @@ import org.kohsuke.stapler.StaplerResponse;
  * Common base class for recording violations results.
  */
 public abstract class AbstractViolationsBuildAction<T extends AbstractViolationsBuildAction> extends Actionable
-        implements Action, HealthReportingAction, StaplerProxy {
+        implements Action, HealthReportingAction, StaplerProxy, SimpleBuildStep.LastBuildAction {
     public static final String VIOLATIONS_PLUGIN_CHART_AUTORANGE_PROPERTY = "violations-plugin.chart.y-axis.auto-range";
 
-    protected final AbstractBuild<?, ?> owner;
+    protected final Run<?, ?> owner;
+    protected final List<ViolationsProjectAction> projectActions;
 
     private static final double LOG_VALUE_FOR_ZERO = 0.5;
     private final boolean useLog = false;
@@ -55,8 +61,12 @@ public abstract class AbstractViolationsBuildAction<T extends AbstractViolations
     /**
      * Constructor setting the owner build.
      */
-    protected AbstractViolationsBuildAction(AbstractBuild<?, ?> owner) {
+    protected AbstractViolationsBuildAction(Run<?, ?> owner) {
         this.owner = owner;
+        
+        List<ViolationsProjectAction> actions = new ArrayList<>();
+        actions.add(new ViolationsProjectAction(owner.getParent()));
+        this.projectActions = actions;
     }
 
     /**
@@ -83,7 +93,7 @@ public abstract class AbstractViolationsBuildAction<T extends AbstractViolations
      *
      * @return the build.
      */
-    public AbstractBuild<?, ?> getBuild() {
+    public Run<?, ?> getBuild() {
         return owner;
     }
 
@@ -266,6 +276,11 @@ public abstract class AbstractViolationsBuildAction<T extends AbstractViolations
         plot.setInsets(new RectangleInsets(PADDING, 0, 0, PADDING));
 
         return chart;
+    }
+    
+    @Override
+    public Collection<? extends Action> getProjectActions(){
+        return this.projectActions;
     }
 
 }

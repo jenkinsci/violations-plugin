@@ -1,6 +1,7 @@
 package hudson.plugins.violations;
 
 import hudson.model.AbstractProject;
+import hudson.model.Job;
 import hudson.plugins.violations.hudson.AbstractViolationsProjectAction;
 
 /**
@@ -13,7 +14,7 @@ public class ViolationsProjectAction
      * Create a project action for the violations.
      * @param project the current project.
      */
-    public  ViolationsProjectAction(AbstractProject<?, ?> project) {
+    public  ViolationsProjectAction(Job<?, ?> project) {
         super(project);
     }
 

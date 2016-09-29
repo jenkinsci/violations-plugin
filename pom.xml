@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.580.3</version>
+    <version>2.15</version>
     <relativePath />
   </parent>
 
@@ -101,8 +101,8 @@
        <!--
         Jenkins started to require Java 7 in 1.612 released 2015-05-03.
         -->
-       <source>1.6</source>
-       <target>1.6</target>
+       <source>1.7</source>
+       <target>1.7</target>
        </configuration>
      </plugin>
     </plugins>
@@ -134,6 +134,11 @@
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>maven-plugin</artifactId>
       <version>2.9</version>
+    </dependency>
+    <dependency>
+        <groupId>org.jenkins-ci.plugins.workflow</groupId>
+        <artifactId>workflow-step-api</artifactId>
+        <version>1.14</version>
     </dependency>
     <dependency>
       <groupId>xpp3</groupId>

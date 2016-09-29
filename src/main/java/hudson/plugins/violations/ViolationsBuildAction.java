@@ -6,6 +6,7 @@ import hudson.maven.MavenBuild;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenModuleSetBuild;
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import hudson.plugins.violations.hudson.AbstractViolationsBuildAction;
 import hudson.plugins.violations.hudson.maven.ViolationsMavenAggregatedBuildAction;
 
@@ -40,7 +41,7 @@ public class ViolationsBuildAction
      * @param report the report for this build.
      */
     public ViolationsBuildAction(
-        AbstractBuild<?, ?> owner,
+        Run<?, ?> owner,
         ViolationsReport report) {
         super(owner);
         this.report = report;
@@ -55,7 +56,7 @@ public class ViolationsBuildAction
      * @param owner the build that has created this action.
      */
     public ViolationsBuildAction(
-        AbstractBuild<?, ?> owner) {
+        Run<?, ?> owner) {
         super(owner);
     }
 

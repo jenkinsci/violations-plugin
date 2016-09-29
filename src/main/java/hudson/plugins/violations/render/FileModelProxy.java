@@ -21,6 +21,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import com.google.common.base.Supplier;
+import hudson.model.Run;
 
 /**
  * A proxy class for FileModel used to allow lazy loading of FileModel. This
@@ -49,7 +50,7 @@ public class FileModelProxy {
         }
     });
     private String contextPath;
-    private AbstractBuild<?, ?> build;
+    private Run<?, ?> build;
 
     /**
      * Construct this proxy.
@@ -68,7 +69,7 @@ public class FileModelProxy {
      *            the owner build.
      * @return this object.
      */
-    public FileModelProxy build(AbstractBuild<?, ?> build) {
+    public FileModelProxy build(Run<?, ?> build) {
         this.build = build;
         return this;
     }
@@ -90,7 +91,7 @@ public class FileModelProxy {
      *
      * @return the current build.
      */
-    public AbstractBuild<?, ?> getBuild() {
+    public Run<?, ?> getBuild() {
         return build;
     }
 

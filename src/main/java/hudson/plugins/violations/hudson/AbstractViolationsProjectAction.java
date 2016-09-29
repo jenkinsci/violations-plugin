@@ -10,6 +10,8 @@ import hudson.model.Action;
 import hudson.model.Actionable;
 import hudson.model.AbstractProject;
 import hudson.model.AbstractBuild;
+import hudson.model.Job;
+import hudson.model.Run;
 
 import hudson.plugins.violations.MagicNames;
 
@@ -21,13 +23,13 @@ public abstract class AbstractViolationsProjectAction
     implements Action, StaplerProxy
     //,  ProminentProjectAction
 {
-    private final AbstractProject<?, ?> project;
+    private final Job<?, ?> project;
 
     /**
      * Create a project action for the violations.
      * @param project the current project.
      */
-    public AbstractViolationsProjectAction(AbstractProject<?, ?> project) {
+    public AbstractViolationsProjectAction(Job<?, ?> project) {
         this.project = project;
     }
 
@@ -35,7 +37,7 @@ public abstract class AbstractViolationsProjectAction
      * Get the project.
      * @return the project.
      */
-    public AbstractProject<?, ?> getProject() {
+    public Job<?, ?> getProject() {
         return project;
     }
 
@@ -106,7 +108,7 @@ public abstract class AbstractViolationsProjectAction
      */
     public AbstractViolationsBuildAction getViolationsAction() {
 
-        for (AbstractBuild<?, ?> b = getProject().getLastBuild();
+        for (Run<?, ?> b = getProject().getLastBuild();
              b != null;
              b = b.getPreviousBuild()) {
             AbstractViolationsBuildAction ret = b.getAction(

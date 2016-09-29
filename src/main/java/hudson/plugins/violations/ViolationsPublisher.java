@@ -7,9 +7,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Action;
-import hudson.model.BuildListener;
 import hudson.model.Result;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.plugins.violations.ViolationsReport.TypeReport;
 import hudson.plugins.violations.hudson.ViolationsFreestyleDescriptor;
@@ -23,6 +21,11 @@ import java.io.IOException;
 import java.util.Collection;
 
 import com.google.common.annotations.VisibleForTesting;
+import hudson.model.Run;
+import hudson.model.TaskListener;
+import javax.annotation.Nonnull;
+import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
  * Generats HTML and XML reports from checkstyle, pmd and findbugs report xml
@@ -30,11 +33,26 @@ import com.google.common.annotations.VisibleForTesting;
  *
  * @author Peter Reilly
  */
-public class ViolationsPublisher extends Recorder {
+public class ViolationsPublisher extends Recorder implements SimpleBuildStep {
 
     private static final String VIOLATIONS = "violations";
 
-    private final ViolationsConfig config = new ViolationsConfig();
+    protected final ViolationsConfig config = new ViolationsConfig();
+    
+    public ViolationsPublisher(){
+    }
+    
+    @DataBoundConstructor
+    public ViolationsPublisher(String type, int sunny, int stormy, int unstable, String pattern, boolean autoUpdateStormyThreshold, boolean autoUpdateUnstableThreshold){
+        TypeConfig tc = new TypeConfig(type);
+        tc.setMin(sunny);
+        tc.setMax(stormy);
+        tc.setUnstable(unstable);
+        tc.setPattern(pattern);
+        this.config.getTypeConfigs().put(type, tc);
+        this.config.setAutoUpdateMax(autoUpdateStormyThreshold);
+        this.config.setAutoUpdateUnstable(autoUpdateUnstableThreshold);
+    }
 
     /**
      * Get the configuration object for this violations publisher.
@@ -60,6 +78,7 @@ public class ViolationsPublisher extends Recorder {
      *
      * @param build
      *            the build
+     * @param workspace
      * @param launcher
      *            the launcher
      * @param listener
@@ -71,21 +90,16 @@ public class ViolationsPublisher extends Recorder {
      *             if problem parsing the xml files
      */
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
-            throws InterruptedException, IOException {
-
-        FilePath htmlPath = new FilePath(new File(build.getProject().getRootDir(), VIOLATIONS));
+    public void perform(Run<?, ?> build, @Nonnull FilePath workspace, Launcher launcher, TaskListener listener) throws IOException, InterruptedException {
+        FilePath htmlPath = new FilePath(new File(build.getRootDir(), VIOLATIONS));
         FilePath targetPath = new FilePath(new File(build.getRootDir(), VIOLATIONS));
 
-        FilePath workspace = build.getWorkspace();
-
         build.getActions().add(createBuildAction(workspace, targetPath, htmlPath, config, build, listener));
-        return true;
     }
 
     @VisibleForTesting
     static ViolationsBuildAction createBuildAction(FilePath workspace, FilePath targetPath, FilePath htmlPath,
-            ViolationsConfig config, AbstractBuild<?, ?> build, BuildListener listener) throws IOException,
+            ViolationsConfig config, Run<?, ?> build, TaskListener listener) throws IOException,
             InterruptedException {
         ViolationsReport report = workspace.act(new ViolationsCollector(false, targetPath, htmlPath, config));
         report.setConfig(config);
@@ -99,7 +113,7 @@ public class ViolationsPublisher extends Recorder {
      * Perform ratcheting if enabled, i.e. lower the thresholds if the build is
      * stable and the current value is lower than the current threshold.
      */
-    static void handleRatcheting(Result result, Collection<TypeReport> typeReports, BuildListener listener,
+    static void handleRatcheting(Result result, Collection<TypeReport> typeReports, TaskListener listener,
             ViolationsConfig config) {
         if (!shouldDoRatcheting(config, result)) {
             return;

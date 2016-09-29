@@ -6,6 +6,7 @@ import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Project;
+import hudson.model.Run;
 /** cannot be used in a slave
  import hudson.maven.MavenModule;
  /**/
@@ -44,7 +45,7 @@ import org.kohsuke.stapler.StaplerResponse;
 public class ViolationsReport implements Serializable {
     private static final Logger LOG = Logger.getLogger(ViolationsReport.class.getName());
 
-    private AbstractBuild<?, ?> build;
+    private Run<?, ?> build;
     private ViolationsConfig config;
     private final Map<String, Integer> violations = new TreeMap<String, Integer>();
     private final Map<String, TypeSummary> typeSummaries = new TreeMap<String, TypeSummary>();
@@ -57,7 +58,7 @@ public class ViolationsReport implements Serializable {
      * @param build
      *            the current build.
      */
-    public void setBuild(AbstractBuild<?, ?> build) {
+    public void setBuild(Run<?, ?> build) {
         this.build = build;
     }
 
@@ -66,7 +67,7 @@ public class ViolationsReport implements Serializable {
      *
      * @return the build.
      */
-    public AbstractBuild<?, ?> getBuild() {
+    public Run<?, ?> getBuild() {
         return build;
     }
 
@@ -225,11 +226,13 @@ public class ViolationsReport implements Serializable {
      * @return the configuration of the job.
      */
     public ViolationsConfig getLiveConfig() {
-        AbstractProject<?, ?> abstractProject = build.getProject();
-        if (abstractProject instanceof Project) {
-            Project project = (Project) abstractProject;
-            ViolationsPublisher publisher = (ViolationsPublisher) project.getPublisher(ViolationsPublisher.DESCRIPTOR);
-            return publisher == null ? null : publisher.getConfig();
+        if(build instanceof AbstractBuild<?,?>){
+            AbstractProject<?, ?> abstractProject = ((AbstractBuild<?,?>)build).getProject();
+            if (abstractProject instanceof Project) {
+                Project project = (Project) abstractProject;
+                ViolationsPublisher publisher = (ViolationsPublisher) project.getPublisher(ViolationsPublisher.DESCRIPTOR);
+                return publisher == null ? null : publisher.getConfig();
+            }
         }
         return null;
     }
@@ -317,7 +320,7 @@ public class ViolationsReport implements Serializable {
      *             if there is an error writing the graph.
      */
     public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
-        AbstractBuild<?, ?> tBuild = build;
+        Run<?, ?> tBuild = build;
         int buildNumber = HelpHudson.findBuildNumber(req);
         if (buildNumber != 0) {
             tBuild = build.getParent().getBuildByNumber(buildNumber);
@@ -557,7 +560,7 @@ public class ViolationsReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static ViolationsReport findViolationsReport(AbstractBuild<?, ?> b) {
+    public static ViolationsReport findViolationsReport(Run<?, ?> b) {
         for (; b != null; b = b.getPreviousBuild()) {
             if (b.getResult().isWorseOrEqualTo(Result.FAILURE)) {
                 continue;
@@ -573,14 +576,14 @@ public class ViolationsReport implements Serializable {
         return null;
     }
 
-    public static ViolationsReportIterator iteration(AbstractBuild<?, ?> build) {
+    public static ViolationsReportIterator iteration(Run<?, ?> build) {
         return new ViolationsReportIterator(build);
     }
 
     public static class ViolationsReportIterator implements Iterator<ViolationsReport>, Iterable<ViolationsReport> {
-        private AbstractBuild<?, ?> curr;
+        private Run<?, ?> curr;
 
-        public ViolationsReportIterator(AbstractBuild<?, ?> curr) {
+        public ViolationsReportIterator(Run<?, ?> curr) {
             this.curr = curr;
         }
 

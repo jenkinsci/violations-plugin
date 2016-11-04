@@ -1,0 +1,41 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+    xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
+
+  <j:set var="config" value="${descriptor}"/>
+  <j:invoke var="allViolationConfigs" on="${config}" method="getAllViolationConfigs"/>
+  <j:if test="${instance != null}">
+    <j:set var="config" value="${instance}"/>
+    <j:invoke var="allViolationConfigs" on="${instance}" method="getAllViolationConfigs"/>
+  </j:if>
+
+  <f:entry>
+  <table class="patterns">
+    <tr>
+      <td align="left" colspan="2">
+        <b>Filename pattern</b>
+        <ul>
+          <li>The pattern may be, for example, <i>.*/findbugs/.*\.xml$</i> to match xml-files, in a folder named findbugs, anywhere in workspace. You may try <a href="https://jex.im/regulex/" target="_blank">Regulex</a> for creating your regexp.</li>
+          <li>The expected file formats are documented <a href="https://github.com/tomasbjerre/violations-lib" target="_blank">here</a>.</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th align="left" width="300">
+        Pattern
+      </th>
+    </tr>
+  </table>
+  </f:entry>
+
+  <j:forEach var="violationConfig" items="${config.getAllViolationConfigs()}" indexVar="i">
+    <input type="hidden" name="reporters" value="${violationConfig.reporter}" />
+    <f:entry title="${violationConfig.reporter}">
+      <f:textbox name="patterns" value="${violationConfig.pattern}" />
+    </f:entry>
+  </j:forEach>
+
+  <f:advanced>
+    <u:advanced id="violations"/>
+  </f:advanced>
+</j:jelly>

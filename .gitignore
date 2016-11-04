@@ -1,0 +1,12 @@
+.classpath
+.project
+.settings
+generated-src
+build
+target
+bin
+temp
+.gradle
+node_modules
+src/test/resources/tests
+work

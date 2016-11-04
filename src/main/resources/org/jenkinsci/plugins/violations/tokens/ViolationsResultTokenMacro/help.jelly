@@ -1,0 +1,9 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+
+  <dt>$${VIOLATIONS_RESULT}</dt>
+  <dd>
+    Expands to the build result of the Violations plug-in.
+  </dd>
+
+</j:jelly>

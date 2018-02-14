@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>3.2</version>
+    <version>3.4</version>
     <relativePath />
   </parent>
 
@@ -14,7 +14,7 @@
   <packaging>hpi</packaging>
   <name>Jenkins Violations plugin</name>
   <description>This plug-in generates reports static code violation detectors such as checkstyle, pmd, cpd, findbugs, codenarc, fxcop, stylecop and simian.</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Violations</url>
+  <url>https://wiki.jenkins.io/display/JENKINS/Violations</url>
 
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>

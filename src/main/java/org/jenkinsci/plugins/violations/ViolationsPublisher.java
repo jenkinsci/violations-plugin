@@ -25,70 +25,87 @@ import hudson.plugins.analysis.util.PluginLogger;
 
 public class ViolationsPublisher extends HealthAwarePublisher {
 
- private static final String INCLUDE_ALL_FILES = "**";
+  private static final String INCLUDE_ALL_FILES = "**";
 
- private static final String PLUGIN_NAME = "VIOLATIONS";
+  private static final String PLUGIN_NAME = "VIOLATIONS";
 
- private static final long serialVersionUID = 6369581633551160418L;
- private List<ViolationConfig> violationConfigs;
+  private static final long serialVersionUID = 6369581633551160418L;
+  private List<ViolationConfig> violationConfigs;
 
- @DataBoundConstructor
- public ViolationsPublisher(List<String> patterns, List<String> reporters, List<ViolationConfig> violationConfigs) {
-  super(PLUGIN_NAME);
-  if (violationConfigs == null || violationConfigs.isEmpty()) {
-   this.violationConfigs = ViolationConfigHelper.getViolationConfigs(patterns, reporters);
-  } else {
-   /**
-    * Used by job DSL. Dont know how to supply the violationConfigs like this
-    * with Jelly templates.
-    */
-   this.violationConfigs = ViolationConfigHelper.getViolationConfigs(violationConfigs);
+  @DataBoundConstructor
+  public ViolationsPublisher(
+      List<String> patterns, List<String> reporters, List<ViolationConfig> violationConfigs) {
+    super(PLUGIN_NAME);
+    if (violationConfigs == null || violationConfigs.isEmpty()) {
+      this.violationConfigs = ViolationConfigHelper.getViolationConfigs(patterns, reporters);
+    } else {
+      /**
+       * Used by job DSL. Dont know how to supply the violationConfigs like this with Jelly
+       * templates.
+       */
+      this.violationConfigs = ViolationConfigHelper.getViolationConfigs(violationConfigs);
+    }
   }
- }
 
- @Override
- public MatrixAggregator createAggregator(final MatrixBuild build, final Launcher launcher,
-   final BuildListener listener) {
-  return new ViolationsAnnotationsAggregator(build, launcher, listener, this, getDefaultEncoding(),
-    usePreviousBuildAsReference(), useOnlyStableBuildsAsReference());
- }
+  @Override
+  public MatrixAggregator createAggregator(
+      final MatrixBuild build, final Launcher launcher, final BuildListener listener) {
+    return new ViolationsAnnotationsAggregator(
+        build,
+        launcher,
+        listener,
+        this,
+        getDefaultEncoding(),
+        usePreviousBuildAsReference(),
+        useOnlyStableBuildsAsReference());
+  }
 
- public List<ViolationConfig> getAllViolationConfigs() {
-  return ViolationConfigHelper.getViolationConfigs(violationConfigs);
- }
+  public List<ViolationConfig> getAllViolationConfigs() {
+    return ViolationConfigHelper.getViolationConfigs(violationConfigs);
+  }
 
- @Override
- public ViolationsDescriptor getDescriptor() {
-  return (ViolationsDescriptor) super.getDescriptor();
- }
+  @Override
+  public ViolationsDescriptor getDescriptor() {
+    return (ViolationsDescriptor) super.getDescriptor();
+  }
 
- @Override
- public Action getProjectAction(final AbstractProject<?, ?> project) {
-  return new ViolationsProjectAction(project);
- }
+  @Override
+  public Action getProjectAction(final AbstractProject<?, ?> project) {
+    return new ViolationsProjectAction(project);
+  }
 
- @Override
- public BuildResult perform(final Run<?, ?> build, final FilePath workspace, final PluginLogger logger)
-   throws InterruptedException, IOException {
-  logger.log("Collecting violations analysis files...");
-  EnvVars environment = build.getEnvironment(TaskListener.NULL);
-  ViolationConfigHelper.expandPatterns(environment, violationConfigs);
-  FilesParser parser = new FilesParser(PLUGIN_NAME, INCLUDE_ALL_FILES,
-    new ViolationsParser(getDefaultEncoding(), violationConfigs), shouldDetectModules(), isMavenBuild(build));
+  @Override
+  public BuildResult perform(
+      final Run<?, ?> build, final FilePath workspace, final PluginLogger logger)
+      throws InterruptedException, IOException {
+    logger.log("Collecting violations analysis files...");
+    EnvVars environment = build.getEnvironment(TaskListener.NULL);
+    ViolationConfigHelper.expandPatterns(environment, violationConfigs);
+    FilesParser parser =
+        new FilesParser(
+            PLUGIN_NAME,
+            INCLUDE_ALL_FILES,
+            new ViolationsParser(getDefaultEncoding(), violationConfigs),
+            shouldDetectModules(),
+            isMavenBuild(build));
 
-  ParserResult project = workspace.act(parser);
-  logger.logLines(project.getLogMessages());
+    ParserResult project = workspace.act(parser);
+    logger.logLines(project.getLogMessages());
 
-  ViolationsResult result = new ViolationsResult(build, getDefaultEncoding(), project, usePreviousBuildAsReference(),
-    useOnlyStableBuildsAsReference());
-  build.addAction(new ViolationsResultAction(build, this, result));
+    ViolationsResult result =
+        new ViolationsResult(
+            build,
+            getDefaultEncoding(),
+            project,
+            usePreviousBuildAsReference(),
+            useOnlyStableBuildsAsReference());
+    build.addAction(new ViolationsResultAction(build, this, result));
 
-  return result;
- }
+    return result;
+  }
 
- @DataBoundSetter
- public void setViolationConfigs(List<ViolationConfig> violationConfigs) {
-  this.violationConfigs = ViolationConfigHelper.getViolationConfigs(violationConfigs);
- }
-
+  @DataBoundSetter
+  public void setViolationConfigs(List<ViolationConfig> violationConfigs) {
+    this.violationConfigs = ViolationConfigHelper.getViolationConfigs(violationConfigs);
+  }
 }

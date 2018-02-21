@@ -8,8 +8,8 @@ import hudson.plugins.analysis.tokens.AbstractResultTokenMacro;
 
 @Extension(optional = true)
 public class ViolationsResultTokenMacro extends AbstractResultTokenMacro {
- @SuppressWarnings("unchecked")
- public ViolationsResultTokenMacro() {
-  super("VIOLATIONS_RESULT", ViolationsResultAction.class, ViolationsMavenResultAction.class);
- }
+  @SuppressWarnings("unchecked")
+  public ViolationsResultTokenMacro() {
+    super("VIOLATIONS_RESULT", ViolationsResultAction.class, ViolationsMavenResultAction.class);
+  }
 }

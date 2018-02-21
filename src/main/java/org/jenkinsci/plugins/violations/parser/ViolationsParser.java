@@ -8,6 +8,8 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.regex.Pattern.matches;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static se.bjurr.violations.lib.parsers.FindbugsParser.setFindbugsMessagesXml;
+import hudson.plugins.analysis.core.AbstractAnnotationParser;
+import hudson.plugins.analysis.util.model.FileAnnotation;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,86 +24,87 @@ import org.apache.commons.lang.NotImplementedException;
 import org.jenkinsci.plugins.violations.ViolationConfig;
 import org.jenkinsci.plugins.violations.ViolationConfigHelper;
 
+import se.bjurr.violations.lib.model.Violation;
+import se.bjurr.violations.lib.reports.Parser;
+
 import com.google.common.base.Optional;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 
-import hudson.plugins.analysis.core.AbstractAnnotationParser;
-import hudson.plugins.analysis.util.model.FileAnnotation;
-import se.bjurr.violations.lib.model.Violation;
-import se.bjurr.violations.lib.reports.Reporter;
-
 public class ViolationsParser extends AbstractAnnotationParser {
- private static Logger LOG = Logger.getLogger(ViolationsParser.class.getName());
- private static final long serialVersionUID = 2373561770223062283L;
+  private static Logger LOG = Logger.getLogger(ViolationsParser.class.getName());
+  private static final long serialVersionUID = 2373561770223062283L;
 
- private static void setupFindBugsMessages() {
-  try {
-   final String findbugsMessagesXml = CharStreams
-     .toString(new InputStreamReader(ViolationsParser.class.getResourceAsStream("findbugs-messages.xml"), UTF_8));
-   setFindbugsMessagesXml(findbugsMessagesXml);
-  } catch (final IOException e) {
-   propagate(e);
+  private static void setupFindBugsMessages() {
+    try {
+      final String findbugsMessagesXml =
+          CharStreams.toString(
+              new InputStreamReader(
+                  ViolationsParser.class.getResourceAsStream("findbugs-messages.xml"), UTF_8));
+      setFindbugsMessagesXml(findbugsMessagesXml);
+    } catch (final IOException e) {
+      propagate(e);
+    }
   }
- }
 
- private final List<ViolationConfig> violationConfigs;
+  private final List<ViolationConfig> violationConfigs;
 
- public ViolationsParser() {
-  super(EMPTY);
-  violationConfigs = newArrayList();
- }
-
- public ViolationsParser(final String defaultEncoding, List<ViolationConfig> violationConfigs) {
-  super(defaultEncoding);
-  this.violationConfigs = ViolationConfigHelper.getViolationConfigs(violationConfigs);
-  setupFindBugsMessages();
- }
-
- private Optional<Reporter> findReporter(List<ViolationConfig> violationConfigs, File file) {
-  for (ViolationConfig candidateReporter : violationConfigs) {
-   String candidatePattern = candidateReporter.getPattern();
-   if (matches(candidatePattern, file.getAbsolutePath())) {
-    return Optional.of(candidateReporter.getReporter());
-   }
+  public ViolationsParser() {
+    super(EMPTY);
+    violationConfigs = newArrayList();
   }
-  return absent();
- }
 
- @Override
- public Collection<FileAnnotation> parse(File file, String moduleName) throws InvocationTargetException {
-  try {
-   Optional<Reporter> reporter = findReporter(violationConfigs, file);
-   if (!reporter.isPresent()) {
-    return newArrayList();
-   }
-   List<Violation> violations = parseFile(file, reporter.get());
-   List<FileAnnotation> fileAnnotations = toFileAnnotations(violations, moduleName);
-   return intern(fileAnnotations);
-  } catch (Exception e) {
-   LOG.log(SEVERE, e.getMessage(), e);
-   return newArrayList();
+  public ViolationsParser(final String defaultEncoding, List<ViolationConfig> violationConfigs) {
+    super(defaultEncoding);
+    this.violationConfigs = ViolationConfigHelper.getViolationConfigs(violationConfigs);
+    setupFindBugsMessages();
   }
- }
 
- @Override
- public Collection<FileAnnotation> parse(final InputStream inputStream, final String moduleName)
-   throws InvocationTargetException {
-  throw new NotImplementedException("parse(file,moduleName) is overridden, so this should never be invoked.");
- }
-
- private List<Violation> parseFile(File file, Reporter reporter) throws IOException, Exception {
-  String fileContent = Files.toString(file, UTF_8);
-  return reporter.getViolationsParser().parseFile(fileContent);
- }
-
- private List<FileAnnotation> toFileAnnotations(List<Violation> violations, String moduleName) {
-  List<FileAnnotation> fileAnnotations = newArrayList();
-  for (Violation violation : violations) {
-   FileAnnotation fileAnnotation = new ViolationFileAnnotation(violation, moduleName);
-   fileAnnotations.add(fileAnnotation);
+  private Optional<Parser> findParser(List<ViolationConfig> violationConfigs, File file) {
+    for (final ViolationConfig candidateReporter : violationConfigs) {
+      final String candidatePattern = candidateReporter.getPattern();
+      if (matches(candidatePattern, file.getAbsolutePath())) {
+        return Optional.of(candidateReporter.getParser());
+      }
+    }
+    return absent();
   }
-  return fileAnnotations;
- }
 
+  @Override
+  public Collection<FileAnnotation> parse(File file, String moduleName)
+      throws InvocationTargetException {
+    try {
+      final Optional<Parser> reporter = findParser(violationConfigs, file);
+      if (!reporter.isPresent()) {
+        return newArrayList();
+      }
+      final List<Violation> violations = parseFile(file, reporter.get());
+      final List<FileAnnotation> fileAnnotations = toFileAnnotations(violations, moduleName);
+      return intern(fileAnnotations);
+    } catch (final Exception e) {
+      LOG.log(SEVERE, e.getMessage(), e);
+      return newArrayList();
+    }
+  }
+
+  @Override
+  public Collection<FileAnnotation> parse(final InputStream inputStream, final String moduleName)
+      throws InvocationTargetException {
+    throw new NotImplementedException(
+        "parse(file,moduleName) is overridden, so this should never be invoked.");
+  }
+
+  private List<Violation> parseFile(File file, Parser parser) throws IOException, Exception {
+    final String fileContent = Files.toString(file, UTF_8);
+    return parser.getViolationsParser().parseReportOutput(fileContent);
+  }
+
+  private List<FileAnnotation> toFileAnnotations(List<Violation> violations, String moduleName) {
+    final List<FileAnnotation> fileAnnotations = newArrayList();
+    for (final Violation violation : violations) {
+      final FileAnnotation fileAnnotation = new ViolationFileAnnotation(violation, moduleName);
+      fileAnnotations.add(fileAnnotation);
+    }
+    return fileAnnotations;
+  }
 }

@@ -8,8 +8,8 @@ import hudson.plugins.analysis.tokens.AbstractFixedAnnotationsTokenMacro;
 
 @Extension(optional = true)
 public class FixedViolationsWarningsTokenMacro extends AbstractFixedAnnotationsTokenMacro {
- @SuppressWarnings("unchecked")
- public FixedViolationsWarningsTokenMacro() {
-  super("VIOLATIONS_FIXED", ViolationsResultAction.class, ViolationsMavenResultAction.class);
- }
+  @SuppressWarnings("unchecked")
+  public FixedViolationsWarningsTokenMacro() {
+    super("VIOLATIONS_FIXED", ViolationsResultAction.class, ViolationsMavenResultAction.class);
+  }
 }

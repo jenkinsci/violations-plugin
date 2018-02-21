@@ -13,34 +13,34 @@ import hudson.plugins.analysis.graph.NewVersusFixedGraph;
 import hudson.plugins.view.dashboard.DashboardPortlet;
 
 public final class WarningsNewVersusFixedGraphPortlet extends AbstractWarningsGraphPortlet {
- @Extension(optional = true)
- public static class WarningsGraphDescriptor extends Descriptor<DashboardPortlet> {
-  @Override
-  public String getDisplayName() {
-   return Messages.Portlet_WarningsNewVsFixedGraph();
+  @Extension(optional = true)
+  public static class WarningsGraphDescriptor extends Descriptor<DashboardPortlet> {
+    @Override
+    public String getDisplayName() {
+      return Messages.Portlet_WarningsNewVsFixedGraph();
+    }
   }
- }
 
- @DataBoundConstructor
- public WarningsNewVersusFixedGraphPortlet(final String name, final String width, final String height,
-   final String dayCountString) {
-  super(name, width, height, dayCountString);
+  @DataBoundConstructor
+  public WarningsNewVersusFixedGraphPortlet(
+      final String name, final String width, final String height, final String dayCountString) {
+    super(name, width, height, dayCountString);
 
-  configureGraph(getGraphType());
- }
+    configureGraph(getGraphType());
+  }
 
- @Override
- protected Class<? extends AbstractProjectAction<?>> getAction() {
-  return ViolationsProjectAction.class;
- }
+  @Override
+  protected Class<? extends AbstractProjectAction<?>> getAction() {
+    return ViolationsProjectAction.class;
+  }
 
- @Override
- protected BuildResultGraph getGraphType() {
-  return new NewVersusFixedGraph();
- }
+  @Override
+  protected BuildResultGraph getGraphType() {
+    return new NewVersusFixedGraph();
+  }
 
- @Override
- protected String getPluginName() {
-  return "violations";
- }
+  @Override
+  protected String getPluginName() {
+    return "violations";
+  }
 }

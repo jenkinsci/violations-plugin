@@ -7,31 +7,31 @@ import hudson.plugins.analysis.views.WarningsCountColumn;
 import hudson.views.ListViewColumnDescriptor;
 
 public class ViolationsColumn extends WarningsCountColumn<ViolationsProjectAction> {
- @Extension
- public static class ColumnDescriptor extends ListViewColumnDescriptor {
-  @Override
-  public String getDisplayName() {
-   return Messages.Violations_Warnings_Column();
+  @Extension
+  public static class ColumnDescriptor extends ListViewColumnDescriptor {
+    @Override
+    public String getDisplayName() {
+      return Messages.Violations_Warnings_Column();
+    }
+
+    @Override
+    public boolean shownByDefault() {
+      return false;
+    }
+  }
+
+  @DataBoundConstructor
+  public ViolationsColumn() { // NOPMD: data binding
+    super();
   }
 
   @Override
-  public boolean shownByDefault() {
-   return false;
+  public String getColumnCaption() {
+    return Messages.Violations_Warnings_ColumnHeader();
   }
- }
 
- @DataBoundConstructor
- public ViolationsColumn() { // NOPMD: data binding
-  super();
- }
-
- @Override
- public String getColumnCaption() {
-  return Messages.Violations_Warnings_ColumnHeader();
- }
-
- @Override
- protected Class<ViolationsProjectAction> getProjectAction() {
-  return ViolationsProjectAction.class;
- }
+  @Override
+  protected Class<ViolationsProjectAction> getProjectAction() {
+    return ViolationsProjectAction.class;
+  }
 }

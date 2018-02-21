@@ -8,8 +8,8 @@ import hudson.plugins.analysis.tokens.AbstractNewAnnotationsTokenMacro;
 
 @Extension(optional = true)
 public class NewViolationsWarningsTokenMacro extends AbstractNewAnnotationsTokenMacro {
- @SuppressWarnings("unchecked")
- public NewViolationsWarningsTokenMacro() {
-  super("VIOLATIONS_NEW", ViolationsResultAction.class, ViolationsMavenResultAction.class);
- }
+  @SuppressWarnings("unchecked")
+  public NewViolationsWarningsTokenMacro() {
+    super("VIOLATIONS_NEW", ViolationsResultAction.class, ViolationsMavenResultAction.class);
+  }
 }

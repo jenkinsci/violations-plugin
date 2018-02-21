@@ -1,85 +1,95 @@
 package org.jenkinsci.plugins.violations;
 
+import hudson.Extension;
+import hudson.model.AbstractDescribableImpl;
+import hudson.model.Descriptor;
+import hudson.util.ListBoxModel;
+
 import java.io.Serializable;
 
+import javax.annotation.Nonnull;
+
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import se.bjurr.violations.lib.reports.Reporter;
+import se.bjurr.violations.lib.reports.Parser;
 
-public class ViolationConfig implements Serializable, Comparable<ViolationConfig> {
- private static final long serialVersionUID = 6664329842273455651L;
+public class ViolationConfig extends AbstractDescribableImpl<ViolationConfig>
+    implements Serializable, Comparable<ViolationConfig> {
+  private static final long serialVersionUID = 9009372864417543781L;
 
- private String pattern;
+  private String pattern;
+  private Parser parser;
+  private String reporter;
 
- private Reporter reporter;
+  public ViolationConfig() {}
 
- public ViolationConfig() {
-
- }
-
- @DataBoundConstructor
- public ViolationConfig(Reporter reporter, String pattern) {
-  this.reporter = reporter;
-  this.pattern = pattern;
- }
-
- @Override
- public int compareTo(ViolationConfig o) {
-  return reporter.name().compareTo(o.reporter.name());
- }
-
- @Override
- public boolean equals(Object obj) {
-  if (this == obj) {
-   return true;
+  @DataBoundConstructor
+  public ViolationConfig(final Parser parser, final String pattern, final String reporter) {
+    this.parser = parser;
+    this.pattern = pattern;
+    this.reporter = reporter;
   }
-  if (obj == null) {
-   return false;
+
+  public String getPattern() {
+    return this.pattern;
   }
-  if (getClass() != obj.getClass()) {
-   return false;
+
+  public Parser getParser() {
+    return this.parser;
   }
-  ViolationConfig other = (ViolationConfig) obj;
-  if (pattern == null) {
-   if (other.pattern != null) {
-    return false;
-   }
-  } else if (!pattern.equals(other.pattern)) {
-   return false;
+
+  public String getReporter() {
+    if (this.reporter == null) {
+      return this.parser.name();
+    }
+    return reporter;
   }
-  if (reporter != other.reporter) {
-   return false;
+
+  public void setPattern(final String pattern) {
+    this.pattern = pattern;
   }
-  return true;
- }
 
- public String getPattern() {
-  return pattern;
- }
+  public void setParser(final Parser parser) {
+    this.parser = parser;
+  }
 
- public Reporter getReporter() {
-  return reporter;
- }
+  public void setReporter(final String reporter) {
+    this.reporter = reporter;
+  }
 
- @Override
- public int hashCode() {
-  final int prime = 31;
-  int result = 1;
-  result = prime * result + (pattern == null ? 0 : pattern.hashCode());
-  result = prime * result + (reporter == null ? 0 : reporter.hashCode());
-  return result;
- }
+  @Override
+  public String toString() {
+    return "ViolationConfig [pattern="
+        + pattern
+        + ", parser="
+        + parser
+        + ", reporter="
+        + reporter
+        + "]";
+  }
 
- public void setPattern(String pattern) {
-  this.pattern = pattern;
- }
+  @Extension
+  public static class DescriptorImpl extends Descriptor<ViolationConfig> {
+    @Nonnull
+    @Override
+    public String getDisplayName() {
+      return "Violations Parser Config";
+    }
 
- public void setReporter(Reporter reporter) {
-  this.reporter = reporter;
- }
+    @Restricted(NoExternalUse.class)
+    public ListBoxModel doFillParserItems() {
+      final ListBoxModel items = new ListBoxModel();
+      for (final Parser parser : Parser.values()) {
+        items.add(parser.name());
+      }
+      return items;
+    }
+  }
 
- @Override
- public String toString() {
-  return "ViolationConfig [reporter=" + reporter + ", pattern=" + pattern + "]";
- }
+  @Override
+  public int compareTo(ViolationConfig o) {
+    return this.parser.name().compareTo(o.parser.name());
+  }
 }

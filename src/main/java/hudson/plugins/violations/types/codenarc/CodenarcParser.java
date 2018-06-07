@@ -1,5 +1,4 @@
 package hudson.plugins.violations.types.codenarc;
-
 import hudson.plugins.violations.model.FullFileModel;
 import hudson.plugins.violations.model.Severity;
 import hudson.plugins.violations.model.Violation;
@@ -7,6 +6,7 @@ import hudson.plugins.violations.parse.AbstractTypeParser;
 import hudson.plugins.violations.util.HashMapWithDefault;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -15,7 +15,7 @@ import org.xmlpull.v1.XmlPullParserException;
  *
  * @author Robin Bramley, Opsera Ltd.
  */
-public class CodenarcParser extends AbstractTypeParser {
+public class CodenarcParser extends AbstractTypeParser implements Serializable {
 
     private static final HashMapWithDefault<String, String> SEVERITIES = new HashMapWithDefault<String, String>(
             Severity.MEDIUM);

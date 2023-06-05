@@ -26,7 +26,7 @@ public class ConfigurationWebTest {
     static {
         LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
                 "org.apache.commons.logging.impl.NoOpLog");
-        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(OFF);
+        java.util.logging.Logger.getLogger("org.htmlunit").setLevel(OFF);
         java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(OFF);
     }
 
